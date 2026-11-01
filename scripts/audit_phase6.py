@@ -28,7 +28,7 @@ from qgis.core import (
     QgsVectorLayer,
 )
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from audit_web import measure_local_http
+from audit_web import audit_site, measure_local_http
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -279,6 +279,9 @@ def main() -> int:
                 )
 
         report["web"] = inspect_web()
+        report["web"]["static_accessibility_audit"] = audit_site()
+        for issue in report["web"]["static_accessibility_audit"]["errors"]:
+            report["findings"].append(f"Static web/accessibility audit: {issue}")
         if args.base_url:
             report["web"]["local_http_sample"] = measure_local_http(args.base_url)
         for path in report["web"]["manifest_missing_files"]:
