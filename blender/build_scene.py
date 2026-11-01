@@ -8,6 +8,7 @@ Requires phase 2 outputs in EPSG:9377:
 Run: blender -b -P blender/build_scene.py
 """
 
+from datetime import datetime, timezone
 import json
 import math
 import os
@@ -520,11 +521,19 @@ def main():
     except (OSError, json.JSONDecodeError):
         web_manifest = {"pmtiles": [], "geojson": [], "media": []}
     published_media = []
+    limits = {".mp4": 50, ".glb": 20}
+    for item in web_manifest.get("media", []):
+        candidate = (ROOT / "web" / item).resolve()
+        if ROOT.joinpath("web").resolve() not in candidate.parents or not candidate.is_file():
+            continue
+        limit = limits.get(candidate.suffix.lower(), 95)
+        if candidate.stat().st_size < limit * 1024 * 1024:
+            published_media.append(candidate.relative_to(ROOT / "web").as_posix())
     for asset in (VIDEO, GLB):
         if asset.exists() and asset.stat().st_size < (50 if asset.suffix == ".mp4" else 20) * 1024 * 1024:
-            published_media.append(asset.relative_to(MEDIA.parent).as_posix())
-    web_manifest["generated_utc"] = __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat()
-    web_manifest["media"] = sorted(set(web_manifest.get("media", []) + published_media))
+            published_media.append(asset.relative_to(ROOT / "web").as_posix())
+    web_manifest["generated_utc"] = datetime.now(timezone.utc).isoformat()
+    web_manifest["media"] = sorted(set(published_media))
     manifest_path.write_text(json.dumps(web_manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     REPORT.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(report, ensure_ascii=False, indent=2))

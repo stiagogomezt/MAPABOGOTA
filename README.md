@@ -62,11 +62,30 @@ Para continuar una Fase 2 interrumpida y reutilizar capas ya validadas:
 cmd /c scripts/run_phase2.bat --resume
 ```
 
+Si las capas de Fase 2 terminaron pero hay que reconstruir la publicación web, sin rehacer indicadores ni recortes:
+
+```powershell
+cmd /c scripts/run_phase2.bat --export-only
+```
+
+## Auditoría y control de calidad
+
+Después de terminar Fase 2, valida los GeoPackages y el visor. La evaluación parcial y sus limitaciones están en [`docs/AUDITORIA_FASE6.md`](docs/AUDITORIA_FASE6.md):
+
+```powershell
+cmd /c scripts/run_audit_phase6.bat --base-url http://localhost:8000
+uv run python -m unittest discover -s tests -v
+```
+
+La auditoría registra CRS, envolventes transformadas, campos clave, valores nulos, nombres de campos sensibles, tamaños y artefactos temporales. El control de coordenadas de ida y vuelta comprueba consistencia numérica, no exactitud posicional. Para evaluar exactitud se necesitan puntos de control independientes y tolerancias definidas. La medición HTTP local tampoco reemplaza una prueba de primera pintura en una red/dispositivo móvil real.
+
 Las fuentes originales y productos intermedios se conservan localmente en `data/raw/` y `data/processed/`, ignorados por Git. Consulta [`docs/DESCARGAS_MANUALES.md`](docs/DESCARGAS_MANUALES.md), [`docs/BITACORA.md`](docs/BITACORA.md) y [`docs/METADATOS.md`](docs/METADATOS.md) para los procedimientos y registros.
 
 ## Publicación
 
 GitHub Actions publica únicamente `web/` en GitHub Pages mediante `actions/deploy-pages`. El workflow comprueba que las rutas declaradas en el manifiesto existan y aplica límites de tamaño antes de desplegar. El despliegue se ejecuta al actualizar `main` o manualmente desde Actions.
+
+Los archivos generados de datos y multimedia están ignorados por Git por defecto. Antes de agregarlos explícitamente al sitio, confirma licencia de redistribución, ausencia de atributos personales, integridad del archivo y límites de tamaño, y actualiza `web/manifest.json`.
 
 ## Estructura
 

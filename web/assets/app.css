@@ -8,7 +8,7 @@
   --line: #263541;
   --text: #edf3f5;
   --muted: #91a3ac;
-  --quiet: #667b86;
+  --quiet: #8a9ca3;
   --mint: #72d6bc;
   --orange: #e89b67;
   font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
@@ -22,6 +22,9 @@ button, input, select { font: inherit; }
 button, a { -webkit-tap-highlight-color: transparent; }
 button { color: inherit; }
 a { color: inherit; text-decoration: none; }
+.skip-link { position: fixed; z-index: 20; top: 8px; left: 8px; padding: 10px 13px; transform: translateY(-160%); border: 1px solid var(--mint); border-radius: 7px; background: #101a22; color: var(--text); }
+.skip-link:focus { transform: translateY(0); }
+:focus-visible { outline: 2px solid var(--mint); outline-offset: 3px; }
 .app-shell { display: grid; grid-template-columns: 354px minmax(0, 1fr); width: 100%; height: 100%; }
 .sidebar { position: relative; z-index: 5; display: flex; flex-direction: column; min-width: 0; height: 100%; background: var(--panel); border-right: 1px solid #ffffff0d; }
 .brand-row { display: flex; align-items: center; gap: 12px; height: 72px; padding: 0 22px; border-bottom: 1px solid var(--line); }
@@ -61,6 +64,7 @@ a { color: inherit; text-decoration: none; }
 .swatch { flex: 0 0 auto; width: 10px; height: 10px; border-radius: 3px; }
 .swatch-building { background: var(--orange); box-shadow: 0 0 9px #e89b6755; }
 .swatch-block { background: #7c9f9a; }
+.swatch-lot { background: transparent; border: 1px solid #e8d6a4; }
 .swatch-green { background: #75ad7e; }
 .swatch-road { background: #cdb78f; }
 .swatch-water { background: #69b7c9; }

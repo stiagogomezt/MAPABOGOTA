@@ -9,8 +9,8 @@
     waterbodies: { url: 'descargas/pmtiles/cuerpo_agua.pmtiles', sourceLayer: 'cuerpo_agua' },
     streams: { url: 'descargas/pmtiles/corriente_agua.pmtiles', sourceLayer: 'corriente_agua' },
     roads: { url: 'descargas/pmtiles/malla_vial.pmtiles', sourceLayer: 'malla_vial' },
+    lots: { url: 'descargas/pmtiles/lote.pmtiles', sourceLayer: 'lote' },
     buildings: { url: 'descargas/pmtiles/construcciones_3d.pmtiles', sourceLayer: 'construcciones_3d' },
-    lots: { url: 'descargas/pmtiles/lotes.pmtiles', sourceLayer: 'lote' },
   };
   const PROPERTY = {
     height: 'altura_est_m',
@@ -33,6 +33,7 @@
   const LAYER_GROUPS = {
     buildings: ['buildings-extrusion', 'buildings-outline'],
     blocks: ['blocks-fill', 'blocks-outline'],
+    lots: ['lots-fill', 'lots-outline'],
     ecology: ['ecology-fill', 'ecology-outline'],
     roads: ['roads-line'],
     water: ['water-line', 'waterbody-fill'],
@@ -167,7 +168,12 @@
       map.addLayer({ id: 'ecology-outline', type: 'line', source: sourceId, 'source-layer': sourceLayer,
         paint: { 'line-color': '#a6c994', 'line-opacity': 0.55, 'line-width': 0.7 } });
     } else if (key === 'lots') {
+      const visible = Boolean(document.querySelector('[data-layer="lots"]')?.checked);
+      map.addLayer({ id: 'lots-fill', type: 'fill', source: sourceId, 'source-layer': sourceLayer, minzoom: 15,
+        layout: { visibility: visible ? 'visible' : 'none' },
+        paint: { 'fill-color': '#efe2b4', 'fill-opacity': 0.015 } });
       map.addLayer({ id: 'lots-outline', type: 'line', source: sourceId, 'source-layer': sourceLayer, minzoom: 15,
+        layout: { visibility: visible ? 'visible' : 'none' },
         paint: { 'line-color': '#efe2b4', 'line-opacity': 0.42, 'line-width': 0.35 } });
     }
     return true;
@@ -193,12 +199,13 @@
 
   function setupPopups() {
     map.on('click', event => {
-      const ids = ['buildings-extrusion', 'blocks-fill', 'lots-outline'];
+      const ids = ['buildings-extrusion', 'lots-fill', 'blocks-fill'];
       const present = ids.filter(id => map.getLayer(id));
       if (!present.length) return;
       const features = map.queryRenderedFeatures(event.point, { layers: present });
       if (!features.length) return;
-      const feature = features.find(item => item.layer.id === 'buildings-extrusion') || features[0];
+      const feature = features.find(item => item.layer.id === 'buildings-extrusion')
+        || features.find(item => item.layer.id === 'lots-fill') || features[0];
       new maplibregl.Popup({ closeButton: true, closeOnClick: true, maxWidth: '320px' })
         .setLngLat(event.lngLat).setHTML(popupContent(feature)).addTo(map);
     });
@@ -222,10 +229,16 @@
     return [(bounds[0] + bounds[2]) / 2, (bounds[1] + bounds[3]) / 2];
   }
 
+  function localityKey(value) {
+    const key = String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('es').trim().replace(/\s+/g, ' ');
+    return key === 'candelaria' ? 'la candelaria' : key;
+  }
+
   function findViewpoint(name) {
-    const found = localityData.get(name.toLocaleLowerCase('es'));
+    const key = localityKey(name);
+    const found = localityData.get(key);
     if (found) return found;
-    const fallback = VIEWPOINTS.find(item => item[0].toLocaleLowerCase('es') === name.toLocaleLowerCase('es'));
+    const fallback = VIEWPOINTS.find(item => localityKey(item[0]) === key);
     return fallback ? { name: fallback[0], center: [fallback[1], fallback[2]] } : null;
   }
 
@@ -345,6 +358,7 @@
     document.getElementById('terrain-exaggeration').addEventListener('input', event => {
       const exaggeration = Number(event.target.value);
       document.getElementById('terrain-value').textContent = `${exaggeration.toFixed(1)}×`;
+      event.target.setAttribute('aria-valuetext', `${exaggeration.toFixed(1)} veces`);
       if (terrainOn && map.getSource('terrain-dem')) map.setTerrain({ source: 'terrain-dem', exaggeration });
     });
   }
@@ -394,7 +408,11 @@
         for (const feature of localities.features) {
           const name = feature.properties?.LOCNOMBRE || feature.properties?.NOMBRE;
           const center = coordinateCenter(feature);
-          if (name && center) localityData.set(name.toLocaleLowerCase('es'), { name, center });
+          if (name && center) {
+            const key = localityKey(name);
+            const displayName = VIEWPOINTS.find(item => localityKey(item[0]) === key)?.[0] || name;
+            localityData.set(key, { name: displayName, center });
+          }
         }
       }
       if (upl?.features?.length) {
@@ -402,7 +420,7 @@
         map.addLayer({ id: 'upl-line', type: 'line', source: 'upl-source', layout: { visibility: 'none' }, paint: { 'line-color': '#7ad4c0', 'line-width': 0.8, 'line-opacity': 0.6, 'line-dasharray': [2, 2] } });
       }
       for (const [name, longitude, latitude] of VIEWPOINTS) {
-        if (localityData.has(name.toLocaleLowerCase('es'))) continue;
+        if (localityData.has(localityKey(name))) continue;
         const option = document.createElement('option');
         option.value = name;
         document.getElementById('locality-options').appendChild(option);

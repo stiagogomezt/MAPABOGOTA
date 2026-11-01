@@ -663,21 +663,43 @@ def build_block_indicators(
 
 
 def save_geojson(layer: QgsVectorLayer, path: Path, fields: list[str]) -> None:
+    missing_fields = [field for field in fields if layer.fields().indexFromName(field) < 0]
+    if missing_fields:
+        raise RuntimeError(
+            f"No se exporta {path.name}: faltan atributos esperados {missing_fields} "
+            f"en la capa {layer.name()}."
+        )
     simplified = run_algorithm(
         "native:simplifygeometries",
         {"INPUT": layer, "METHOD": 0, "TOLERANCE": 1.5, "OUTPUT": "memory:"},
     )
+    path.parent.mkdir(parents=True, exist_ok=True)
+    staging = WORK / f"_{path.name}"
+    clear_generated(staging)
     options = QgsVectorFileWriter.SaveVectorOptions()
     options.driverName = "GeoJSON"
     options.fileEncoding = "UTF-8"
     options.ct = QgsCoordinateTransform(PROJECT_CRS, WEB_CRS, QgsProject.instance())
-    options.attributes = [simplified.fields().indexFromName(field) for field in fields if simplified.fields().indexFromName(field) >= 0]
+    options.attributes = [simplified.fields().indexFromName(field) for field in fields]
     options.layerOptions = ["RFC7946=YES"]
     result = QgsVectorFileWriter.writeAsVectorFormatV3(
-        simplified, str(path), QgsProject.instance().transformContext(), options
+        simplified, str(staging), QgsProject.instance().transformContext(), options
     )
     if result[0] != QgsVectorFileWriter.NoError:
+        clear_generated(staging)
         raise RuntimeError(f"No se pudo exportar GeoJSON {path}: {result}")
+    verified = open_source(path.stem, staging)
+    if verified.crs().authid() != "EPSG:4326":
+        clear_generated(staging)
+        raise RuntimeError(f"GeoJSON {path.name} no quedó en EPSG:4326: {verified.crs().authid()}")
+    if verified.featureCount() != simplified.featureCount():
+        clear_generated(staging)
+        raise RuntimeError(
+            f"GeoJSON {path.name}: conteo exportado {verified.featureCount()} "
+            f"no coincide con origen simplificado {simplified.featureCount()}."
+        )
+    clear_generated(path)
+    staging.replace(path)
 
 
 def export_pmtiles(layer: QgsVectorLayer, name: str) -> list[str]:
@@ -696,20 +718,45 @@ def export_pmtiles(layer: QgsVectorLayer, name: str) -> list[str]:
         raise FileNotFoundError(source)
     target = WEB_DOWNLOADS / "pmtiles" / f"{name}.pmtiles"
     target.parent.mkdir(parents=True, exist_ok=True)
+    archive_target = FINAL / "pmtiles" / f"{name}.pmtiles"
     clear_generated(target)
+    clear_generated(archive_target)
+    for candidate in target.parent.glob(f"{target.name}.tmp*"):
+        if candidate.is_file():
+            candidate.unlink()
+    staging = WORK / f"_{name}.pmtiles"
+    clear_generated(staging)
+    for candidate in WORK.glob(f"{staging.name}.tmp*"):
+        if candidate.is_file():
+            candidate.unlink()
     command = [
-        ogr2ogr, "-f", "PMTiles", str(target), str(source),
+        ogr2ogr, "-f", "PMTiles", str(staging), str(source),
         "-t_srs", "EPSG:4326", "-dsco", "MINZOOM=11", "-dsco", "MAXZOOM=16",
     ]
     completed = subprocess.run(command, capture_output=True, text=True)
     if completed.returncode != 0:
+        clear_generated(staging)
+        for candidate in WORK.glob(f"{staging.name}.tmp*"):
+            if candidate.is_file():
+                candidate.unlink()
         raise RuntimeError(f"ogr2ogr PMTiles falló para {name}: {completed.stderr[-2000:]}")
-    if target.stat().st_size >= 95 * 1024 * 1024:
-        archive_target = FINAL / "pmtiles" / f"{name}.pmtiles"
+    if not staging.is_file():
+        for candidate in WORK.glob(f"{staging.name}.tmp*"):
+            if candidate.is_file():
+                candidate.unlink()
+        raise RuntimeError(f"ogr2ogr PMTiles finalizó sin crear el archivo {staging}.")
+    if staging.stat().st_size >= 95 * 1024 * 1024:
         archive_target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.move(str(target), str(archive_target))
-        target = archive_target
-    results.append(target.relative_to(ROOT).as_posix())
+        staging.replace(archive_target)
+        final_target = archive_target
+    else:
+        clear_generated(target)
+        staging.replace(target)
+        final_target = target
+    for candidate in WORK.glob(f"{staging.name}.tmp*"):
+        if candidate.is_file():
+            candidate.unlink()
+    results.append(final_target.relative_to(ROOT).as_posix())
     return results
 
 
@@ -728,12 +775,18 @@ def write_web_manifest() -> Path:
     geojson = sorted(
         path.relative_to(ROOT / "web").as_posix()
         for path in (ROOT / "web" / "descargas").glob("*.geojson")
-        if path.is_file()
+        if path.is_file() and path.stat().st_size < 95 * 1024 * 1024
     )
-    media = [
-        item for item in previous.get("media", [])
-        if (ROOT / "web" / item).is_file()
-    ]
+    media = []
+    web_root = (ROOT / "web").resolve()
+    for item in previous.get("media", []):
+        asset = (web_root / item).resolve()
+        if web_root not in asset.parents or not asset.is_file():
+            continue
+        suffix = asset.suffix.lower()
+        limit = 50 if suffix == ".mp4" else 20 if suffix == ".glb" else 95
+        if asset.stat().st_size < limit * 1024 * 1024:
+            media.append(asset.relative_to(web_root).as_posix())
     manifest = {
         "generated_utc": datetime.now(timezone.utc).isoformat(),
         "pmtiles": pmtiles,
@@ -742,6 +795,46 @@ def write_web_manifest() -> Path:
     }
     manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
     return manifest_path
+
+
+def publish_web_products(processed: dict[str, QgsVectorLayer], report: dict[str, Any]) -> None:
+    administrative = {
+        "localidad": ["LOCCODIGO", "LOCNOMBRE"],
+        "upl": ["CODIGO_UPL", "NOMBRE"],
+        "sector": ["SCACODIGO", "SCANOMBRE"],
+    }
+    for layer_name, fields in administrative.items():
+        geojson_path = WEB_DOWNLOADS / f"{layer_name}.geojson"
+        save_geojson(processed[layer_name], geojson_path, fields)
+        report["outputs"][f"geojson_{layer_name}"] = {
+            "path": geojson_path.relative_to(ROOT).as_posix(),
+            "crs": "EPSG:4326",
+            "features": processed[layer_name].featureCount(),
+            "bytes": geojson_path.stat().st_size,
+        }
+
+    # Indicators are already carried by PMTiles. Avoid a second, bulky GeoJSON
+    # copy in the static site and remove this pipeline-owned legacy artifact.
+    legacy_indicators = WEB_DOWNLOADS / "manzanas_indicadores.geojson"
+    if legacy_indicators.is_file():
+        legacy_indicators.unlink()
+
+    for layer_name in [
+        "construcciones_3d", "manzanas_indicadores", "lote", "malla_vial",
+        "corriente_agua", "cuerpo_agua", "estructura_ecologica",
+    ]:
+        try:
+            paths = export_pmtiles(processed[layer_name], layer_name)
+            report["outputs"][f"pmtiles_{layer_name}"] = paths
+            for relative in paths:
+                size = (ROOT / relative).stat().st_size
+                if size >= 95 * 1024 * 1024:
+                    report["warnings"].append(
+                        f"{relative} exceeds 95 MB and must be partitioned before web publication."
+                    )
+        except Exception as exc:
+            report["warnings"].append(f"PMTiles {layer_name}: {exc}")
+    write_web_manifest()
 
 
 def style_layer(layer: QgsVectorLayer, theme: str) -> None:
@@ -879,13 +972,17 @@ def main() -> int:
         "--resume", action="store_true",
         help="reuse pipeline outputs already validated against the current source files",
     )
+    parser.add_argument(
+        "--export-only", action="store_true",
+        help="rebuild publication GeoJSON/PMTiles from completed phase2 GeoPackages without repeating processing",
+    )
     args = parser.parse_args()
     WORK.mkdir(parents=True, exist_ok=True)
     FINAL.mkdir(parents=True, exist_ok=True)
     WEB_DOWNLOADS.mkdir(parents=True, exist_ok=True)
     previous_report: dict[str, Any] = {}
     previous_report_path = ROOT / "docs" / "REPORTE_FASE2.json"
-    if args.resume and previous_report_path.is_file():
+    if (args.resume or args.export_only) and previous_report_path.is_file():
         try:
             previous_report = json.loads(previous_report_path.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError):
@@ -905,8 +1002,35 @@ def main() -> int:
         "outputs": {},
         "warnings": [],
     }
+    if args.export_only:
+        report["layers"] = previous_report.get("layers", {})
+        if "topology" in previous_report:
+            report["topology"] = previous_report["topology"]
     try:
         initialize_processing()
+        if args.export_only:
+            publication_inputs = [
+                "localidad", "upl", "sector", "construcciones_3d", "manzanas_indicadores",
+                "lote", "malla_vial", "corriente_agua", "cuerpo_agua", "estructura_ecologica",
+            ]
+            processed: dict[str, QgsVectorLayer] = {}
+            missing_products = [WORK / f"{name}.gpkg" for name in publication_inputs if not (WORK / f"{name}.gpkg").is_file()]
+            if missing_products:
+                raise FileNotFoundError(
+                    "Export-only needs completed phase2 layers: "
+                    + ", ".join(path.relative_to(ROOT).as_posix() for path in missing_products)
+                )
+            for name in publication_inputs:
+                layer = open_source(name, WORK / f"{name}.gpkg")
+                if layer.crs().authid() != "EPSG:9377":
+                    raise RuntimeError(
+                        f"Export-only rechazó {name}: CRS {layer.crs().authid()}, se esperaba EPSG:9377."
+                    )
+                processed[name] = layer
+            publish_web_products(processed, report)
+            report["status"] = "completed-with-warnings" if report["warnings"] else "completed"
+            return 0
+
         expected = list(SOURCE_FILES.items())
         missing = [path for _, path in expected if not path.exists() or path.name.endswith(".part")]
         if missing:
@@ -961,42 +1085,9 @@ def main() -> int:
             "limitations": "Boundary coverage/overlap rules between adjacent cadastral polygons are not asserted by simple geometry validity.",
         }
 
-        administrative = {
-            "localidad": ["LOCCODIGO", "LOCNOMBRE"],
-            "upl": ["CODIGO_UPL", "NOMBRE"],
-            "sector": ["SCACODIGO", "SCANOMBRE"],
-            "manzanas_indicadores": [
-                "MANCODIGO", "SECCODIGO", "area_huella_m2", "area_constr_m2",
-                "indice_ocupacion", "indice_construccion", "localidad", "upl_nombre",
-                "sector_codigo", "estrato", "valor_ref_m2",
-            ],
-        }
-        for layer_name, fields in administrative.items():
-            geojson_path = WEB_DOWNLOADS / f"{layer_name}.geojson"
-            save_geojson(processed[layer_name], geojson_path, fields)
-            report["outputs"][f"geojson_{layer_name}"] = {
-                "path": geojson_path.relative_to(ROOT).as_posix(),
-                "crs": "EPSG:4326",
-                "features": processed[layer_name].featureCount(),
-                "bytes": geojson_path.stat().st_size,
-            }
-
-        for layer_name in ["construcciones_3d", "manzanas_indicadores", "malla_vial", "cuerpo_agua", "estructura_ecologica"]:
-            try:
-                paths = export_pmtiles(processed[layer_name], layer_name)
-                report["outputs"][f"pmtiles_{layer_name}"] = paths
-                for relative in paths:
-                    size = (ROOT / relative).stat().st_size
-                    if size >= 95 * 1024 * 1024:
-                        report["warnings"].append(
-                            f"{relative} excede 95 MB y debe dividirse por localidad antes de publicar."
-                        )
-            except Exception as exc:
-                report["warnings"].append(f"PMTiles {layer_name}: {exc}")
-
+        publish_web_products(processed, report)
         report["outputs"]["pdf"] = create_project_and_pdf(processed).relative_to(ROOT).as_posix()
         report["outputs"]["qgz"] = (FINAL / "Proyecto_Bogota_Urbana.qgz").relative_to(ROOT).as_posix()
-        write_web_manifest()
         report["height_note"] = (
             "3 m por piso es un supuesto de visualización, no una altura medida ni una especificación normativa. "
             "CONNPISOS conserva el número oficial de pisos; altura nula cuando el dato no es válido."

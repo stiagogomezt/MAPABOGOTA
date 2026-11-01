@@ -18,7 +18,20 @@ __pycache__/
 *.tiff
 *.pmtiles
 *.blend1
-!/web/descargas/**/*.pmtiles
+# Generated publication datasets stay local until license/privacy review and explicit approval.
+/web/descargas/**/*.geojson
+/web/descargas/**/*.pmtiles
+/web/descargas/**/*.pdf
+/web/media/*.mp4
+/web/media/*.glb
+/web/descargas/**/*.tmp*
+/web/descargas/**/*.mbtiles*
+/web/descargas/**/*.temp.db
+/web/descargas/**/*.part
+/web/descargas/**/*.copying
+/web/descargas/**/*-journal
+/web/descargas/**/*-wal
+/web/descargas/**/*-shm
 symbology-style.db
 symbology-style.db-shm
 symbology-style.db-wal

@@ -1,6 +1,6 @@
 import unittest
 
-from scripts.acquire_sources import esri_geometry, safe_fields
+from scripts.acquire_sources import esri_geometry, safe_fields, scale_range
 
 
 class ArcGISConversionTests(unittest.TestCase):
@@ -23,6 +23,9 @@ class ArcGISConversionTests(unittest.TestCase):
             ]
         }
         self.assertEqual(safe_fields(layer), ["OBJECTID", "CODIGO"])
+
+    def test_zero_arcgis_scale_limits_are_reported_as_unspecified(self) -> None:
+        self.assertIn("No declarada", scale_range({"minScale": 0, "maxScale": 0}))
 
 
 if __name__ == "__main__":

@@ -177,6 +177,15 @@ def safe_fields(layer: dict[str, Any]) -> list[str]:
     ]
 
 
+def scale_range(layer: dict[str, Any]) -> str:
+    """Format ArcGIS scale limits without presenting its zero sentinel as scale 0."""
+    minimum = layer.get("minScale")
+    maximum = layer.get("maxScale")
+    if minimum in (None, 0) and maximum in (None, 0):
+        return "No declarada (ArcGIS informa 0, sin límite de escala)"
+    return f"{minimum or 'sin límite'} a {maximum or 'sin límite'}"
+
+
 def download_arcgis_layer(
     layer_id: int, name: str, ids: list[int], urban_mask: Any, layer: dict[str, Any]
 ) -> dict[str, Any]:
@@ -360,7 +369,7 @@ def write_inventory(entries: dict[str, Any], failures: list[str]) -> None:
                 f"- Fecha de descarga: {item['downloaded_utc']}",
                 f"- Entidades descargadas: {item['count']:,}; conteo intersectando suelo urbano: {item['source_count_intersecting_urban_mask']:,}.",
                 f"- CRS origen informado: EPSG:{item.get('source_crs')}; CRS del archivo descargado: {item['output_crs']}.",
-                f"- Escala de visualización del servicio (denominador): {item.get('nominal_scale_min')} a {item.get('nominal_scale_max')}.",
+                f"- Escala de visualización del servicio (denominador): {scale_range(item)}.",
                 f"- Campos descargados: {', '.join(item['fields'])}.",
                 "- Licencia: consultar términos del Mapa de Referencia y metadatos IDECA antes de redistribuir.",
             ]

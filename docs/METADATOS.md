@@ -13,7 +13,7 @@ Datos fuente en `data/raw/` se excluyen de Git. Los GeoJSON ArcGIS se exportaron
 - Fecha de descarga: 2026-11-01T06:56:24.254237+00:00
 - Entidades descargadas: 5; conteo intersectando suelo urbano: 5.
 - CRS origen informado: EPSG:4326; CRS del archivo descargado: EPSG:4326.
-- Escala de visualización del servicio (denominador): 0 a 25000.
+- Escala de visualización del servicio (denominador): maxScale 1:25,000; minScale sin límite (ArcGIS codifica el límite abierto como 0).
 - Campos descargados: SUECODIGO, SUECSUELO, SUEAADMIN, SUEAREA, OBJECTID.
 - Licencia: consultar términos del Mapa de Referencia y metadatos IDECA antes de redistribuir.
 
@@ -25,7 +25,7 @@ Datos fuente en `data/raw/` se excluyen de Git. Los GeoJSON ArcGIS se exportaron
 - Fecha de descarga: 2026-11-01T06:56:26.445300+00:00
 - Entidades descargadas: 19; conteo intersectando suelo urbano: 19.
 - CRS origen informado: EPSG:4326; CRS del archivo descargado: EPSG:4326.
-- Escala de visualización del servicio (denominador): 0 a 0.
+- Escala de visualización del servicio (denominador): no declarada / sin límite (ArcGIS informa 0 en ambos límites).
 - Campos descargados: LOCCODIGO, LOCNOMBRE, LOCAADMINI, LOCAREA, OBJECTID.
 - Licencia: consultar términos del Mapa de Referencia y metadatos IDECA antes de redistribuir.
 
@@ -37,7 +37,7 @@ Datos fuente en `data/raw/` se excluyen de Git. Los GeoJSON ArcGIS se exportaron
 - Fecha de descarga: 2026-11-01T06:56:28.201711+00:00
 - Entidades descargadas: 32; conteo intersectando suelo urbano: 32.
 - CRS origen informado: EPSG:4326; CRS del archivo descargado: EPSG:4326.
-- Escala de visualización del servicio (denominador): 0 a 0.
+- Escala de visualización del servicio (denominador): no declarada / sin límite (ArcGIS informa 0 en ambos límites).
 - Campos descargados: NOMBRE, ACTO_ADMINISTRATIVO, OBJECTID, CODIGO_UPL, NUMERO_ACTO_ADMINISTRATIVO, FECHA_ACTO_ADMINISTRATIVO, NORMATIVA, VOCACION, OBSERVACION, AREA_HA.
 - Licencia: consultar términos del Mapa de Referencia y metadatos IDECA antes de redistribuir.
 
@@ -49,7 +49,7 @@ Datos fuente en `data/raw/` se excluyen de Git. Los GeoJSON ArcGIS se exportaron
 - Fecha de descarga: 2026-11-01T06:56:43.720375+00:00
 - Entidades descargadas: 1,138; conteo intersectando suelo urbano: 1,138.
 - CRS origen informado: EPSG:4326; CRS del archivo descargado: EPSG:4326.
-- Escala de visualización del servicio (denominador): 199999 a 0.
+- Escala de visualización del servicio (denominador): minScale 1:199,999; maxScale sin límite (ArcGIS codifica el límite abierto como 0).
 - Campos descargados: SCACODIGO, SCATIPO, SCANOMBRE, OBJECTID.
 - Licencia: consultar términos del Mapa de Referencia y metadatos IDECA antes de redistribuir.
 
@@ -61,7 +61,7 @@ Datos fuente en `data/raw/` se excluyen de Git. Los GeoJSON ArcGIS se exportaron
 - Fecha de descarga: 2026-11-01T07:01:50.812179+00:00
 - Entidades descargadas: 43,682; conteo intersectando suelo urbano: 43,682.
 - CRS origen informado: EPSG:4326; CRS del archivo descargado: EPSG:4326.
-- Escala de visualización del servicio (denominador): 20000 a 0.
+- Escala de visualización del servicio (denominador): minScale 1:20,000; maxScale sin límite (ArcGIS codifica el límite abierto como 0).
 - Campos descargados: MANCODIGO, SECCODIGO, OBJECTID.
 - Licencia: consultar términos del Mapa de Referencia y metadatos IDECA antes de redistribuir.
 
@@ -73,7 +73,7 @@ Datos fuente en `data/raw/` se excluyen de Git. Los GeoJSON ArcGIS se exportaron
 - Fecha de descarga: 2026-11-01T07:20:53.444957+00:00
 - Entidades descargadas: 912,777; conteo intersectando suelo urbano: 912,777.
 - CRS origen informado: EPSG:4326; CRS del archivo descargado: EPSG:4326.
-- Escala de visualización del servicio (denominador): 10000 a 0.
+- Escala de visualización del servicio (denominador): minScale 1:10,000; maxScale sin límite (ArcGIS codifica el límite abierto como 0).
 - Campos descargados: LOTCODIGO, LOTDISPERS, LOTILDISPE, LOTUPREDIA, LOTDISTRIT, MANZCODIGO, OBJECTID.
 - Licencia: consultar términos del Mapa de Referencia y metadatos IDECA antes de redistribuir.
 
@@ -85,7 +85,7 @@ Datos fuente en `data/raw/` se excluyen de Git. Los GeoJSON ArcGIS se exportaron
 - Fecha de descarga: 2026-11-01T08:07:10.393929+00:00
 - Entidades descargadas: 134,726; conteo intersectando suelo urbano: 134,726.
 - CRS origen informado: EPSG:4326; CRS del archivo descargado: EPSG:4326.
-- Escala de visualización del servicio (denominador): 10000 a 0.
+- Escala de visualización del servicio (denominador): minScale 1:10,000; maxScale sin límite (ArcGIS codifica el límite abierto como 0).
 - Campos descargados: MVICODIGO, MVICCALZAD, MVICIV, MVICCAT, MVITCLA, MVITIPO, MVINOMBRE, MVINALTERN, MVINPRINCI, MVINGENERA, MVINANTIGU, MVIETIQUET, MVISVIA, MVINUMC, MVIVELREG, OBJECTID.
 - Licencia: consultar términos del Mapa de Referencia y metadatos IDECA antes de redistribuir.
 
@@ -97,7 +97,7 @@ Datos fuente en `data/raw/` se excluyen de Git. Los GeoJSON ArcGIS se exportaron
 - Fecha de descarga: 2026-11-01T08:07:29.729968+00:00
 - Entidades descargadas: 342; conteo intersectando suelo urbano: 342.
 - CRS origen informado: EPSG:4326; CRS del archivo descargado: EPSG:4326.
-- Escala de visualización del servicio (denominador): 0 a 0.
+- Escala de visualización del servicio (denominador): no declarada / sin límite (ArcGIS informa 0 en ambos límites).
 - Campos descargados: TIPO, NOMBRE, SECTOR, CODCUE, CUENCA, CODSCUE, SUBCUENCA, CODMCUE, MICROCUENCA, OBSERVACION, LONGITUD, IDTABINV, CODHIDRO, OBJECTID.
 - Licencia: consultar términos del Mapa de Referencia y metadatos IDECA antes de redistribuir.
 
@@ -109,7 +109,7 @@ Datos fuente en `data/raw/` se excluyen de Git. Los GeoJSON ArcGIS se exportaron
 - Fecha de descarga: 2026-11-01T08:07:43.058060+00:00
 - Entidades descargadas: 149; conteo intersectando suelo urbano: 149.
 - CRS origen informado: EPSG:4326; CRS del archivo descargado: EPSG:4326.
-- Escala de visualización del servicio (denominador): 0 a 0.
+- Escala de visualización del servicio (denominador): no declarada / sin límite (ArcGIS informa 0 en ambos límites).
 - Campos descargados: TIPO, NOMBRE, SECTOR, CODCUE, CUENCA, CODSCUE, SUBCUENCA, CODMCUE, MICROCUENCA, VOLUMEN, OBSERVACION, IDTABINV, CODHIDRO, OBJECTID, AMBIENTE.Hidrografia_CAgu.AREA.
 - Licencia: consultar términos del Mapa de Referencia y metadatos IDECA antes de redistribuir.
 
@@ -154,5 +154,5 @@ Se excluyen campos cuyo nombre coincide con propietario, documento, cédula, ide
 ## Terreno y fallback
 
 - Terreno mostrado en el visor: AWS Terrain Tiles, codificación Terrarium, consultado en vivo por tiles. No se hizo mosaico local ni se redistribuyen tiles. Fecha de descarga: no aplica; CRS de tesela: Web Mercator (EPSG:3857); elevación codificada en RGB. Verificar términos y atribución del proveedor.
-- Copernicus DEM GLO-30 / ALOS: no descargados en esta fase. Requieren seleccionar teselas, verificar datum vertical/licencia y preparar mosaicos; ver `docs/DESCARGAS_MANUALES.md`.
+- Copernicus DEM GLO-30: se descargó el 2026-11-01 en `data/raw/copernicus_dem_glo30_n04_w075.tif` (tesela N04 W075). El pipeline recortó un buffer de 5 km para las localidades centrales, reproyectó a EPSG:9377 con resolución de 30 m y produjo `data/processed/phase2/terrain_center_9377.tif`/`.asc`. Es un DSM con edificios y vegetación; no se aplicó transformación vertical ni se evaluó contra puntos de control. Verificar términos de redistribución antes de publicar el raster.
 - OpenStreetMap/OSMnx: no utilizado como fallback, dado que el servicio oficial de referencia expone vías, edificios, hidrografía y áreas catastrales. Si se emplea después, identificarlo como OSM y cumplir ODbL.

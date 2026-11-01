@@ -19,6 +19,7 @@
   <script defer src="assets/app.js"></script>
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Saltar al mapa</a>
   <div class="app-shell">
     <aside class="sidebar" id="sidebar">
       <div class="brand-row">
@@ -47,6 +48,7 @@
         <div class="layer-list">
           <label class="layer-toggle featured"><input type="checkbox" data-layer="buildings" checked><span class="swatch swatch-building"></span><span class="layer-label"><strong>Edificios 3D</strong><small>Huella y altura estimada</small></span><span class="layer-state"></span></label>
           <label class="layer-toggle"><input type="checkbox" data-layer="blocks" checked><span class="swatch swatch-block"></span><span class="layer-label"><strong>Manzanas</strong><small>Indicadores urbanos</small></span><span class="layer-state"></span></label>
+          <label class="layer-toggle"><input type="checkbox" data-layer="lots"><span class="swatch swatch-lot"></span><span class="layer-label"><strong>Lotes</strong><small>Códigos cartográficos · sin propietarios</small></span><span class="layer-state"></span></label>
           <label class="layer-toggle"><input type="checkbox" data-layer="ecology" checked><span class="swatch swatch-green"></span><span class="layer-label"><strong>Estructura ecológica</strong><small>Componentes ambientales</small></span><span class="layer-state"></span></label>
           <label class="layer-toggle"><input type="checkbox" data-layer="roads"><span class="swatch swatch-road"></span><span class="layer-label"><strong>Malla vial</strong><small>Vías urbanas</small></span><span class="layer-state"></span></label>
           <label class="layer-toggle"><input type="checkbox" data-layer="water"><span class="swatch swatch-water"></span><span class="layer-label"><strong>Agua</strong><small>Corrientes y cuerpos</small></span><span class="layer-state"></span></label>
@@ -61,11 +63,12 @@
           <option value="stratum">Estrato socioeconómico</option>
           <option value="construction">Índice de construcción</option>
         </select>
+        <p class="muted compact-copy">Valor, estrato e índice se aplican a manzanas; las extrusiones necesitan esos atributos asociados para adoptar el mismo tema.</p>
         <div class="legend" id="legend" aria-live="polite"></div>
 
         <div class="section-title terrain-heading"><h2>Terreno 3D</h2><button class="text-button terrain-toggle" id="terrain-toggle" aria-pressed="true">Activo</button><span class="value-chip" id="terrain-value">1.3×</span></div>
         <label class="sr-only" for="terrain-exaggeration">Exageración vertical del terreno</label>
-        <input class="range-control" id="terrain-exaggeration" type="range" min="0" max="2.5" step="0.1" value="1.3">
+        <input class="range-control" id="terrain-exaggeration" type="range" min="0" max="2.5" step="0.1" value="1.3" aria-valuetext="1.3 veces">
         <div class="range-labels"><span>Natural</span><span>Exagerado</span></div>
 
         <div class="section-title flight-heading"><h2>Sobrevuelo</h2><span class="tag" id="flight-count">20 LOCALIDADES</span></div>
@@ -98,12 +101,13 @@
       <footer class="sidebar-footer"><span>ESTUDIO ACADÉMICO · 2026</span><a href="metodologia.html">Acerca del proyecto</a></footer>
     </aside>
 
-    <main class="map-stage">
-      <div id="map" role="application" aria-label="Mapa 3D de Bogotá"></div>
+    <main class="map-stage" id="main-content" tabindex="-1">
+      <div id="map" role="application" aria-label="Mapa 3D de Bogotá" aria-describedby="map-instructions"></div>
+      <p id="map-instructions" class="sr-only">Mapa interactivo. Usa los controles de navegación para acercar y alejar; arrastra para mover el mapa. La información también está disponible en el panel de capas y en la página Metodología.</p>
       <div class="map-topbar">
         <button class="icon-button mobile-menu" id="open-sidebar" aria-label="Abrir panel">☰</button>
         <div class="location-pill"><span class="location-pin">⌖</span><span id="map-location">Bogotá D.C.</span><span class="pill-divider"></span><span class="zoom-readout" id="zoom-readout">Z 10.2</span></div>
-        <div class="map-status"><span class="status-dot"></span><span id="map-status">Conectando al mapa</span></div>
+        <div class="map-status"><span class="status-dot" aria-hidden="true"></span><span id="map-status" role="status" aria-live="polite">Conectando al mapa</span></div>
       </div>
       <div class="north-marker" aria-label="Norte"><span>N</span><i>↑</i></div>
       <div class="coordinate-readout" id="coordinate-readout">4.7110° N&nbsp;&nbsp; 74.0721° O</div>
