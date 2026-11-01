@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 from datetime import datetime, timezone
+import gc
 import json
 import os
 from pathlib import Path
@@ -689,14 +690,22 @@ def save_geojson(layer: QgsVectorLayer, path: Path, fields: list[str]) -> None:
         clear_generated(staging)
         raise RuntimeError(f"No se pudo exportar GeoJSON {path}: {result}")
     verified = open_source(path.stem, staging)
-    if verified.crs().authid() != "EPSG:4326":
+    verified_crs = verified.crs().authid()
+    verified_count = verified.featureCount()
+    expected_count = simplified.featureCount()
+    # OGR-backed QgsVectorLayer instances keep the dataset open. Release both
+    # handles before replacing the staged file, especially on Windows.
+    verified = None
+    simplified = None
+    gc.collect()
+    if verified_crs != "EPSG:4326":
         clear_generated(staging)
-        raise RuntimeError(f"GeoJSON {path.name} no quedó en EPSG:4326: {verified.crs().authid()}")
-    if verified.featureCount() != simplified.featureCount():
+        raise RuntimeError(f"GeoJSON {path.name} no quedó en EPSG:4326: {verified_crs}")
+    if verified_count != expected_count:
         clear_generated(staging)
         raise RuntimeError(
-            f"GeoJSON {path.name}: conteo exportado {verified.featureCount()} "
-            f"no coincide con origen simplificado {simplified.featureCount()}."
+            f"GeoJSON {path.name}: conteo exportado {verified_count} "
+            f"no coincide con origen simplificado {expected_count}."
         )
     clear_generated(path)
     staging.replace(path)
