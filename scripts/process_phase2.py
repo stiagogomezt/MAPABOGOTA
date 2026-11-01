@@ -17,6 +17,7 @@ import sqlite3
 import subprocess
 import sys
 import traceback
+import unicodedata
 import urllib.request
 from typing import Any
 
@@ -310,6 +311,19 @@ def find_field(layer: QgsVectorLayer, candidates: list[str], required: bool = Tr
     return None
 
 
+def normalize_locality_name(value: Any) -> str:
+    """Normalize locality labels for matching despite accents and whitespace."""
+    text = unicodedata.normalize("NFKD", str(value or ""))
+    without_marks = "".join(char for char in text if not unicodedata.combining(char))
+    return " ".join(without_marks.upper().split())
+
+
+def canonical_locality_name(value: Any) -> str:
+    """Return the pipeline's locality label, including official short-name aliases."""
+    normalized = normalize_locality_name(value)
+    return {"CANDELARIA": "LA CANDELARIA"}.get(normalized, normalized)
+
+
 def add_calculated_fields(buildings: QgsVectorLayer) -> QgsVectorLayer:
     floors = find_field(buildings, ["CONNPISOS", "NUM_PISOS", "NUMPISOS", "PISOS"])
     height = run_to_gpkg(
@@ -345,9 +359,9 @@ def prepare_center_assets(localities: QgsVectorLayer, buildings: QgsVectorLayer)
     wanted = {"LA CANDELARIA", "SANTA FE", "CHAPINERO"}
     selected = [
         feature for feature in localities.getFeatures()
-        if str(feature[locality_field]).strip().upper() in wanted
+        if canonical_locality_name(feature[locality_field]) in wanted
     ]
-    matched = {str(feature[locality_field]).strip().upper() for feature in selected}
+    matched = {canonical_locality_name(feature[locality_field]) for feature in selected}
     if matched != wanted:
         raise RuntimeError(f"Localidades esperadas no halladas: {sorted(wanted - matched)}")
 
