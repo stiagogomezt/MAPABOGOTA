@@ -50,6 +50,8 @@ canvas{position:fixed;inset:0;display:block}
 </style>
 </head>
 <body>
+<a href="#main" class="skip-link">Saltar al contenido</a>
+<main id="main" tabindex="-1" style="position:fixed;inset:0;pointer-events:none"></main>
 <div id="loader"><h1>Gemelo digital 3D de Bogotá D.C.</h1><div class="bar"><div class="fill" id="loadfill"></div></div><div id="loadtxt" style="margin-top:10px;font-size:12px;color:var(--muted)">Cargando…</div></div>
 <div id="cover">
   <h1>Gemelo digital 3D de Bogotá D.C.</h1>
@@ -75,10 +77,17 @@ canvas{position:fixed;inset:0;display:block}
   <h2 data-sec="tools">Herramientas</h2>
   <div class="section" id="tools">
     <button id="fly" style="width:100%;margin:4px 0;padding:6px;border:1px solid var(--border);background:rgba(0,0,0,.3);color:var(--fg);border-radius:6px;cursor:pointer">Sobrevolar Bogotá</button>
+    <button id="videoBtn" style="width:100%;margin:4px 0;padding:6px;border:1px solid var(--border);background:rgba(0,0,0,.3);color:var(--fg);border-radius:6px;cursor:pointer">Ver video</button>
     <button id="btnProfile" style="width:100%;margin:4px 0;padding:6px;border:1px solid var(--border);background:rgba(0,0,0,.3);color:var(--fg);border-radius:6px;cursor:pointer">Perfil topográfico</button>
     <button id="resetView" style="width:100%;margin:4px 0;padding:6px;border:1px solid var(--border);background:rgba(0,0,0,.3);color:var(--fg);border-radius:6px;cursor:pointer">Vista general</button>
-    <label style="display:block;margin-top:6px">Exageración vertical <span id="exagVal">1.0</span></label>
+    <label for="exag" style="display:block;margin-top:6px">Exageración vertical <span id="exagVal">1.0</span></label>
     <input type="range" id="exag" min="1" max="2.5" step="0.1" value="1" style="width:100%">
+    <label for="quality" style="display:block;margin-top:6px">Calidad</label>
+    <select id="quality" style="width:100%;padding:4px;border:1px solid var(--border);background:rgba(0,0,0,.3);color:var(--fg);border-radius:6px">
+      <option value="high">Alta</option>
+      <option value="medium">Media</option>
+      <option value="low">Baja</option>
+    </select>
     <div id="legend"></div>
   </div>
   <h2 data-sec="info">Información</h2>
@@ -116,8 +125,11 @@ const canvas=document.getElementById('canvas');
 const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
 renderer.setSize(window.innerWidth,window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+renderer.shadowMap.enabled=true;
+renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 const scene=new THREE.Scene();
-scene.background=new THREE.Color(0x0b0f1a);
+scene.background=new THREE.Color(0x87a8c4);
+scene.fog=new THREE.Fog(0x87a8c4, 20000, 80000);
 const camera=new THREE.PerspectiveCamera(46,window.innerWidth/window.innerHeight,1,200000);
 camera.position.set(0,-50000,20000);
 camera.lookAt(0,0,0);
@@ -125,7 +137,13 @@ const controls=new OrbitControls(camera,renderer.domElement);
 controls.enableDamping=true;
 controls.target.set(0,0,0);
 const light=new THREE.DirectionalLight(0xffffff,2.0);
-light.position.set(10000,-10000,5000); scene.add(light);
+light.position.set(10000,-10000,5000);
+light.castShadow=true;
+light.shadow.mapSize.width=2048;
+light.shadow.mapSize.height=2048;
+light.shadow.camera.near=1;
+light.shadow.camera.far=100000;
+scene.add(light);
 scene.add(new THREE.AmbientLight(0xffffff,1.0));
 
 const texLoader=new THREE.TextureLoader();
@@ -142,7 +160,7 @@ let terrain=null, mesh=null, exag=1.0;
 const loader=new GLTFLoader();
 loader.load('terrain/terrain.glb',(gltf)=>{
   terrain=gltf.scene;
-  terrain.traverse(o=>{ if(o.isMesh && !mesh){ mesh=o; const mat=new THREE.MeshStandardMaterial({map:textures.satellite,side:THREE.DoubleSide}); mesh.material=mat; } });
+  terrain.traverse(o=>{ if(o.isMesh && !mesh){ mesh=o; const nmap=new THREE.TextureLoader().load('terrain/normalmap.jpg'); const mat=new THREE.MeshStandardMaterial({map:textures.satellite,normalMap:nmap,side:THREE.DoubleSide}); mesh.material=mat; mesh.castShadow=true; mesh.receiveShadow=true; } });
   scene.add(terrain);
   document.getElementById('loader').style.opacity='0';
   setTimeout(()=>document.getElementById('loader').style.display='none',600);
