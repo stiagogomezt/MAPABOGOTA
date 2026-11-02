@@ -1,12 +1,12 @@
 # Instrucciones del proyecto
 
-## Producto principal (visión vigente)
+## Visión (proyecto definitivo)
 
-Maqueta 3D de terreno de Bogotá: relieve real del DEM Copernicus GLO-30 más imagen satelital Sentinel-2 L2A sin nubes, con sobrevuelo, publicada como visor interactivo three.js en GitHub Pages mediante GitHub Actions.
+Gemelo digital 3D de Bogotá con MDT oficial: maqueta 3D interactiva (relieve del MDT oficial + imagen satelital sin nubes + volumetría de edificaciones) con sobrevuelo, publicada en GitHub Pages mediante GitHub Actions. Pipeline obligatorio y documentado: QGIS → Blender → visor web three.js. El visor MapLibre actual pasa a `web/explorador.html` como secundario.
 
-Pipeline obligatorio: QGIS (procesamiento y texturas) → Blender (malla, materiales, cámara, render) → web (visor three.js). El visor MapLibre existente pasa a ser secundario y se sirve como `web/explorador.html`.
+Estándares: procesamiento en EPSG:9377; datum vertical documentado por fuente; metadatos ISO 19115 por producto; linaje completo en METADATOS.md; atribución y licencias visibles en el visor. Productos derivados bajo CC BY-NC-SA 4.0 (Catastro Bogotá/IDECA).
 
-La rama de trabajo de esta visión es `feat/terreno-3d`, creada desde la rama más reciente publicada en el remoto. Cada fase se cierra con commit semántico y capturas en `docs/capturas/`.
+Rama de trabajo: `feat/terreno-3d`, desde la rama más reciente publicada en el remoto. Commit al terminar cada fase. Procesos largos en segundo plano con logs en `logs/`.
 
 ## Propósito y estructura
 
