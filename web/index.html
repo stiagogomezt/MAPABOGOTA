@@ -1,120 +1,122 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#0a1117">
-  <meta name="description" content="Visor 3D experimental de Bogotá, con relieve, datos urbanos oficiales y modelos derivados.">
-  <title>Bogotá Urbana | Gemelo Digital 3D</title>
-  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-  <link rel="preconnect" href="https://tiles.openfreemap.org">
-  <link rel="preconnect" href="https://unpkg.com" crossorigin>
-  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.6.1/dist/maplibre-gl.css">
-  <link rel="stylesheet" href="assets/app.css">
-  <script type="importmap">
-    {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}
-  </script>
-  <script defer src="https://unpkg.com/maplibre-gl@5.6.1/dist/maplibre-gl.js"></script>
-  <script defer src="https://unpkg.com/pmtiles@4.3.0/dist/pmtiles.js"></script>
-  <script defer src="assets/app.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bogotá 3D - Gemelo digital del terreno</title>
+<style>
+body{margin:0;font-family:system-ui,sans-serif;background:#0b0f1a;color:#e6e6e6;overflow:hidden}
+#canvas{position:fixed;inset:0}
+#ui{position:fixed;top:12px;left:12px;background:rgba(0,0,0,.55);padding:12px;border-radius:8px;max-width:320px}
+#ui h1{font-size:16px;margin:0 0 8px}
+#ui button,#ui select{margin:4px 0;width:100%;padding:6px}
+#status{font-size:12px;opacity:.8;margin-top:6px}
+#credits{position:fixed;bottom:8px;right:8px;font-size:11px;opacity:.7;max-width:420px;text-align:right}
+#loader{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#0b0f1a;font-size:18px}
+</style>
 </head>
 <body>
-  <a class="skip-link" href="#main-content">Saltar al mapa</a>
-  <div class="app-shell">
-    <aside class="sidebar" id="sidebar">
-      <div class="brand-row">
-        <a class="brand-mark" href="index.html" aria-label="Bogotá Urbana, inicio">BO<span>G</span></a>
-        <div class="brand-copy"><span class="eyebrow">Atlas urbano · Colombia</span><strong>Bogotá Urbana</strong></div>
-        <button class="icon-button mobile-close" id="close-sidebar" aria-label="Cerrar panel">×</button>
-      </div>
+<a href="#main" class="skip-link">Saltar al contenido</a>
+<div id="loader">Cargando terreno…</div>
+<canvas id="canvas"></canvas>
+<main id="main" tabindex="-1" style="position:fixed;inset:0;pointer-events:none"></main>
+<div id="ui">
+  <h1>Bogotá 3D</h1>
+  <label for="tex" style="display:block;font-size:12px;margin-bottom:2px">Textura</label>
+  <select id="tex">
+    <option value="satellite">Satelital</option>
+    <option value="localidades">Localidades</option>
+    <option value="valor">Valor / estrato</option>
+    <option value="relief">Relieve + hipsometría</option>
+    <option value="slope">Pendientes</option>
+  </select>
+  <button id="fly">Sobrevolar Bogotá</button>
+  <button id="buildings">Mostrar/ocultar edificaciones</button>
+  <button id="profile">Perfil topográfico</button>
+  <div id="status"></div>
+</div>
+<div id="credits">MDT: UAECD (CC BY-NC-SA 4.0) · Copernicus DEM GLO-30 · Sentinel-2/ESA · Ortoimagen satelital. Productos derivados bajo CC BY-NC-SA 4.0.</div>
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-      <nav class="view-tabs" aria-label="Vistas">
-        <button class="view-tab active" data-view="map" aria-selected="true">Mapa</button>
-        <button class="view-tab" data-view="media" aria-selected="false">Visualización</button>
-        <a class="view-tab link-tab" href="metodologia.html">Metodología ↗</a>
-      </nav>
+const canvas=document.getElementById('canvas');
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
+renderer.setSize(window.innerWidth,window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+const scene=new THREE.Scene();
+scene.background=new THREE.Color(0x0b0f1a);
+const camera=new THREE.PerspectiveCamera(55,window.innerWidth/window.innerHeight,1,200000);
+camera.position.set(0,-35000,8000);
+const controls=new OrbitControls(camera,renderer.domElement);
+controls.enableDamping=true;
+controls.maxPolarAngle=Math.PI/2.1;
+const light=new THREE.DirectionalLight(0xffffff,1.2);
+light.position.set(10000,-10000,5000); scene.add(light);
+scene.add(new THREE.AmbientLight(0x404040,0.6));
 
-      <section class="sidebar-content" id="map-controls" aria-label="Controles del mapa">
-        <div class="panel-heading">
-          <div><span class="eyebrow">Exploración 3D</span><h1>Gemelo Digital<br>de Bogotá</h1></div>
-          <span class="live-dot" title="Visor experimental"></span>
-        </div>
-        <p class="muted intro-copy">Cartografía urbana, relieve y datos derivados. Uso académico, no catastral.</p>
+const texLoader=new THREE.TextureLoader();
+const textures={
+ satellite: texLoader.load('terrain/texture_satellite_4096.jpg'),
+ localidades: texLoader.load('terrain/texture_localidades_4096.jpg'),
+ valor: texLoader.load('terrain/texture_valor_4096.jpg'),
+ relief: texLoader.load('terrain/texture_relief_4096.jpg'),
+ slope: texLoader.load('terrain/texture_slope_4096.jpg'),
+};
+// fix paths: textures are in data/processed/terrain not web; place copies in web/terrain
+// We'll load from web/terrain if exists, fallback to data path via relative
+Object.keys(textures).forEach(k=>{textures[k].colorSpace=THREE.SRGBColorSpace;});
 
-        <label class="search-label" for="locality-search">Buscar localidad</label>
-        <div class="search-wrap"><span aria-hidden="true">⌕</span><input id="locality-search" list="locality-options" placeholder="Nombre de localidad" autocomplete="off"><datalist id="locality-options"></datalist><button id="search-go" aria-label="Ir a localidad">↵</button></div>
+let terrain=null;
+const loader=new GLTFLoader();
+loader.load('terrain/terrain.glb', (gltf)=>{
+  terrain=gltf.scene;
+  const mesh=terrain.children[0];
+  const mat=new THREE.MeshStandardMaterial({map:textures.satellite});
+  mesh.material=mat;
+  scene.add(terrain);
+  document.getElementById('loader').style.display='none';
+}, undefined, (e)=>{console.error(e);document.getElementById('status').textContent='Error cargando terreno';});
 
-        <div class="section-title"><h2>Capas</h2><button class="text-button" id="reset-layers">Restablecer</button></div>
-        <div class="layer-list">
-          <label class="layer-toggle featured"><input type="checkbox" data-layer="buildings" checked><span class="swatch swatch-building"></span><span class="layer-label"><strong>Edificios 3D</strong><small>Huella y altura estimada</small></span><span class="layer-state"></span></label>
-          <label class="layer-toggle"><input type="checkbox" data-layer="blocks" checked><span class="swatch swatch-block"></span><span class="layer-label"><strong>Manzanas</strong><small>Indicadores urbanos</small></span><span class="layer-state"></span></label>
-          <label class="layer-toggle"><input type="checkbox" data-layer="lots"><span class="swatch swatch-lot"></span><span class="layer-label"><strong>Lotes</strong><small>Códigos cartográficos · sin propietarios</small></span><span class="layer-state"></span></label>
-          <label class="layer-toggle"><input type="checkbox" data-layer="ecology" checked><span class="swatch swatch-green"></span><span class="layer-label"><strong>Estructura ecológica</strong><small>Componentes ambientales</small></span><span class="layer-state"></span></label>
-          <label class="layer-toggle"><input type="checkbox" data-layer="roads"><span class="swatch swatch-road"></span><span class="layer-label"><strong>Malla vial</strong><small>Vías urbanas</small></span><span class="layer-state"></span></label>
-          <label class="layer-toggle"><input type="checkbox" data-layer="water"><span class="swatch swatch-water"></span><span class="layer-label"><strong>Agua</strong><small>Corrientes y cuerpos</small></span><span class="layer-state"></span></label>
-          <label class="layer-toggle"><input type="checkbox" data-layer="admin"><span class="swatch swatch-admin"></span><span class="layer-label"><strong>Límites administrativos</strong><small>Localidades y UPL</small></span><span class="layer-state"></span></label>
-        </div>
+// texture selector
+document.getElementById('tex').addEventListener('change', (e)=>{
+  if(!terrain) return;
+  terrain.children[0].material.map=textures[e.target.value];
+  terrain.children[0].material.needsUpdate=true;
+});
 
-        <div class="section-title"><h2>Tema de color</h2><span class="tag">DINÁMICO</span></div>
-        <label class="sr-only" for="theme-select">Tema de color</label>
-        <select id="theme-select" class="select-control">
-          <option value="height">Altura estimada</option>
-          <option value="value">Valor de referencia del suelo</option>
-          <option value="stratum">Estrato socioeconómico</option>
-          <option value="construction">Índice de construcción</option>
-        </select>
-        <p class="muted compact-copy">Valor, estrato e índice se aplican a manzanas; las extrusiones necesitan esos atributos asociados para adoptar el mismo tema.</p>
-        <div class="legend" id="legend" aria-live="polite"></div>
+// flyover
+let flying=false, flyIndex=0, flyData=null;
+fetch('terrain/camera_path.json').then(r=>r.json()).then(d=>{flyData=d;});
+document.getElementById('fly').addEventListener('click',()=>{
+  if(!flyData) return;
+  flying=!flying; flyIndex=0;
+});
+document.getElementById('buildings').addEventListener('click',()=>{ /* placeholder */ });
 
-        <div class="section-title terrain-heading"><h2>Terreno 3D</h2><button class="text-button terrain-toggle" id="terrain-toggle" aria-pressed="true">Activo</button><span class="value-chip" id="terrain-value">1.3×</span></div>
-        <label class="sr-only" for="terrain-exaggeration">Exageración vertical del terreno</label>
-        <input class="range-control" id="terrain-exaggeration" type="range" min="0" max="2.5" step="0.1" value="1.3" aria-valuetext="1.3 veces">
-        <div class="range-labels"><span>Natural</span><span>Exagerado</span></div>
-
-        <div class="section-title flight-heading"><h2>Sobrevuelo</h2><span class="tag" id="flight-count">20 LOCALIDADES</span></div>
-        <p class="muted compact-copy">Recorrido panorámico por las localidades de Bogotá.</p>
-        <div class="button-row"><button class="primary-button" id="flight-toggle">▶ Iniciar recorrido</button><button class="secondary-button" id="flight-pause" disabled>Ⅱ Pausar</button></div>
-        <div class="flight-progress"><span id="flight-progress-fill"></span></div>
-        <p class="flight-caption" id="flight-caption">Listo para explorar</p>
-
-        <div class="source-note"><span class="note-icon">i</span><p>Las capas aparecen cuando sus archivos PMTiles están publicados en <code>/descargas</code>. No se cargan datos personales.</p></div>
-      </section>
-
-      <section class="sidebar-content media-content hidden" id="media-controls" aria-label="Video y modelo 3D">
-        <div class="panel-heading"><div><span class="eyebrow">Piezas 3D</span><h1>Una ciudad,<br>otras perspectivas</h1></div></div>
-        <p class="muted intro-copy">Sobrevuelo renderizado y modelo ligero del centro histórico.</p>
-        <div class="media-card">
-          <div class="media-card-heading"><span class="media-index">01</span><div><h2>Sobrevuelo urbano</h2><p>Av. Séptima → Monserrate</p></div></div>
-          <video id="city-video" controls playsinline preload="none" poster="assets/video-poster.svg">
-            Tu navegador no puede reproducir este video.
-          </video>
-          <p class="asset-message" id="video-message">El video aparecerá aquí cuando esté generado en la Fase 3.</p>
-        </div>
-        <div class="media-card model-card">
-          <div class="media-card-heading"><span class="media-index">02</span><div><h2>Centro histórico</h2><p>La Candelaria · GLB / Draco</p></div></div>
-          <div class="model-viewer" id="model-viewer"><div class="model-placeholder" id="model-message"><span>◇</span><strong>Modelo 3D</strong><small>Arrastra para orbitar · rueda para zoom</small></div></div>
-          <div class="model-footer"><span id="model-status">Esperando modelo GLB</span><span class="tag">INTERACTIVO</span></div>
-        </div>
-        <a class="method-link" href="metodologia.html">Fuentes, CRS y metodología <span>↗</span></a>
-      </section>
-
-      <footer class="sidebar-footer"><span>ESTUDIO ACADÉMICO · 2026</span><a href="metodologia.html">Acerca del proyecto</a></footer>
-    </aside>
-
-    <main class="map-stage" id="main-content" tabindex="-1">
-      <div id="map" role="application" aria-label="Mapa 3D de Bogotá" aria-describedby="map-instructions"></div>
-      <p id="map-instructions" class="sr-only">Mapa interactivo. Usa los controles de navegación para acercar y alejar; arrastra para mover el mapa. La información también está disponible en el panel de capas y en la página Metodología.</p>
-      <div class="map-topbar">
-        <button class="icon-button mobile-menu" id="open-sidebar" aria-label="Abrir panel">☰</button>
-        <div class="location-pill"><span class="location-pin">⌖</span><span id="map-location">Bogotá D.C.</span><span class="pill-divider"></span><span class="zoom-readout" id="zoom-readout">Z 10.2</span></div>
-        <div class="map-status"><span class="status-dot" aria-hidden="true"></span><span id="map-status" role="status" aria-live="polite">Conectando al mapa</span></div>
-      </div>
-      <div class="north-marker" aria-label="Norte"><span>N</span><i>↑</i></div>
-      <div class="coordinate-readout" id="coordinate-readout">4.7110° N&nbsp;&nbsp; 74.0721° O</div>
-      <div class="map-disclaimer">Visualización exploratoria · no usar para decisiones prediales</div>
-      <div class="mobile-bottom-nav" aria-label="Navegación móvil"><button data-view="map" class="mobile-nav-active">⌖<span>Mapa</span></button><button data-view="media">◇<span>3D</span></button><a href="metodologia.html">i<span>Info</span></a></div>
-    </main>
-  </div>
-  <script type="module" src="assets/model-viewer.js"></script>
+// animation loop
+const clock=new THREE.Clock();
+function animate(){
+  requestAnimationFrame(animate);
+  if(flying && flyData){
+    const step=Math.floor(clock.getElapsedTime()*30)%flyData.length;
+    const p=flyData[step].position;
+    camera.position.set(p[0],p[1],p[2]);
+  }
+  controls.update();
+  renderer.render(scene,camera);
+}
+animate();
+window.addEventListener('resize',()=>{
+  camera.aspect=window.innerWidth/window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth,window.innerHeight);
+});
+</script>
 </body>
 </html>
+EOF
