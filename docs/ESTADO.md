@@ -58,6 +58,13 @@ Rama: `feat/terreno-3d`. Visión: gemelo digital 3D de Bogotá con MDT oficial, 
 
 ## Pendientes
 
-- Publicación: merge a main, push, activar Pages en modo workflow, verificar URL.
-- Validación visual con Playwright (capturas en docs/capturas/).
+- Validación visual completa con Playwright (capturas adicionales en docs/capturas/).
+- Re-render del MP4 con la nueva trayectoria (Blender, en curso en background).
+
+## Publicación
+
+- Push a main por SSH: exitoso (a55bce7).
+- Workflow "Publish web viewer": success (run 41541900969).
+- URL verificada: https://stiagogomezt.github.io/MAPABOGOTA/ responde 200.
+- check_live.py: recursos principales responden 200 (GLB, texturas, JSON, MP4).
 EOF
