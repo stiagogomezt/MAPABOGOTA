@@ -35,3 +35,5 @@ __pycache__/
 symbology-style.db
 symbology-style.db-shm
 symbology-style.db-wal
+
+logs_*.txt
