@@ -33,6 +33,7 @@ body{margin:0;font-family:system-ui,sans-serif;background:#0b0f1a;color:#e6e6e6;
   <button id="fly">Sobrevolar Bogotá</button>
   <button id="buildings">Mostrar/ocultar edificaciones</button>
   <button id="profile">Perfil topográfico</button>
+  <button id="videoBtn">Ver video de sobrevuelo</button>
   <div id="status"></div>
 </div>
 <div id="credits">MDT: UAECD (CC BY-NC-SA 4.0) · Copernicus DEM GLO-30 · Sentinel-2/ESA · Ortoimagen satelital. Productos derivados bajo CC BY-NC-SA 4.0.</div>
@@ -50,14 +51,13 @@ renderer.setSize(window.innerWidth,window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
 const scene=new THREE.Scene();
 scene.background=new THREE.Color(0x0b0f1a);
+
 const camera=new THREE.PerspectiveCamera(55,window.innerWidth/window.innerHeight,1,200000);
-camera.position.set(0,-35000,8000);
-const controls=new OrbitControls(camera,renderer.domElement);
-controls.enableDamping=true;
-controls.maxPolarAngle=Math.PI/2.1;
-const light=new THREE.DirectionalLight(0xffffff,1.2);
+camera.position.set(0,0,50000);
+camera.lookAt(0,0,0);
+const light=new THREE.DirectionalLight(0xffffff,2.0);
 light.position.set(10000,-10000,5000); scene.add(light);
-scene.add(new THREE.AmbientLight(0x404040,0.6));
+scene.add(new THREE.AmbientLight(0xffffff,1.0));
 
 const texLoader=new THREE.TextureLoader();
 const textures={
@@ -75,12 +75,19 @@ let terrain=null;
 const loader=new GLTFLoader();
 loader.load('terrain/terrain.glb', (gltf)=>{
   terrain=gltf.scene;
-  const mesh=terrain.children[0];
+  let mesh=null;
+  terrain.traverse(o=>{ if(o.isMesh && !mesh) mesh=o; });
+  const box=new THREE.Box3().setFromObject(terrain);
+  if(mesh){
+    const mat=new THREE.MeshStandardMaterial({map:textures.satellite, side:THREE.DoubleSide});
+    mesh.material=mat;
+
+  }
   const mat=new THREE.MeshStandardMaterial({map:textures.satellite});
   mesh.material=mat;
   scene.add(terrain);
   document.getElementById('loader').style.display='none';
-}, undefined, (e)=>{console.error(e);document.getElementById('status').textContent='Error cargando terreno';});
+}, undefined, (e)=>{console.error('GLB load error:',e);document.getElementById('status').textContent='Error cargando terreno: '+(e&&e.message?e.message:e)+' (terrain/terrain.glb)';});
 
 // texture selector
 document.getElementById('tex').addEventListener('change', (e)=>{
@@ -97,17 +104,20 @@ document.getElementById('fly').addEventListener('click',()=>{
   flying=!flying; flyIndex=0;
 });
 document.getElementById('buildings').addEventListener('click',()=>{ /* placeholder */ });
+document.getElementById('videoBtn').addEventListener('click',()=>{ window.open('media/bogota_flyover.mp4','_blank'); });
 
 // animation loop
 const clock=new THREE.Clock();
+let renderCount=0;
 function animate(){
   requestAnimationFrame(animate);
+  renderer.render(scene,camera);
+  renderCount++;
   if(flying && flyData){
     const step=Math.floor(clock.getElapsedTime()*30)%flyData.length;
     const p=flyData[step].position;
     camera.position.set(p[0],p[1],p[2]);
   }
-  controls.update();
   renderer.render(scene,camera);
 }
 animate();
