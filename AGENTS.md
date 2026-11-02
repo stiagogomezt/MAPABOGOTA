@@ -1,5 +1,13 @@
 # Instrucciones del proyecto
 
+## Visión (proyecto definitivo)
+
+Gemelo digital 3D de Bogotá con MDT oficial: maqueta 3D interactiva (relieve del MDT oficial + imagen satelital sin nubes + volumetría de edificaciones) con sobrevuelo, publicada en GitHub Pages mediante GitHub Actions. Pipeline obligatorio y documentado: QGIS → Blender → visor web three.js. El visor MapLibre actual pasa a `web/explorador.html` como secundario.
+
+Estándares: procesamiento en EPSG:9377; datum vertical documentado por fuente; metadatos ISO 19115 por producto; linaje completo en METADATOS.md; atribución y licencias visibles en el visor. Productos derivados bajo CC BY-NC-SA 4.0 (Catastro Bogotá/IDECA).
+
+Rama de trabajo: `feat/terreno-3d`, desde la rama más reciente publicada en el remoto. Commit al terminar cada fase. Procesos largos en segundo plano con logs en `logs/`.
+
 ## Propósito y estructura
 
 Proyecto académico de gemelo digital 3D de Bogotá D.C. Publicar únicamente `web/`. Mantener originales en `data/raw/` y productos intermedios en `data/processed/`, ambos ignorados por Git.
