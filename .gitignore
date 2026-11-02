@@ -1,0 +1,37 @@
+# Datos locales, no publicar ni versionar
+/data/raw/**
+/data/processed/**
+!/data/raw/.gitkeep
+!/data/processed/.gitkeep
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.ruff_cache/
+.pytest_cache/
+*.egg-info/
+
+# Salidas locales
+*.gpkg
+*.tif
+*.tiff
+*.pmtiles
+*.blend1
+# Generated publication datasets stay local until license/privacy review and explicit approval.
+/web/descargas/**/*.geojson
+/web/descargas/**/*.pmtiles
+/web/descargas/**/*.pdf
+/web/media/*.mp4
+/web/media/*.glb
+/web/descargas/**/*.tmp*
+/web/descargas/**/*.mbtiles*
+/web/descargas/**/*.temp.db
+/web/descargas/**/*.part
+/web/descargas/**/*.copying
+/web/descargas/**/*-journal
+/web/descargas/**/*-wal
+/web/descargas/**/*-shm
+symbology-style.db
+symbology-style.db-shm
+symbology-style.db-wal

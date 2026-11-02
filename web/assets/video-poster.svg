@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720">
+  <defs>
+    <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#203c49"/><stop offset=".62" stop-color="#b77f63"/><stop offset="1" stop-color="#182a2c"/></linearGradient>
+    <linearGradient id="hill" x2="0" y2="1"><stop stop-color="#5a7058"/><stop offset="1" stop-color="#182a26"/></linearGradient>
+  </defs>
+  <rect width="1280" height="720" fill="url(#sky)"/>
+  <circle cx="935" cy="210" r="69" fill="#f1c18a" opacity=".8"/>
+  <path d="M0 520 160 390l120 112 150-190 130 172 160-243 145 225 145-177 140 150 130-110v391H0Z" fill="url(#hill)" opacity=".9"/>
+  <path d="M0 590h1280v130H0Z" fill="#111d20"/>
+  <g fill="#d0a37b" opacity=".8">
+    <path d="M70 580h55v-96l25-16 25 16v96h35v-139l39-23 40 23v139h55v-182l42-27 42 27v182h65v-119l32-20 35 20v119h56v-160l44-26 45 26v160h53v-212l50-28 47 28v212h60v-130l35-23 38 23v130h75v-177l51-31 53 31v177h65v-99l32-20 34 20v99Z"/>
+  </g>
+  <path d="M0 675h1280" stroke="#72d6bc" stroke-width="2" opacity=".8"/>
+  <text x="64" y="90" fill="#72d6bc" font-family="monospace" font-size="18" letter-spacing="5">BOGOTÁ URBANA · BLENDER 3D</text>
+  <text x="64" y="145" fill="#f3eee5" font-family="Arial,sans-serif" font-size="42" font-weight="700">AV. SÉPTIMA → MONSERRATE</text>
+</svg>

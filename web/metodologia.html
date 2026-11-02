@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a1117">
+  <meta name="description" content="Fuentes, CRS, procesamiento, limitaciones y autoría del Gemelo Digital Urbano de Bogotá.">
+  <title>Metodología | Bogotá Urbana</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="assets/methodology.css">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Saltar al contenido</a>
+  <header class="doc-header">
+    <a class="doc-brand" href="index.html"><span>BOG</span><b>Bogotá Urbana</b></a>
+    <nav aria-label="Navegación principal"><a href="index.html">← Volver al visor</a></nav>
+  </header>
+  <main class="doc-main" id="main-content" tabindex="-1">
+    <section class="doc-hero">
+      <span class="eyebrow">FICHA TÉCNICA · NOVIEMBRE 2026</span>
+      <h1>Metodología y<br><em>procedencia</em> de datos</h1>
+      <p>Este visor es un prototipo académico para explorar la forma urbana, el relieve y algunos indicadores agregados de Bogotá. No es un producto catastral oficial ni reemplaza cartografía de autoridad.</p>
+      <div class="hero-tags"><span>EPSG:9377 · procesamiento</span><span>EPSG:4326 · publicación</span><span>Web Mercator · mapa</span></div>
+    </section>
+
+    <section class="doc-section">
+      <div class="section-index">01</div><div class="section-body">
+        <span class="eyebrow">REFERENCIA ESPACIAL</span><h2>Un flujo, tres CRS</h2>
+        <div class="crs-grid">
+          <article><span class="step">01 · MÉTRICO</span><h3>MAGNA-SIRGAS / Origen-Nacional</h3><code>EPSG:9377</code><p>CRS de procesamiento para áreas, alturas derivadas y geometrías métricas.</p></article>
+          <article><span class="step">02 · INTERCAMBIO</span><h3>WGS 84</h3><code>EPSG:4326</code><p>Coordenadas geográficas usadas por GeoJSON y PMTiles publicados.</p></article>
+          <article><span class="step">03 · VISUALIZACIÓN</span><h3>Web Mercator</h3><code>EPSG:3857</code><p>Proyección de pantalla administrada por MapLibre GL JS.</p></article>
+        </div>
+        <p class="callout">Los GeoPackages de estratificación y estructura ecológica declaran CarMAGBOG personalizado (SRS ID 300001). Se conserva su WKT y se reproyecta con QGIS, no se reasigna como EPSG:9377.</p>
+      </div>
+    </section>
+
+    <section class="doc-section">
+      <div class="section-index">02</div><div class="section-body">
+        <span class="eyebrow">FUENTES DE DATOS</span><h2>Capas y linaje</h2>
+        <div class="source-table-wrap"><table>
+          <thead><tr><th>Fuente / capa</th><th>Contenido y escala</th><th>Fecha de referencia</th><th>Licencia / uso</th></tr></thead>
+          <tbody>
+            <tr><td><a href="https://serviciosgis.catastrobogota.gov.co/arcgis/rest/services/Mapa_Referencia/Mapa_Referencia/MapServer">UAECD · Mapa de Referencia</a><small>Localidades, UPL, sectores, manzanas, lotes, construcciones, vías e hidrografía.</small></td><td>Cartografía vectorial oficial. Consulta limitada a la máscara de suelo urbano; el servicio no declara una escala uniforme.</td><td>Descarga: 1 nov. 2026<br>Fecha de edición: no informada por servicio.</td><td>Consultar términos IDECA/UAECD antes de redistribuir. No se publica la tabla Predio.</td></tr>
+            <tr><td><a href="https://datosabiertos.bogota.gov.co/dataset/estratificacion-para-bogota">Estratificación por manzana</a><small>GeoPackage · 44.260 registros en la fuente descargada.</small></td><td>Estrato y clasificación socioeconómica por manzana.</td><td>Metadato: 20 nov. 2025.</td><td>CC BY 4.0 declarada por el recurso; conservar atribución.</td></tr>
+            <tr><td><a href="https://datosabiertos.bogota.gov.co/dataset/estructura-ecologica-principal-bogota-d-c">Estructura Ecológica Principal</a><small>GeoPackage · 4.553 registros en la fuente descargada.</small></td><td>Componentes y elementos de la estructura ecológica del POT.</td><td>Metadato: 14 oct. 2026.</td><td>CC BY 4.0 declarada por el recurso; conservar atribución.</td></tr>
+            <tr><td><a href="https://datosabiertos.bogota.gov.co/dataset/valor-de-referencia-por-metro-cuadrado-de-terreno">Valor de referencia del suelo</a><small>GeoPackage · 41.858 registros, año de referencia 2026.</small></td><td>Valor de referencia por m² de terreno agregado a manzana; no es precio de venta ni avalúo individual.</td><td>Metadato: 3 jun. 2026.</td><td>CC BY 4.0 declarada por el recurso; conservar atribución.</td></tr>
+            <tr><td><a href="https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N04_00_W075_00_DEM/Copernicus_DSM_COG_10_N04_00_W075_00_DEM.tif">Copernicus DEM GLO-30</a><small>DSM, resolución nominal de 30 m.</small></td><td>Modelo digital de superficie: contiene edificios y vegetación. Se reproyecta y recorta con buffer de 5 km.</td><td>Producto Copernicus distribuido en AWS; tesela N04 W075.</td><td>Aplican los términos vigentes de Copernicus DEM; verificar atribución y redistribución de la versión usada. No es bare-earth ni topografía predial.</td></tr>
+            <tr><td><a href="https://openfreemap.org/">OpenFreeMap</a> y <a href="https://registry.opendata.aws/terrain-tiles/">AWS Terrain Tiles</a></td><td>Estilo base y relieve Terrarium consultados en línea; no se empaquetan en el repositorio.</td><td>Servicios externos en vivo.</td><td>Respetar atribución y términos de cada proveedor.</td></tr>
+          </tbody>
+        </table></div>
+        <p class="table-note">Los conteos corresponden a los archivos fuente inspeccionados. Los conteos publicados pueden variar por recorte urbano, reparación topológica, simplificación y tamaño de tesela. Ver el inventario completo y fechado en <code>docs/METADATOS.md</code> del repositorio.</p>
+      </div>
+    </section>
+
+    <section class="doc-section">
+      <div class="section-index">03</div><div class="section-body">
+        <span class="eyebrow">PROCESAMIENTO</span><h2>De la fuente al visor</h2>
+        <ol class="process-list">
+          <li><b>Máscara</b><span>Selección de suelo urbano mediante la capa oficial SUECSUELO = 1. El alcance no representa suelo rural ni de expansión.</span></li>
+          <li><b>Control geométrico</b><span>Reparación de geometrías, promoción a multipartes, recorte al suelo urbano, deduplicación y control de vacías e inválidas.</span></li>
+          <li><b>Edificios e indicadores</b><span>Altura estimada = pisos reportados × 3 m. Se agregan huella y área construida estimada por manzana, junto con índices de ocupación y construcción.</span></li>
+          <li><b>Publicación</b><span>QGIS/GDAL produce GeoJSON y PMTiles entre zooms 11 y 16. MapLibre consulta teselas vectoriales desde CDN local, sin proceso de compilación.</span></li>
+          <li><b>Escena 3D</b><span>El DEM y las huellas se transforman a EPSG:9377; Blender utiliza coordenadas locales en metros. La base de edificios se aproxima con el cuartil inferior de una ventana DSM 5×5.</span></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="doc-section">
+      <div class="section-index">04</div><div class="section-body">
+        <span class="eyebrow">PRIVACIDAD Y ALCANCE</span><h2>Lo que este modelo no es</h2>
+        <div class="limits-grid">
+          <article><h3>No es un catastro para trámites</h3><p>Alturas e indicadores son derivados y aproximados. No se deben usar para decisiones jurídicas, comerciales, de diseño o gestión predial.</p></article>
+          <article><h3>Sin atributos personales</h3><p>Se excluyen propietarios, documentos de identidad, datos de contacto, direcciones personales y la tabla Predio. Los popups muestran únicamente atributos cartográficos seleccionados.</p></article>
+          <article><h3>Incertidumbre vertical</h3><p>Tres metros por piso es un supuesto visual. El DSM GLO-30 puede reflejar techos y vegetación, no el terreno desnudo.</p></article>
+          <article><h3>Uso de fuentes oficiales</h3><p>La publicación de capas se condiciona a sus licencias y restricciones. La atribución no implica respaldo institucional del proyecto.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="author-card">
+      <span class="eyebrow">AUTORÍA</span><h2>Santiago Gómez</h2>
+      <p>Estudiante de Ingeniería Catastral y Geodesia · Universidad Distrital Francisco José de Caldas, Bogotá, Colombia.</p>
+      <p class="author-note">Proyecto académico independiente. Los datos y servicios pertenecen a sus respectivas entidades proveedoras.</p>
+      <a href="https://github.com/stiagogomezt">GitHub · stiagogomezt ↗</a>
+    </section>
+  </main>
+  <footer class="doc-footer"><a href="index.html">← Volver al visor</a><span>BOGOTÁ URBANA · PROTOTIPO ACADÉMICO · 2026</span></footer>
+</body>
+</html>

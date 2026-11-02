@@ -1,0 +1,83 @@
+name: Publish web viewer
+
+on:
+  push:
+    branches:
+      - main
+      - "feat/**"
+    paths:
+      - "web/**"
+      - "scripts/audit_web.py"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Validate static site and asset manifest
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path("web").resolve()
+          manifest_path = root / "manifest.json"
+          manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+          referenced = [*manifest.get("pmtiles", []), *manifest.get("geojson", []), *manifest.get("media", [])]
+
+          for item in referenced:
+              path = (root / item).resolve()
+              if root not in path.parents:
+                  raise SystemExit(f"Manifest path escapes web/: {item}")
+              if not path.is_file():
+                  raise SystemExit(f"Manifest asset is missing: {item}")
+              if path.stat().st_size >= 95 * 1024 * 1024:
+                  raise SystemExit(f"Web asset exceeds 95 MB: {item}")
+              if item.lower().endswith(".mp4") and path.stat().st_size >= 50 * 1024 * 1024:
+                  raise SystemExit(f"MP4 exceeds 50 MB: {item}")
+              if item.lower().endswith(".glb") and path.stat().st_size >= 20 * 1024 * 1024:
+                  raise SystemExit(f"GLB exceeds 20 MB: {item}")
+
+          for path in root.rglob("*"):
+              if not path.is_file():
+                  continue
+              relative = path.relative_to(root).as_posix()
+              if path.stat().st_size >= 95 * 1024 * 1024:
+                  raise SystemExit(f"Web file exceeds 95 MB: {relative}")
+              if relative.endswith((".part", ".copying", ".tmp", ".temp.db", ".mbtiles", "-journal", "-wal", "-shm")):
+                  raise SystemExit(f"Temporary processing file in web/: {relative}")
+
+          print(f"Validated {len(referenced)} manifest assets and site file size limits.")
+          PY
+
+      - name: Check accessibility and site payload
+        run: python scripts/audit_web.py
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload web directory
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: web
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
