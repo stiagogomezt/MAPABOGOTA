@@ -1,0 +1,524 @@
+{
+  "generated_utc": "2026-11-02T01:40:40.509844+00:00",
+  "status": "completed_with_findings",
+  "positional_accuracy": {
+    "status": "not_assessed",
+    "reason": "No independent surveyed/GNSS control points or positional tolerance were supplied.",
+    "crs_round_trip_is_not_positional_accuracy": true
+  },
+  "processing_crs_expected": "EPSG:9377",
+  "publication_crs_expected": "EPSG:4326",
+  "display_crs": "EPSG:3857",
+  "layers": {
+    "center_dem_buffer": {
+      "path": "data/processed/phase2/center_dem_buffer.gpkg",
+      "feature_count": 1,
+      "crs": "EPSG:9377",
+      "processing_crs_ok": true,
+      "extent_epsg4326": [
+        -74.134316,
+        4.5309882,
+        -73.9906187,
+        4.7321738
+      ],
+      "extent_plausible_for_bogota": true,
+      "crs_round_trip_error_m": 0.0,
+      "expected_attribute_completeness": {},
+      "building_theme_fields": null,
+      "privacy_sensitive_field_names": []
+    },
+    "construccion": {
+      "path": "data/processed/phase2/construccion.gpkg",
+      "feature_count": 2368909,
+      "crs": "EPSG:9377",
+      "processing_crs_ok": true,
+      "extent_epsg4326": [
+        -74.2226291,
+        4.4684573,
+        -74.012092,
+        4.8275623
+      ],
+      "extent_plausible_for_bogota": true,
+      "crs_round_trip_error_m": 0.0,
+      "expected_attribute_completeness": {},
+      "building_theme_fields": null,
+      "privacy_sensitive_field_names": []
+    },
+    "construcciones_3d": {
+      "path": "data/processed/phase2/construcciones_3d.gpkg",
+      "feature_count": 2368909,
+      "crs": "EPSG:9377",
+      "processing_crs_ok": true,
+      "extent_epsg4326": [
+        -74.2226291,
+        4.4684573,
+        -74.012092,
+        4.8275623
+      ],
+      "extent_plausible_for_bogota": true,
+      "crs_round_trip_error_m": 0.0,
+      "expected_attribute_completeness": {
+        "CONNPISOS": {
+          "present": true,
+          "null_count": 87,
+          "nonnull_pct": 100.0
+        },
+        "altura_est_m": {
+          "present": true,
+          "null_count": 16230,
+          "nonnull_pct": 99.31
+        },
+        "area_huella_m2": {
+          "present": true,
+          "null_count": 0,
+          "nonnull_pct": 100.0
+        },
+        "area_constr_m2": {
+          "present": true,
+          "null_count": 16230,
+          "nonnull_pct": 99.31
+        }
+      },
+      "building_theme_fields": {
+        "altura_est_m": true,
+        "valor_ref_m2": false,
+        "estrato": false,
+        "indice_construccion": false
+      },
+      "privacy_sensitive_field_names": []
+    },
+    "construcciones_centro": {
+      "path": "data/processed/phase2/construcciones_centro.gpkg",
+      "feature_count": 78089,
+      "crs": "EPSG:9377",
+      "processing_crs_ok": true,
+      "extent_epsg4326": [
+        -74.0888092,
+        4.576461,
+        -74.0379888,
+        4.6862804
+      ],
+      "extent_plausible_for_bogota": true,
+      "crs_round_trip_error_m": 0.0,
+      "expected_attribute_completeness": {},
+      "building_theme_fields": null,
+      "privacy_sensitive_field_names": []
+    },
+    "corriente_agua": {
+      "path": "data/processed/phase2/corriente_agua.gpkg",
+      "feature_count": 342,
+      "crs": "EPSG:9377",
+      "processing_crs_ok": true,
+      "extent_epsg4326": [
+        -74.2238588,
+        4.4687399,
+        -74.0117396,
+        4.8265301
+      ],
+      "extent_plausible_for_bogota": true,
+      "crs_round_trip_error_m": 0.0,
+      "expected_attribute_completeness": {},
+      "building_theme_fields": null,
+      "privacy_sensitive_field_names": []
+    },
+    "cuerpo_agua": {
+      "path": "data/processed/phase2/cuerpo_agua.gpkg",
+      "feature_count": 149,
+      "crs": "EPSG:9377",
+      "processing_crs_ok": true,
+      "extent_epsg4326": [
+        -74.2239371,
+        4.4740898,
+        -74.0241716,
+        4.8285033
+      ],
+      "extent_plausible_for_bogota": true,
+      "crs_round_trip_error_m": 0.0,
+      "expected_attribute_completeness": {},
+      "building_theme_fields": null,
+      "privacy_sensitive_field_names": []
+    },
+    "estrato": {
+      "path": "data/processed/phase2/estrato.gpkg",
+      "feature_count": 43247,
+      "crs": "EPSG:9377",
+      "processing_crs_ok": true,
+      "extent_epsg4326": [
+        -74.223941,
+        4.4684551,
+        -74.0116925,
+        4.8307068
+      ],
+      "extent_plausible_for_bogota": true,
+      "crs_round_trip_error_m": 0.0,
+      "expected_attribute_completeness": {},
+      "building_theme_fields": null,
+      "privacy_sensitive_field_names": []
+    },
+    "estructura_ecologica": {
+      "path": "data/processed/phase2/estructura_ecologica.gpkg",
+      "feature_count": 656,
+      "crs": "EPSG:9377",
+      "processing_crs_ok": true,
+      "extent_epsg4326": [
+        -74.223941,
+        4.4685291,
+        -74.0116926,
+        4.8307068
+      ],
+      "extent_plausible_for_bogota": true,
+      "crs_round_trip_error_m": 0.0,
+      "expected_attribute_completeness": {},
+      "building_theme_fields": null,
+      "privacy_sensitive_field_names": []
+    },
+    "localidad": {
+      "path": "data/processed/phase2/localidad.gpkg",
+      "feature_count": 19,
+      "crs": "EPSG:9377",
+      "processing_crs_ok": true,
+      "extent_epsg4326": [
+        -74.223941,
+        4.4684551,
+        -74.0116925,
+        4.8307068
+      ],
+      "extent_plausible_for_bogota": true,
+      "crs_round_trip_error_m": 0.0,
+      "expected_attribute_completeness": {
+        "LOCNOMBRE": {
+          "present": true,
+          "null_count": 0,
+          "nonnull_pct": 100.0
+        }
+      },
+      "building_theme_fields": null,
+      "privacy_sensitive_field_names": []
+    },
+    "lote": {
+      "path": "data/processed/phase2/lote.gpkg",
+      "feature_count": 912751,
+      "crs": "EPSG:9377",
+      "processing_crs_ok": true,
+      "extent_epsg4326": [
+        -74.2238584,
+        4.4684552,
+        -74.0116925,
+        4.8307068
+      ],
+      "extent_plausible_for_bogota": true,
+      "crs_round_trip_error_m": 0.0,
+      "expected_attribute_completeness": {},
+      "building_theme_fields": null,
+      "privacy_sensitive_field_names": []
+    },
+    "malla_vial": {
+      "path": "data/processed/phase2/malla_vial.gpkg",
+      "feature_count": 134725,
+      "crs": "EPSG:9377",
+      "processing_crs_ok": true,
+      "extent_epsg4326": [
+        -74.2178321,
+        4.4689704,
+        -74.012291,
+        4.828023
+      ],
+      "extent_plausible_for_bogota": true,
+      "crs_round_trip_error_m": 0.0,
+      "expected_attribute_completeness": {},
+      "building_theme_fields": null,
+      "privacy_sensitive_field_names": []
+    },
+    "manzana": {
+      "path": "data/processed/phase2/manzana.gpkg",
+      "feature_count": 43669,
+      "crs": "EPSG:9377",
+      "processing_crs_ok": true,
+      "extent_epsg4326": [
+        -74.2238584,
+        4.4684552,
+        -74.0116925,
+        4.8307068
+      ],
+      "extent_plausible_for_bogota": true,
+      "crs_round_trip_error_m": 0.0,
+      "expected_attribute_completeness": {
+        "MANCODIGO": {
+          "present": true,
+          "null_count": 4,
+          "nonnull_pct": 99.99
+        }
+      },
+      "building_theme_fields": null,
+      "privacy_sensitive_field_names": []
+    },
+    "manzanas_indicadores": {
+      "path": "data/processed/phase2/manzanas_indicadores.gpkg",
+      "feature_count": 43669,
+      "crs": "EPSG:9377",
+      "processing_crs_ok": true,
+      "extent_epsg4326": [
+        -74.2238584,
+        4.4684552,
+        -74.0116925,
+        4.8307068
+      ],
+      "extent_plausible_for_bogota": true,
+      "crs_round_trip_error_m": 0.0,
+      "expected_attribute_completeness": {
+        "MANCODIGO": {
+          "present": true,
+          "null_count": 4,
+          "nonnull_pct": 99.99
+        },
+        "area_huella_m2": {
+          "present": true,
+          "null_count": 0,
+          "nonnull_pct": 100.0
+        },
+        "area_constr_m2": {
+          "present": true,
+          "null_count": 0,
+          "nonnull_pct": 100.0
+        },
+        "indice_ocupacion": {
+          "present": true,
+          "null_count": 0,
+          "nonnull_pct": 100.0
+        },
+        "indice_construccion": {
+          "present": true,
+          "null_count": 0,
+          "nonnull_pct": 100.0
+        },
+        "localidad": {
+          "present": true,
+          "null_count": 0,
+          "nonnull_pct": 100.0
+        },
+        "upl_nombre": {
+          "present": true,
+          "null_count": 0,
+          "nonnull_pct": 100.0
+        },
+        "estrato": {
+          "present": true,
+          "null_count": 772,
+          "nonnull_pct": 98.23
+        },
+        "valor_ref_m2": {
+          "present": true,
+          "null_count": 2164,
+          "nonnull_pct": 95.04
+        }
+      },
+      "building_theme_fields": null,
+      "privacy_sensitive_field_names": []
+    },
+    "sector": {
+      "path": "data/processed/phase2/sector.gpkg",
+      "feature_count": 1138,
+      "crs": "EPSG:9377",
+      "processing_crs_ok": true,
+      "extent_epsg4326": [
+        -74.223941,
+        4.4684551,
+        -74.0116925,
+        4.8307068
+      ],
+      "extent_plausible_for_bogota": true,
+      "crs_round_trip_error_m": 0.0,
+      "expected_attribute_completeness": {},
+      "building_theme_fields": null,
+      "privacy_sensitive_field_names": []
+    },
+    "upl": {
+      "path": "data/processed/phase2/upl.gpkg",
+      "feature_count": 32,
+      "crs": "EPSG:9377",
+      "processing_crs_ok": true,
+      "extent_epsg4326": [
+        -74.223941,
+        4.4684551,
+        -74.0116925,
+        4.8307067
+      ],
+      "extent_plausible_for_bogota": true,
+      "crs_round_trip_error_m": 0.0,
+      "expected_attribute_completeness": {
+        "NOMBRE": {
+          "present": true,
+          "null_count": 0,
+          "nonnull_pct": 100.0
+        },
+        "CODIGO_UPL": {
+          "present": true,
+          "null_count": 0,
+          "nonnull_pct": 100.0
+        }
+      },
+      "building_theme_fields": null,
+      "privacy_sensitive_field_names": []
+    },
+    "valor_referencia": {
+      "path": "data/processed/phase2/valor_referencia.gpkg",
+      "feature_count": 41483,
+      "crs": "EPSG:9377",
+      "processing_crs_ok": true,
+      "extent_epsg4326": [
+        -74.2238584,
+        4.4684552,
+        -74.0116925,
+        4.8307068
+      ],
+      "extent_plausible_for_bogota": true,
+      "crs_round_trip_error_m": 0.0,
+      "expected_attribute_completeness": {},
+      "building_theme_fields": null,
+      "privacy_sensitive_field_names": []
+    }
+  },
+  "web": {
+    "files": 20,
+    "total_bytes": 71158075,
+    "largest_files": [
+      {
+        "path": "descargas/pmtiles/malla_vial.pmtiles",
+        "bytes": 35392293
+      },
+      {
+        "path": "descargas/pmtiles/manzanas_indicadores.pmtiles",
+        "bytes": 29707007
+      },
+      {
+        "path": "descargas/pmtiles/estructura_ecologica.pmtiles",
+        "bytes": 2428096
+      },
+      {
+        "path": "descargas/sector.geojson",
+        "bytes": 1282047
+      },
+      {
+        "path": "descargas/pmtiles/cuerpo_agua.pmtiles",
+        "bytes": 872022
+      },
+      {
+        "path": "descargas/pmtiles/corriente_agua.pmtiles",
+        "bytes": 826890
+      },
+      {
+        "path": "descargas/upl.geojson",
+        "bytes": 243820
+      },
+      {
+        "path": "descargas/localidad.geojson",
+        "bytes": 211615
+      },
+      {
+        "path": "descargas/Mapa_Bogota_Urbana.pdf",
+        "bytes": 120865
+      },
+      {
+        "path": "assets/app.js",
+        "bytes": 25480
+      }
+    ],
+    "pmtiles": [
+      {
+        "path": "descargas/pmtiles/corriente_agua.pmtiles",
+        "bytes": 826890
+      },
+      {
+        "path": "descargas/pmtiles/cuerpo_agua.pmtiles",
+        "bytes": 872022
+      },
+      {
+        "path": "descargas/pmtiles/estructura_ecologica.pmtiles",
+        "bytes": 2428096
+      },
+      {
+        "path": "descargas/pmtiles/malla_vial.pmtiles",
+        "bytes": 35392293
+      },
+      {
+        "path": "descargas/pmtiles/manzanas_indicadores.pmtiles",
+        "bytes": 29707007
+      }
+    ],
+    "manifest_assets": [
+      "descargas/pmtiles/corriente_agua.pmtiles",
+      "descargas/pmtiles/cuerpo_agua.pmtiles",
+      "descargas/pmtiles/estructura_ecologica.pmtiles",
+      "descargas/pmtiles/malla_vial.pmtiles",
+      "descargas/pmtiles/manzanas_indicadores.pmtiles",
+      "descargas/localidad.geojson",
+      "descargas/sector.geojson",
+      "descargas/upl.geojson"
+    ],
+    "manifest_missing_files": [],
+    "temporary_processing_files": [],
+    "static_accessibility_audit": {
+      "files": 20,
+      "bytes": 71158075,
+      "largest_files": [
+        {
+          "path": "descargas/pmtiles/malla_vial.pmtiles",
+          "bytes": 35392293
+        },
+        {
+          "path": "descargas/pmtiles/manzanas_indicadores.pmtiles",
+          "bytes": 29707007
+        },
+        {
+          "path": "descargas/pmtiles/estructura_ecologica.pmtiles",
+          "bytes": 2428096
+        },
+        {
+          "path": "descargas/sector.geojson",
+          "bytes": 1282047
+        },
+        {
+          "path": "descargas/pmtiles/cuerpo_agua.pmtiles",
+          "bytes": 872022
+        },
+        {
+          "path": "descargas/pmtiles/corriente_agua.pmtiles",
+          "bytes": 826890
+        },
+        {
+          "path": "descargas/upl.geojson",
+          "bytes": 243820
+        },
+        {
+          "path": "descargas/localidad.geojson",
+          "bytes": 211615
+        },
+        {
+          "path": "descargas/Mapa_Bogota_Urbana.pdf",
+          "bytes": 120865
+        },
+        {
+          "path": "assets/app.js",
+          "bytes": 25480
+        }
+      ],
+      "pmtiles": [
+        "descargas/pmtiles/corriente_agua.pmtiles",
+        "descargas/pmtiles/cuerpo_agua.pmtiles",
+        "descargas/pmtiles/estructura_ecologica.pmtiles",
+        "descargas/pmtiles/malla_vial.pmtiles",
+        "descargas/pmtiles/manzanas_indicadores.pmtiles"
+      ],
+      "manifest_assets": 8,
+      "contrast_ratios": {
+        "--text": 15.71,
+        "--muted": 7.41,
+        "--quiet": 6.17
+      },
+      "errors": []
+    }
+  },
+  "findings": [
+    "Building extrusions cannot use all selected thematic values because construcciones_3d.gpkg lacks attributes ['valor_ref_m2', 'estrato', 'indice_construccion']; the block layer carries these indicators."
+  ]
+}

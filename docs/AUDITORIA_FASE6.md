@@ -1,43 +1,62 @@
 # Auditoría integral de Fase 6
 
-Fecha: 2026-11-01. Estado: revisión parcial; la Fase 2 seguía escribiendo productos cuando se realizó esta auditoría. Ejecutar `cmd /c scripts/run_audit_phase6.bat --base-url http://localhost:8000` para actualizar el informe geoespacial cuando no haya archivos SQLite journal activos.
+Auditoría generada: 2026-11-02T01:40:40.509844+00:00 (UTC).
+
+## Resumen ejecutivo
+
+Estado: **completed_with_findings**. Hallazgos: 1.
 
 ## Exactitud posicional y CRS
 
-La exactitud posicional externa no es cuantificable con los insumos disponibles: no se entregaron puntos de control GNSS/topográficos independientes ni tolerancias de aceptación. La transformación inversa comprueba coherencia numérica del CRS, no exactitud de fuente ni error de levantamiento.
+La exactitud posicional externa **no es cuantificable** con los insumos disponibles: no se suministraron puntos de control independientes, coordenadas GNSS ni tolerancias de aceptación. Las comprobaciones de transformación inversa solo miden consistencia numérica del CRS, no error de levantamiento o de la fuente.
 
-La capa procesada de localidades se abrió con QGIS: 19 entidades, EPSG:9377. Su envolvente transformada fue `[-74.223941, 4.4684551, -74.0116925, 4.8307068]` en EPSG:4326. El error numérico de ida y vuelta en el centro de la envolvente fue 0.0 m a la precisión reportada. Esta prueba no reemplaza una red de control.
+Se valida EPSG:9377 en capas de proceso, una envolvente razonable de Bogotá tras transformar a EPSG:4326, y el error de ida y vuelta en el centro de cada envolvente. GeoJSON/PMTiles se publican en EPSG:4326; el mapa proyecta a EPSG:3857.
 
-El reporte de procesamiento disponible registra EPSG:4326 en los GeoJSON de origen; EPSG:9377 en productos procesados; WGS 84 personalizado `SRS_ID=300001` para dos GeoPackages CarMAGBOG; y EPSG:4326 para el valor de referencia. Se mantiene la transformación desde la definición CRS original, no una reasignación.
+| Capa | Entidades | CRS | EPSG:9377 | Envolvente Bogotá |
+| --- | ---: | --- |:---:|:---:|
+| `center_dem_buffer` | 1 | EPSG:9377 | Sí | Sí |
+| `construccion` | 2,368,909 | EPSG:9377 | Sí | Sí |
+| `construcciones_3d` | 2,368,909 | EPSG:9377 | Sí | Sí |
+| `construcciones_centro` | 78,089 | EPSG:9377 | Sí | Sí |
+| `corriente_agua` | 342 | EPSG:9377 | Sí | Sí |
+| `cuerpo_agua` | 149 | EPSG:9377 | Sí | Sí |
+| `estrato` | 43,247 | EPSG:9377 | Sí | Sí |
+| `estructura_ecologica` | 656 | EPSG:9377 | Sí | Sí |
+| `localidad` | 19 | EPSG:9377 | Sí | Sí |
+| `lote` | 912,751 | EPSG:9377 | Sí | Sí |
+| `malla_vial` | 134,725 | EPSG:9377 | Sí | Sí |
+| `manzana` | 43,669 | EPSG:9377 | Sí | Sí |
+| `manzanas_indicadores` | 43,669 | EPSG:9377 | Sí | Sí |
+| `sector` | 1,138 | EPSG:9377 | Sí | Sí |
+| `upl` | 32 | EPSG:9377 | Sí | Sí |
+| `valor_referencia` | 41,483 | EPSG:9377 | Sí | Sí |
 
-## Geometrías y atributos
+## Completitud y privacidad de atributos
 
-El último reporte de Fase 2 indica 0 geometrías inválidas después de reparación en las capas procesadas. En valor de referencia registra 6 inválidas en origen reparadas y 8 duplicadas retiradas. Una geometría GEOS válida no prueba que polígonos vecinos no tengan solapes o vacíos topológicos.
+La presencia y nulidad de los campos clave se registra por capa en `REPORTE_AUDITORIA_FASE6.json`. En `manzanas_indicadores` se contaron 43,669 entidades: `estrato` tiene 772 nulos (98.23% no nulo), `valor_ref_m2` 2,164 nulos (95.04% no nulo), y `MANCODIGO` 4 nulos (99.99% no nulo). En `construcciones_3d`, `altura_est_m` y `area_constr_m2` tienen 16,230 nulos cada uno (99.31% no nulo), mientras que `area_huella_m2` está completo. Los nulos no se interpretan como cero. No se detectaron nombres de campos sensibles en estas capas; esto no sustituye validación jurídica de valores.
 
-Se agregó una validación que detiene la exportación GeoJSON si falta un campo pedido, en vez de omitirlo silenciosamente. El conteo de nulos y la presencia de atributos clave se automatizaron en `scripts/audit_phase6.py`, pero no se ejecutaron contra todos los GeoPackages porque algunos tenían una transacción activa. Los nulos de indicador pueden ser ausencia de dato y no deben interpretarse como cero.
+## Metadatos, geometrías y linaje
 
-No se incorporan propietarios ni identificaciones. La lista de nombres de campo sensibles es un filtro preventivo, no una revisión legal de los valores.
+Se inspeccionan conteos, CRS, extensiones, campos clave y nombres de campos sensibles. El pipeline reporta control de geometrías inválidas después de `fixgeometries`; esta revisión no prueba ausencia de solapes, vacíos topológicos entre polígonos ni ajuste a linderos de terreno.
 
-## Metadatos y linaje
+ArcGIS usa 0 como valor de límite de escala sin restricción; se corrigió la representación documental para no presentarlo como escala 0. Fechas y licencias se conservan en `docs/METADATOS.md`, con los límites declarados por cada fuente.
 
-Se corrigió la escala ArcGIS en `docs/METADATOS.md`: el cero es el centinela de límite abierto, no una escala 0. Se documentó el DSM Copernicus GLO-30 descargado, recorte con buffer de 5 km y reproyección a EPSG:9377. El raster incluye edificios y vegetación y no tiene ajuste vertical comprobado.
+## Rendimiento web
 
-## Rendimiento y publicación web
+Peso total de archivos locales bajo `web/`: 71,158,075 bytes. Hay cinco PMTiles terminados, con un peso combinado de 69,226,308 bytes: vías 35,392,293; manzanas 29,707,007; estructura ecológica 2,428,096; cuerpos de agua 872,022; corrientes de agua 826,890 bytes. Durante la auditoría, el manifiesto local listó esos cinco paquetes y tres GeoJSON administrativos; luego se devolvió al estado vacío versionado para no dejar referencias a assets ignorados por Git. Estos archivos locales no están aprobados aún para redistribución.
 
-La muestra secuencial local de los primeros cuatro recursos estáticos fue de 50.702 bytes y 0,1504 s en localhost. No es una medida de primera pintura: no incluye MapLibre/PMTiles por CDN, relieve, teselas, caché, red móvil ni dispositivo.
+La prueba secuencial HTTP local de siete recursos de la interfaz (HTML/CSS/JS/manifiesto) respondió 200 en todos: 71,871 bytes y 0.6201 s. No equivale al tiempo de primera pintura del mapa: no incluye peticiones CDN, lectura/consulta de PMTiles, teselas de relieve, caché, red externa ni dispositivo final. Los tamaños de PMTiles sí se midieron, pero no el tiempo real de carga de tiles.
 
-Al muestrear la carpeta mientras la exportación estaba activa, se observó un temporal del driver PMTiles mayor a 95 MB y un GeoJSON redundante de indicadores de aproximadamente 24 MB. Los tamaños cambiaban durante la escritura, por lo que no se consideran medidas finales. Se corrigió el pipeline para preparar tiles y GeoJSON en `data/processed/phase2/`, retirar el GeoJSON redundante y mover únicamente productos completos a `web/`. Se añadió `--export-only` para rehacer la publicación después de completar el proceso, sin recalcular las capas.
-
-Todavía no hay una medición reproducible de tamaño/tiempo de tiles finales. La Fase 2 debe terminar y los productos deben aprobar licencia antes de agregarlos a Git. El manifiesto rastreado permanece vacío para evitar publicar datos sin aprobación.
+La exportación `--export-only` finalizó con advertencias: no pudo mover el PMTiles de construcciones 3D por `WinError 32` en el temporal, y el PMTiles de lotes excede 95 MB, por lo que se guardó en `data/processed/pmtiles/lote.pmtiles` y no se incluyó en el manifiesto web. El validador rechaza temporales y referencias rotas.
 
 ## Accesibilidad
 
-Se añadieron enlaces para saltar al contenido, foco visible, instrucciones accesibles del mapa, estado dinámico anunciable y etiqueta de valor para exageración del terreno. Se elevaron colores de texto con contraste bajo. La auditoría estática de ambos HTML pasó; los colores de texto de paleta muestreados superan 6:1 sobre el panel oscuro. No equivale a certificación WCAG ni a prueba con lector de pantalla.
+`python scripts/audit_web.py` comprueba `lang`, título, landmark principal, enlace para saltar al contenido, etiquetas de formularios y nombre accesible de botones, texto alternativo de imágenes, temporales web y contraste mínimo WCAG AA de los colores de texto de la paleta. Es una revisión estática, no una certificación WCAG ni prueba con tecnologías de asistencia.
 
-## Hallazgos y estado de publicación
+## Hallazgos y acciones
 
-- La exactitud posicional requiere puntos de control independientes.
-- Los paquetes PMTiles finales y sus tiempos de carga requieren que termine Fase 2.
-- Valor, estrato e índice están asociados a manzanas; el producto de edificios puede no contener esos atributos y el visor lo advierte. Asociarlos por lote/manzana requiere un join derivado y una nueva validación.
-- Los productos derivados permanecen fuera de Git por defecto hasta aprobar licencia, privacidad e integridad.
-- La publicación pública sigue bloqueada: GitHub Pages no estaba habilitado y `gh` no estaba autenticado; la URL devolvía 404. El push de esta fase necesita autenticación y nueva ejecución de Actions.
+- Building extrusions cannot use all selected thematic values because construcciones_3d.gpkg lacks attributes ['valor_ref_m2', 'estrato', 'indice_construccion']; the block layer carries these indicators.
+
+## Reproducibilidad y límites
+
+Reejecutar `cmd /c scripts/run_audit_phase6.bat` después de cambios GIS. Para repetir la muestra HTTP local, iniciar `python -m http.server 8000 --directory web` y correr `uv run python scripts/audit_web.py --base-url http://localhost:8000`. Las pruebas no reemplazan red de control GNSS/topográfica, inspección de licencias ni ensayo real de primera pintura en móvil. En esta sesión, el MCP de QGIS falló al consultar el proyecto y al añadir capas, por lo que no se comprobó la simbología en la ventana.

@@ -1,0 +1,5 @@
+{
+  "status": "failed",
+  "error": "Faltan salidas de Fase 2: data\\processed\\phase2\\construcciones_centro_9377.geojson, data\\processed\\phase2\\terrain_center_9377.asc, data\\processed\\phase2\\camera_path_9377.json",
+  "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\kevin\\Desktop\\mapabogota\\blender\\build_scene.py\", line 477, in <module>\n    main()\n    ~~~~^^\n  File \"C:\\Users\\kevin\\Desktop\\mapabogota\\blender\\build_scene.py\", line 376, in main\n    raise FileNotFoundError(\"Faltan salidas de Fase 2: \" + \", \".join(missing))\nFileNotFoundError: Faltan salidas de Fase 2: data\\processed\\phase2\\construcciones_centro_9377.geojson, data\\processed\\phase2\\terrain_center_9377.asc, data\\processed\\phase2\\camera_path_9377.json\n"
+}

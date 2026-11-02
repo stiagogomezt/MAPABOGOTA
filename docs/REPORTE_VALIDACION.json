@@ -1,0 +1,32 @@
+{
+  "generated_utc": "2026-11-01T06:54:32.060508+00:00",
+  "processing_crs": "EPSG:9377",
+  "publication_crs": [
+    "EPSG:4326",
+    "EPSG:3857"
+  ],
+  "publish_directory": "web/",
+  "downloaded_sources": 4,
+  "source_failures": [
+    "ArcGIS localidad (capa 48): name 'geometry' is not defined",
+    "ArcGIS upl (capa 44): name 'geometry' is not defined",
+    "ArcGIS sector_catastral (capa 37): name 'geometry' is not defined",
+    "ArcGIS manzana (capa 40): name 'geometry' is not defined",
+    "ArcGIS lote (capa 38): name 'geometry' is not defined",
+    "ArcGIS construccion (capa 39): ('Connection broken: IncompleteRead(4450 bytes read, 5790 more expected)', IncompleteRead(4450 bytes read, 5790 more expected))",
+    "ArcGIS malla_vial (capa 13): name 'geometry' is not defined",
+    "ArcGIS corriente_agua (capa 27): name 'geometry' is not defined",
+    "ArcGIS cuerpo_agua (capa 29): name 'geometry' is not defined"
+  ],
+  "privacy_review": "Download script excludes fields matching sensitive-name rules; manual review remains required",
+  "validation": "scaffold-only; topology validation is not yet implemented",
+  "required_files": [
+    "web/index.html",
+    "docs/BITACORA.md",
+    "docs/METADATOS.md",
+    "docs/DESCARGAS_MANUALES.md",
+    "AGENTS.md",
+    "pyproject.toml",
+    ".github/workflows/pages.yml"
+  ]
+}

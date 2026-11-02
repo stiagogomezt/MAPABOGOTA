@@ -1,0 +1,108 @@
+{
+  "files": 20,
+  "bytes": 71158075,
+  "largest_files": [
+    {
+      "path": "descargas/pmtiles/malla_vial.pmtiles",
+      "bytes": 35392293
+    },
+    {
+      "path": "descargas/pmtiles/manzanas_indicadores.pmtiles",
+      "bytes": 29707007
+    },
+    {
+      "path": "descargas/pmtiles/estructura_ecologica.pmtiles",
+      "bytes": 2428096
+    },
+    {
+      "path": "descargas/sector.geojson",
+      "bytes": 1282047
+    },
+    {
+      "path": "descargas/pmtiles/cuerpo_agua.pmtiles",
+      "bytes": 872022
+    },
+    {
+      "path": "descargas/pmtiles/corriente_agua.pmtiles",
+      "bytes": 826890
+    },
+    {
+      "path": "descargas/upl.geojson",
+      "bytes": 243820
+    },
+    {
+      "path": "descargas/localidad.geojson",
+      "bytes": 211615
+    },
+    {
+      "path": "descargas/Mapa_Bogota_Urbana.pdf",
+      "bytes": 120865
+    },
+    {
+      "path": "assets/app.js",
+      "bytes": 25480
+    }
+  ],
+  "pmtiles": [
+    "descargas/pmtiles/corriente_agua.pmtiles",
+    "descargas/pmtiles/cuerpo_agua.pmtiles",
+    "descargas/pmtiles/estructura_ecologica.pmtiles",
+    "descargas/pmtiles/malla_vial.pmtiles",
+    "descargas/pmtiles/manzanas_indicadores.pmtiles"
+  ],
+  "manifest_assets": 8,
+  "contrast_ratios": {
+    "--text": 15.71,
+    "--muted": 7.41,
+    "--quiet": 6.17
+  },
+  "errors": [],
+  "local_http_sample": {
+    "requests": [
+      {
+        "path": "/",
+        "status": 200,
+        "bytes": 10245,
+        "seconds": 0.3664
+      },
+      {
+        "path": "assets/app.css",
+        "status": 200,
+        "bytes": 16265,
+        "seconds": 0.005
+      },
+      {
+        "path": "assets/app.js",
+        "status": 200,
+        "bytes": 25480,
+        "seconds": 0.1113
+      },
+      {
+        "path": "assets/model-viewer.js",
+        "status": 200,
+        "bytes": 3931,
+        "seconds": 0.0992
+      },
+      {
+        "path": "manifest.json",
+        "status": 200,
+        "bytes": 468,
+        "seconds": 0.0154
+      },
+      {
+        "path": "metodologia.html",
+        "status": 200,
+        "bytes": 8952,
+        "seconds": 0.009
+      },
+      {
+        "path": "assets/methodology.css",
+        "status": 200,
+        "bytes": 6530,
+        "seconds": 0.0139
+      }
+    ],
+    "sequential_bytes": 71871,
+    "sequential_seconds": 0.6201
+  }
+}

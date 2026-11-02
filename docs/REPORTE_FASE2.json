@@ -1,0 +1,456 @@
+{
+  "generated_utc": "2026-11-02T00:46:35.678234+00:00",
+  "processing_crs": "EPSG:9377",
+  "publication_crs": "EPSG:4326",
+  "height_assumption": "estimated height in metres = CONNPISOS × 3 m; null when floor count is missing/non-positive",
+  "indicators": {
+    "area_huella_m2": "sum of horizontal building footprints per block",
+    "area_constr_m2": "sum of footprint area × reported floor count per block",
+    "indice_ocupacion": "building footprint area / block polygon area",
+    "indice_construccion": "estimated built floor area / block polygon area"
+  },
+  "layers": {
+    "localidad": {
+      "source": "data/raw/localidad.geojson",
+      "source_crs": "EPSG:4326",
+      "processing_crs": "EPSG:9377",
+      "source_features": 19,
+      "invalid_in_source": 0,
+      "source_geometries_repaired_before_projection": 0,
+      "features_after_urban_clip": 19,
+      "invalid_before_fix": 0,
+      "empty_geometries_removed": 0,
+      "empty_geometry_output_fids": [],
+      "duplicate_geometries_removed": 0,
+      "invalid_after_fix": 0,
+      "output": "data/processed/phase2/localidad.gpkg"
+    },
+    "upl": {
+      "source": "data/raw/upl.geojson",
+      "source_crs": "EPSG:4326",
+      "processing_crs": "EPSG:9377",
+      "source_features": 32,
+      "invalid_in_source": 0,
+      "source_geometries_repaired_before_projection": 0,
+      "features_after_urban_clip": 32,
+      "invalid_before_fix": 0,
+      "empty_geometries_removed": 0,
+      "empty_geometry_output_fids": [],
+      "duplicate_geometries_removed": 0,
+      "invalid_after_fix": 0,
+      "output": "data/processed/phase2/upl.gpkg"
+    },
+    "sector": {
+      "source": "data/raw/sector_catastral.geojson",
+      "source_crs": "EPSG:4326",
+      "processing_crs": "EPSG:9377",
+      "source_features": 1138,
+      "invalid_in_source": 4,
+      "source_geometries_repaired_before_projection": 4,
+      "features_after_urban_clip": 1138,
+      "invalid_before_fix": 0,
+      "empty_geometries_removed": 0,
+      "empty_geometry_output_fids": [],
+      "duplicate_geometries_removed": 0,
+      "invalid_after_fix": 0,
+      "output": "data/processed/phase2/sector.gpkg"
+    },
+    "manzana": {
+      "source": "data/raw/manzana.geojson",
+      "source_crs": "EPSG:4326",
+      "processing_crs": "EPSG:9377",
+      "source_features": 43682,
+      "invalid_in_source": 7,
+      "source_geometries_repaired_before_projection": 7,
+      "features_after_urban_clip": 43669,
+      "invalid_before_fix": 1,
+      "empty_geometries_removed": 1,
+      "empty_geometry_output_fids": [
+        38605
+      ],
+      "duplicate_geometries_removed": 11,
+      "invalid_after_fix": 0,
+      "output": "data/processed/phase2/manzana.gpkg"
+    },
+    "lote": {
+      "source": "data/raw/lote.geojson",
+      "source_crs": "EPSG:4326",
+      "processing_crs": "EPSG:9377",
+      "source_features": 912777,
+      "invalid_in_source": 54,
+      "source_geometries_repaired_before_projection": 54,
+      "features_after_urban_clip": 912751,
+      "invalid_before_fix": 1,
+      "empty_geometries_removed": 1,
+      "empty_geometry_output_fids": [
+        872866
+      ],
+      "duplicate_geometries_removed": 21,
+      "invalid_after_fix": 0,
+      "output": "data/processed/phase2/lote.gpkg"
+    },
+    "construccion": {
+      "source": "data/raw/construccion.geojson",
+      "source_crs": "EPSG:4326",
+      "processing_crs": "EPSG:9377",
+      "source_features": 2369041,
+      "invalid_in_source": 480,
+      "source_geometries_repaired_before_projection": 480,
+      "features_after_urban_clip": 2368909,
+      "invalid_before_fix": 0,
+      "empty_geometries_removed": 0,
+      "empty_geometry_output_fids": [],
+      "duplicate_geometries_removed": 132,
+      "invalid_after_fix": 0,
+      "output": "data/processed/phase2/construccion.gpkg"
+    },
+    "malla_vial": {
+      "source": "data/raw/malla_vial.geojson",
+      "source_crs": "EPSG:4326",
+      "processing_crs": "EPSG:9377",
+      "source_features": 134726,
+      "invalid_in_source": 0,
+      "source_geometries_repaired_before_projection": 0,
+      "features_after_urban_clip": 134725,
+      "invalid_before_fix": 0,
+      "empty_geometries_removed": 0,
+      "empty_geometry_output_fids": [],
+      "duplicate_geometries_removed": 0,
+      "invalid_after_fix": 0,
+      "output": "data/processed/phase2/malla_vial.gpkg"
+    },
+    "corriente_agua": {
+      "source": "data/raw/corriente_agua.geojson",
+      "source_crs": "EPSG:4326",
+      "processing_crs": "EPSG:9377",
+      "source_features": 342,
+      "invalid_in_source": 0,
+      "source_geometries_repaired_before_projection": 0,
+      "features_after_urban_clip": 342,
+      "invalid_before_fix": 0,
+      "empty_geometries_removed": 0,
+      "empty_geometry_output_fids": [],
+      "duplicate_geometries_removed": 0,
+      "invalid_after_fix": 0,
+      "output": "data/processed/phase2/corriente_agua.gpkg"
+    },
+    "cuerpo_agua": {
+      "source": "data/raw/cuerpo_agua.geojson",
+      "source_crs": "EPSG:4326",
+      "processing_crs": "EPSG:9377",
+      "source_features": 149,
+      "invalid_in_source": 0,
+      "source_geometries_repaired_before_projection": 0,
+      "features_after_urban_clip": 149,
+      "invalid_before_fix": 0,
+      "empty_geometries_removed": 0,
+      "empty_geometry_output_fids": [],
+      "duplicate_geometries_removed": 0,
+      "invalid_after_fix": 0,
+      "output": "data/processed/phase2/cuerpo_agua.gpkg"
+    },
+    "estrato": {
+      "source": "data/raw/estratificacion_manzana.gpkg",
+      "source_crs": "CUSTOM:SRS_ID=300001",
+      "processing_crs": "EPSG:9377",
+      "source_features": 44260,
+      "invalid_in_source": 0,
+      "source_geometries_repaired_before_projection": 0,
+      "features_after_urban_clip": 43247,
+      "invalid_before_fix": 0,
+      "empty_geometries_removed": 0,
+      "empty_geometry_output_fids": [],
+      "duplicate_geometries_removed": 0,
+      "invalid_after_fix": 0,
+      "output": "data/processed/phase2/estrato.gpkg"
+    },
+    "estructura_ecologica": {
+      "source": "data/raw/estructura_ecologica_principal.gpkg",
+      "source_crs": "CUSTOM:SRS_ID=300001",
+      "processing_crs": "EPSG:9377",
+      "source_features": 4553,
+      "invalid_in_source": 0,
+      "source_geometries_repaired_before_projection": 0,
+      "features_after_urban_clip": 656,
+      "invalid_before_fix": 0,
+      "empty_geometries_removed": 0,
+      "empty_geometry_output_fids": [],
+      "duplicate_geometries_removed": 5,
+      "invalid_after_fix": 0,
+      "output": "data/processed/phase2/estructura_ecologica.gpkg"
+    },
+    "valor_referencia": {
+      "source": "data/raw/valor_referencia_terreno.gpkg",
+      "source_crs": "EPSG:4326",
+      "processing_crs": "EPSG:9377",
+      "source_features": 41858,
+      "invalid_in_source": 6,
+      "source_geometries_repaired_before_projection": 6,
+      "features_after_urban_clip": 41483,
+      "invalid_before_fix": 0,
+      "empty_geometries_removed": 0,
+      "empty_geometry_output_fids": [],
+      "duplicate_geometries_removed": 8,
+      "invalid_after_fix": 0,
+      "output": "data/processed/phase2/valor_referencia.gpkg"
+    },
+    "construcciones_3d": {
+      "features": 2368909,
+      "floor_field": "CONNPISOS",
+      "height_field": "altura_est_m",
+      "height_assumption": "number of floors × 3.0 m"
+    },
+    "manzanas_indicadores": {
+      "features": 43669,
+      "fields": [
+        "fid",
+        "MANCODIGO",
+        "SECCODIGO",
+        "OBJECTID",
+        "area_huella_m2",
+        "area_constr_m2",
+        "indice_ocupacion",
+        "indice_construccion",
+        "localidad",
+        "upl_nombre",
+        "sector_codigo",
+        "estrato",
+        "valor_ref_m2"
+      ],
+      "joins": "building.LOTECODIGO → lot.LOTCODIGO → lot.MANZCODIGO → block.MANCODIGO; administrative and socio-economic layers by point-on-surface intersection"
+    }
+  },
+  "outputs": {
+    "geojson_localidad": {
+      "path": "web/descargas/localidad.geojson",
+      "crs": "EPSG:4326",
+      "features": 19,
+      "bytes": 211615
+    },
+    "geojson_upl": {
+      "path": "web/descargas/upl.geojson",
+      "crs": "EPSG:4326",
+      "features": 32,
+      "bytes": 243820
+    },
+    "geojson_sector": {
+      "path": "web/descargas/sector.geojson",
+      "crs": "EPSG:4326",
+      "features": 1138,
+      "bytes": 1282047
+    },
+    "pmtiles_manzanas_indicadores": [
+      "web/descargas/pmtiles/manzanas_indicadores.pmtiles"
+    ],
+    "pmtiles_lote": [
+      "data/processed/pmtiles/lote.pmtiles"
+    ],
+    "pmtiles_malla_vial": [
+      "web/descargas/pmtiles/malla_vial.pmtiles"
+    ],
+    "pmtiles_corriente_agua": [
+      "web/descargas/pmtiles/corriente_agua.pmtiles"
+    ],
+    "pmtiles_cuerpo_agua": [
+      "web/descargas/pmtiles/cuerpo_agua.pmtiles"
+    ],
+    "pmtiles_estructura_ecologica": [
+      "web/descargas/pmtiles/estructura_ecologica.pmtiles"
+    ]
+  },
+  "warnings": [
+    "PMTiles construcciones_3d: [WinError 32] The process cannot access the file because it is being used by another process: 'C:\\\\Users\\\\kevin\\\\Desktop\\\\mapabogota\\\\data\\\\processed\\\\phase2\\\\_construcciones_3d.pmtiles.tmp.mbtiles'",
+    "data/processed/pmtiles/lote.pmtiles exceeds 95 MB and must be partitioned before web publication."
+  ],
+  "topology": {
+    "method": "native:fixgeometries, native:deleteduplicategeometries, GEOS validity scan",
+    "layers": {
+      "localidad": {
+        "source": "data/raw/localidad.geojson",
+        "source_crs": "EPSG:4326",
+        "processing_crs": "EPSG:9377",
+        "source_features": 19,
+        "invalid_in_source": 0,
+        "source_geometries_repaired_before_projection": 0,
+        "features_after_urban_clip": 19,
+        "invalid_before_fix": 0,
+        "empty_geometries_removed": 0,
+        "empty_geometry_output_fids": [],
+        "duplicate_geometries_removed": 0,
+        "invalid_after_fix": 0,
+        "output": "data/processed/phase2/localidad.gpkg"
+      },
+      "upl": {
+        "source": "data/raw/upl.geojson",
+        "source_crs": "EPSG:4326",
+        "processing_crs": "EPSG:9377",
+        "source_features": 32,
+        "invalid_in_source": 0,
+        "source_geometries_repaired_before_projection": 0,
+        "features_after_urban_clip": 32,
+        "invalid_before_fix": 0,
+        "empty_geometries_removed": 0,
+        "empty_geometry_output_fids": [],
+        "duplicate_geometries_removed": 0,
+        "invalid_after_fix": 0,
+        "output": "data/processed/phase2/upl.gpkg"
+      },
+      "sector": {
+        "source": "data/raw/sector_catastral.geojson",
+        "source_crs": "EPSG:4326",
+        "processing_crs": "EPSG:9377",
+        "source_features": 1138,
+        "invalid_in_source": 4,
+        "source_geometries_repaired_before_projection": 4,
+        "features_after_urban_clip": 1138,
+        "invalid_before_fix": 0,
+        "empty_geometries_removed": 0,
+        "empty_geometry_output_fids": [],
+        "duplicate_geometries_removed": 0,
+        "invalid_after_fix": 0,
+        "output": "data/processed/phase2/sector.gpkg"
+      },
+      "manzana": {
+        "source": "data/raw/manzana.geojson",
+        "source_crs": "EPSG:4326",
+        "processing_crs": "EPSG:9377",
+        "source_features": 43682,
+        "invalid_in_source": 7,
+        "source_geometries_repaired_before_projection": 7,
+        "features_after_urban_clip": 43669,
+        "invalid_before_fix": 1,
+        "empty_geometries_removed": 1,
+        "empty_geometry_output_fids": [
+          38605
+        ],
+        "duplicate_geometries_removed": 11,
+        "invalid_after_fix": 0,
+        "output": "data/processed/phase2/manzana.gpkg"
+      },
+      "lote": {
+        "source": "data/raw/lote.geojson",
+        "source_crs": "EPSG:4326",
+        "processing_crs": "EPSG:9377",
+        "source_features": 912777,
+        "invalid_in_source": 54,
+        "source_geometries_repaired_before_projection": 54,
+        "features_after_urban_clip": 912751,
+        "invalid_before_fix": 1,
+        "empty_geometries_removed": 1,
+        "empty_geometry_output_fids": [
+          872866
+        ],
+        "duplicate_geometries_removed": 21,
+        "invalid_after_fix": 0,
+        "output": "data/processed/phase2/lote.gpkg"
+      },
+      "construccion": {
+        "source": "data/raw/construccion.geojson",
+        "source_crs": "EPSG:4326",
+        "processing_crs": "EPSG:9377",
+        "source_features": 2369041,
+        "invalid_in_source": 480,
+        "source_geometries_repaired_before_projection": 480,
+        "features_after_urban_clip": 2368909,
+        "invalid_before_fix": 0,
+        "empty_geometries_removed": 0,
+        "empty_geometry_output_fids": [],
+        "duplicate_geometries_removed": 132,
+        "invalid_after_fix": 0,
+        "output": "data/processed/phase2/construccion.gpkg"
+      },
+      "malla_vial": {
+        "source": "data/raw/malla_vial.geojson",
+        "source_crs": "EPSG:4326",
+        "processing_crs": "EPSG:9377",
+        "source_features": 134726,
+        "invalid_in_source": 0,
+        "source_geometries_repaired_before_projection": 0,
+        "features_after_urban_clip": 134725,
+        "invalid_before_fix": 0,
+        "empty_geometries_removed": 0,
+        "empty_geometry_output_fids": [],
+        "duplicate_geometries_removed": 0,
+        "invalid_after_fix": 0,
+        "output": "data/processed/phase2/malla_vial.gpkg"
+      },
+      "corriente_agua": {
+        "source": "data/raw/corriente_agua.geojson",
+        "source_crs": "EPSG:4326",
+        "processing_crs": "EPSG:9377",
+        "source_features": 342,
+        "invalid_in_source": 0,
+        "source_geometries_repaired_before_projection": 0,
+        "features_after_urban_clip": 342,
+        "invalid_before_fix": 0,
+        "empty_geometries_removed": 0,
+        "empty_geometry_output_fids": [],
+        "duplicate_geometries_removed": 0,
+        "invalid_after_fix": 0,
+        "output": "data/processed/phase2/corriente_agua.gpkg"
+      },
+      "cuerpo_agua": {
+        "source": "data/raw/cuerpo_agua.geojson",
+        "source_crs": "EPSG:4326",
+        "processing_crs": "EPSG:9377",
+        "source_features": 149,
+        "invalid_in_source": 0,
+        "source_geometries_repaired_before_projection": 0,
+        "features_after_urban_clip": 149,
+        "invalid_before_fix": 0,
+        "empty_geometries_removed": 0,
+        "empty_geometry_output_fids": [],
+        "duplicate_geometries_removed": 0,
+        "invalid_after_fix": 0,
+        "output": "data/processed/phase2/cuerpo_agua.gpkg"
+      },
+      "estrato": {
+        "source": "data/raw/estratificacion_manzana.gpkg",
+        "source_crs": "CUSTOM:SRS_ID=300001",
+        "processing_crs": "EPSG:9377",
+        "source_features": 44260,
+        "invalid_in_source": 0,
+        "source_geometries_repaired_before_projection": 0,
+        "features_after_urban_clip": 43247,
+        "invalid_before_fix": 0,
+        "empty_geometries_removed": 0,
+        "empty_geometry_output_fids": [],
+        "duplicate_geometries_removed": 0,
+        "invalid_after_fix": 0,
+        "output": "data/processed/phase2/estrato.gpkg"
+      },
+      "estructura_ecologica": {
+        "source": "data/raw/estructura_ecologica_principal.gpkg",
+        "source_crs": "CUSTOM:SRS_ID=300001",
+        "processing_crs": "EPSG:9377",
+        "source_features": 4553,
+        "invalid_in_source": 0,
+        "source_geometries_repaired_before_projection": 0,
+        "features_after_urban_clip": 656,
+        "invalid_before_fix": 0,
+        "empty_geometries_removed": 0,
+        "empty_geometry_output_fids": [],
+        "duplicate_geometries_removed": 5,
+        "invalid_after_fix": 0,
+        "output": "data/processed/phase2/estructura_ecologica.gpkg"
+      },
+      "valor_referencia": {
+        "source": "data/raw/valor_referencia_terreno.gpkg",
+        "source_crs": "EPSG:4326",
+        "processing_crs": "EPSG:9377",
+        "source_features": 41858,
+        "invalid_in_source": 6,
+        "source_geometries_repaired_before_projection": 6,
+        "features_after_urban_clip": 41483,
+        "invalid_before_fix": 0,
+        "empty_geometries_removed": 0,
+        "empty_geometry_output_fids": [],
+        "duplicate_geometries_removed": 8,
+        "invalid_after_fix": 0,
+        "output": "data/processed/phase2/valor_referencia.gpkg"
+      }
+    },
+    "limitations": "Boundary coverage/overlap rules between adjacent cadastral polygons are not asserted by simple geometry validity."
+  },
+  "status": "completed-with-warnings"
+}
