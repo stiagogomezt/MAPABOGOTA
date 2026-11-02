@@ -3,40 +3,107 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Bogotá 3D - Gemelo digital del terreno</title>
+<title>Gemelo digital 3D de Bogotá D.C.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-body{margin:0;font-family:system-ui,sans-serif;background:#0b0f1a;color:#e6e6e6;overflow:hidden}
-#canvas{position:fixed;inset:0}
-#ui{position:fixed;top:12px;left:12px;background:rgba(0,0,0,.55);padding:12px;border-radius:8px;max-width:320px}
-#ui h1{font-size:16px;margin:0 0 8px}
-#ui button,#ui select{margin:4px 0;width:100%;padding:6px}
-#status{font-size:12px;opacity:.8;margin-top:6px}
-#credits{position:fixed;bottom:8px;right:8px;font-size:11px;opacity:.7;max-width:420px;text-align:right}
-#loader{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#0b0f1a;font-size:18px}
+:root{--bg:rgba(12,16,28,.72);--fg:#e8ecf4;--muted:#9aa4b2;--accent:#6ea8fe;--border:rgba(255,255,255,.12)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#050810;color:var(--fg);overflow:hidden;height:100vh}
+canvas{position:fixed;inset:0;display:block}
+#loader{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#050810;z-index:100;transition:opacity .6s}
+#loader h1{font-size:22px;font-weight:500;margin-bottom:16px}
+#loader .bar{width:260px;height:6px;background:rgba(255,255,255,.15);border-radius:3px;overflow:hidden}
+#loader .fill{height:100%;width:0;background:var(--accent);transition:width .2s}
+#cover{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#0a1020,#050810);z-index:90;transition:opacity .8s}
+#cover h1{font-size:34px;font-weight:600;margin-bottom:8px;text-align:center}
+#cover p{color:var(--muted);margin-bottom:6px;text-align:center;max-width:520px}
+#cover .author{font-size:13px;color:var(--muted);margin:12px 0 24px}
+#cover button{margin:6px;padding:10px 22px;border:1px solid var(--border);background:var(--bg);color:var(--fg);border-radius:6px;cursor:pointer;font-size:14px;backdrop-filter:blur(8px)}
+#cover button:hover{background:rgba(110,168,254,.18)}
+#panel{position:fixed;top:12px;left:12px;width:300px;max-height:calc(100vh-24px);overflow:auto;background:var(--bg);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:10px;padding:12px;z-index:50;font-size:13px}
+#panel h2{font-size:14px;margin:10px 0 6px;color:var(--accent);cursor:pointer;user-select:none}
+#panel h2::before{content:'▸ ';font-size:10px}
+#panel h2.open::before{content:'▾ '}
+.section{display:none;margin-bottom:8px}
+.section.open{display:block}
+.card-row{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
+.tcard{border:1px solid var(--border);border-radius:6px;overflow:hidden;cursor:pointer;background:rgba(0,0,0,.3)}
+.tcard img{width:100%;height:60px;object-fit:cover;display:block}
+.tcard span{display:block;padding:4px;font-size:11px;text-align:center}
+.tcard.active{border-color:var(--accent)}
+#compass{position:fixed;top:12px;right:12px;width:46px;height:46px;background:var(--bg);backdrop-filter:blur(8px);border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:50}
+#compass svg{width:30px;height:30px}
+#scalebar{position:fixed;bottom:40px;left:50%;transform:translateX(-50%);background:var(--bg);backdrop-filter:blur(8px);padding:4px 10px;border-radius:4px;font-size:11px;border:1px solid var(--border);z-index:50}
+#statusbar{position:fixed;bottom:0;left:0;right:0;height:32px;background:var(--bg);backdrop-filter:blur(8px);border-top:1px solid var(--border);display:flex;align-items:center;padding:0 12px;font-size:12px;color:var(--muted);z-index:50;gap:16px}
+#legend{margin-top:8px;padding:8px;background:rgba(0,0,0,.3);border-radius:6px;font-size:11px}
+#legend .ramp{height:12px;border-radius:3px;margin:4px 0}
+#clickinfo{position:fixed;top:70px;right:12px;width:260px;background:var(--bg);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:10px;padding:10px;font-size:12px;z-index:50;display:none}
+#profilebox{position:fixed;bottom:40px;left:50%;transform:translateX(-50%);width:420px;height:160px;background:var(--bg);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:10px;padding:8px;z-index:55;display:none}
+#profilebox canvas{width:100%;height:120px}
+#help{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.7);z-index:100}
+#help .box{background:var(--bg);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:10px;padding:16px;max-width:420px}
+#help kbd{background:rgba(255,255,255,.1);padding:2px 6px;border-radius:3px;font-size:11px}
+#videoModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;align-items:center;justify-content:center}
+#videoModal video{max-width:90vw;max-height:80vh}
+@media(max-width:700px){#panel{top:auto;bottom:0;left:0;width:100%;max-height:45vh;border-radius:10px 10px 0 0}}
 </style>
 </head>
 <body>
-<a href="#main" class="skip-link">Saltar al contenido</a>
-<div id="loader">Cargando terreno…</div>
-<canvas id="canvas"></canvas>
-<main id="main" tabindex="-1" style="position:fixed;inset:0;pointer-events:none"></main>
-<div id="ui">
-  <h1>Bogotá 3D</h1>
-  <label for="tex" style="display:block;font-size:12px;margin-bottom:2px">Textura</label>
-  <select id="tex">
-    <option value="satellite">Satelital</option>
-    <option value="localidades">Localidades</option>
-    <option value="valor">Valor / estrato</option>
-    <option value="relief">Relieve + hipsometría</option>
-    <option value="slope">Pendientes</option>
-  </select>
-  <button id="fly">Sobrevolar Bogotá</button>
-  <button id="buildings">Mostrar/ocultar edificaciones</button>
-  <button id="profile">Perfil topográfico</button>
-  <button id="videoBtn">Ver video de sobrevuelo</button>
-  <div id="status"></div>
+<div id="loader"><h1>Gemelo digital 3D de Bogotá D.C.</h1><div class="bar"><div class="fill" id="loadfill"></div></div><div id="loadtxt" style="margin-top:10px;font-size:12px;color:var(--muted)">Cargando…</div></div>
+<div id="cover">
+  <h1>Gemelo digital 3D de Bogotá D.C.</h1>
+  <p>Maqueta interactiva del terreno con relieve del MDT oficial, imagen satelital sin nubes y volumetría de edificaciones.</p>
+  <div class="author">Kevin Santiago Gómez Tibaquira — Ingeniería Catastral y Geodesia, Universidad Distrital</div>
+  <div>
+    <button id="exploreBtn">Explorar</button>
+    <button id="flyBtn">Sobrevolar Bogotá</button>
+  </div>
 </div>
-<div id="credits">MDT: UAECD (CC BY-NC-SA 4.0) · Copernicus DEM GLO-30 · Sentinel-2/ESA · Ortoimagen satelital. Productos derivados bajo CC BY-NC-SA 4.0.</div>
+<canvas id="canvas"></canvas>
+<div id="panel">
+  <div style="font-weight:600;margin-bottom:8px">Controles</div>
+  <h2 class="open" data-sec="layers">Capas</h2>
+  <div class="section open" id="layers">
+    <label><input type="checkbox" id="chkBuildings" checked> Edificaciones</label><br>
+    <label><input type="checkbox" id="chkLabels" checked> Etiquetas</label>
+  </div>
+  <h2 data-sec="texture">Textura</h2>
+  <div class="section" id="texture">
+    <div class="card-row" id="texCards"></div>
+  </div>
+  <h2 data-sec="tools">Herramientas</h2>
+  <div class="section" id="tools">
+    <button id="fly" style="width:100%;margin:4px 0;padding:6px;border:1px solid var(--border);background:rgba(0,0,0,.3);color:var(--fg);border-radius:6px;cursor:pointer">Sobrevolar Bogotá</button>
+    <button id="btnProfile" style="width:100%;margin:4px 0;padding:6px;border:1px solid var(--border);background:rgba(0,0,0,.3);color:var(--fg);border-radius:6px;cursor:pointer">Perfil topográfico</button>
+    <button id="resetView" style="width:100%;margin:4px 0;padding:6px;border:1px solid var(--border);background:rgba(0,0,0,.3);color:var(--fg);border-radius:6px;cursor:pointer">Vista general</button>
+    <label style="display:block;margin-top:6px">Exageración vertical <span id="exagVal">1.0</span></label>
+    <input type="range" id="exag" min="1" max="2.5" step="0.1" value="1" style="width:100%">
+    <div id="legend"></div>
+  </div>
+  <h2 data-sec="info">Información</h2>
+  <div class="section" id="info">
+    <div style="font-size:11px;color:var(--muted);line-height:1.5">
+      MDT: UAECD (CC BY-NC-SA 4.0)<br>
+      Copernicus DEM GLO-30<br>
+      Sentinel-2 / ESA<br>
+      Datum vertical: gravity-related height (m)<br>
+      CRS: EPSG:9377
+    </div>
+  </div>
+</div>
+<div id="compass" title="Orientar al norte"><svg viewBox="0 0 30 30"><circle cx="15" cy="15" r="13" fill="none" stroke="#9aa4b2" stroke-width="1"/><polygon points="15,4 18,15 15,12 12,15" fill="#e55"/><polygon points="15,26 12,15 15,18 18,15" fill="#9aa4b2"/></svg></div>
+<div id="scalebar">1 km</div>
+<div id="statusbar"><span id="coords">—</span><span id="alt">—</span><span id="texname" style="margin-left:auto">Satelital</span></div>
+<div id="clickinfo"></div>
+<div id="profilebox"><canvas id="profilecanvas"></canvas><button id="closeProfile" style="position:absolute;top:6px;right:8px;background:none;border:none;color:var(--fg);cursor:pointer">✕</button></div>
+<div id="help"><div class="box"><h3 style="margin-bottom:8px">Atajos</h3><p><kbd>H</kbd> Ayuda &nbsp; <kbd>F</kbd> Sobrevolar &nbsp; <kbd>R</kbd> Vista general</p><button id="closeHelp" style="margin-top:10px;padding:6px 12px;border:1px solid var(--border);background:rgba(0,0,0,.3);color:var(--fg);border-radius:6px;cursor:pointer">Cerrar</button></div></div>
+<div id="videoModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;align-items:center;justify-content:center">
+  <div style="max-width:90vw;max-height:90vh">
+    <video id="videoPlayer" controls poster="media/poster.jpg" style="max-width:100%;max-height:80vh"></video>
+    <br><button id="closeVideo" style="margin-top:8px;padding:6px 12px;border:1px solid var(--border);background:rgba(0,0,0,.3);color:var(--fg);border-radius:6px;cursor:pointer">Cerrar</button>
+  </div>
+</div>
 <script type="importmap">
 {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
 </script>
@@ -51,81 +118,122 @@ renderer.setSize(window.innerWidth,window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
 const scene=new THREE.Scene();
 scene.background=new THREE.Color(0x0b0f1a);
-
-const camera=new THREE.PerspectiveCamera(55,window.innerWidth/window.innerHeight,1,200000);
-camera.position.set(0,0,50000);
+const camera=new THREE.PerspectiveCamera(46,window.innerWidth/window.innerHeight,1,200000);
+camera.position.set(0,-50000,20000);
 camera.lookAt(0,0,0);
+const controls=new OrbitControls(camera,renderer.domElement);
+controls.enableDamping=true;
+controls.target.set(0,0,0);
 const light=new THREE.DirectionalLight(0xffffff,2.0);
 light.position.set(10000,-10000,5000); scene.add(light);
 scene.add(new THREE.AmbientLight(0xffffff,1.0));
 
 const texLoader=new THREE.TextureLoader();
-const textures={
- satellite: texLoader.load('terrain/texture_satellite_4096.jpg'),
- localidades: texLoader.load('terrain/texture_localidades_4096.jpg'),
- valor: texLoader.load('terrain/texture_valor_4096.jpg'),
- relief: texLoader.load('terrain/texture_relief_4096.jpg'),
- slope: texLoader.load('terrain/texture_slope_4096.jpg'),
-};
-// fix paths: textures are in data/processed/terrain not web; place copies in web/terrain
-// We'll load from web/terrain if exists, fallback to data path via relative
-Object.keys(textures).forEach(k=>{textures[k].colorSpace=THREE.SRGBColorSpace;});
+const texNames={satellite:'Satelital',localidades:'Localidades',valor:'Valor/estrato',relief:'Relieve',slope:'Pendientes'};
+const textures={};
+const texFiles={satellite:'terrain/texture_satellite_4096.jpg',localidades:'terrain/texture_localidades_4096.jpg',valor:'terrain/texture_valor_4096.jpg',relief:'terrain/texture_relief_4096.jpg',slope:'terrain/texture_slope_4096.jpg'};
+let loadedCount=0,totalCount=Object.keys(texFiles).length;
+const loadfill=document.getElementById('loadfill'),loadtxt=document.getElementById('loadtxt');
+function updateLoad(){ loadedCount++; loadfill.style.width=(loadedCount/totalCount*100)+'%'; loadtxt.textContent=`Cargando texturas… ${loadedCount}/${totalCount}`; if(loadedCount>=totalCount){ loadtxt.textContent='Cargando terreno…'; } }
+Object.keys(texFiles).forEach(k=>{ textures[k]=texLoader.load(texFiles[k],()=>updateLoad()); textures[k].colorSpace=THREE.SRGBColorSpace; });
 
-let terrain=null;
+// terrain
+let terrain=null, mesh=null, exag=1.0;
 const loader=new GLTFLoader();
-loader.load('terrain/terrain.glb', (gltf)=>{
+loader.load('terrain/terrain.glb',(gltf)=>{
   terrain=gltf.scene;
-  let mesh=null;
-  terrain.traverse(o=>{ if(o.isMesh && !mesh) mesh=o; });
-  const box=new THREE.Box3().setFromObject(terrain);
-  if(mesh){
-    const mat=new THREE.MeshStandardMaterial({map:textures.satellite, side:THREE.DoubleSide});
-    mesh.material=mat;
-
-  }
-  const mat=new THREE.MeshStandardMaterial({map:textures.satellite});
-  mesh.material=mat;
+  terrain.traverse(o=>{ if(o.isMesh && !mesh){ mesh=o; const mat=new THREE.MeshStandardMaterial({map:textures.satellite,side:THREE.DoubleSide}); mesh.material=mat; } });
   scene.add(terrain);
-  document.getElementById('loader').style.display='none';
-}, undefined, (e)=>{console.error('GLB load error:',e);document.getElementById('status').textContent='Error cargando terreno: '+(e&&e.message?e.message:e)+' (terrain/terrain.glb)';});
+  document.getElementById('loader').style.opacity='0';
+  setTimeout(()=>document.getElementById('loader').style.display='none',600);
+  document.getElementById('cover').style.display='flex';
+}, (xhr)=>{ if(xhr.lengthComputable){ const p=xhr.loaded/xhr.total*100; loadfill.style.width=p+'%'; loadtxt.textContent=`Cargando terreno… ${p.toFixed(0)}%`; } },
+(e)=>{ console.error('GLB load error:',e); document.getElementById('status').textContent='Error cargando terreno: '+(e&&e.message?e.message:e); });
 
-// texture selector
-document.getElementById('tex').addEventListener('change', (e)=>{
-  if(!terrain) return;
-  terrain.children[0].material.map=textures[e.target.value];
-  terrain.children[0].material.needsUpdate=true;
+// texture cards
+const cards=document.getElementById('texCards');
+Object.keys(texFiles).forEach(k=>{
+  const c=document.createElement('div'); c.className='tcard'; c.dataset.key=k;
+  c.innerHTML=`<img src="${texFiles[k]}" alt="${texNames[k]}"><span>${texNames[k]}</span>`;
+  c.addEventListener('click',()=>{ if(!mesh) return; mesh.material.map=textures[k]; mesh.material.needsUpdate=true; document.querySelectorAll('.tcard').forEach(x=>x.classList.remove('active')); c.classList.add('active'); document.getElementById('texname').textContent=texNames[k]; });
+  cards.appendChild(c);
 });
+document.querySelector('.tcard').classList.add('active');
 
-// flyover
-let flying=false, flyIndex=0, flyData=null;
+// exag slider
+document.getElementById('exag').addEventListener('input',(e)=>{ exag=parseFloat(e.target.value); document.getElementById('exagVal').textContent=exag.toFixed(1); if(mesh&&mesh.geometry.attributes._origPos===undefined){ mesh.geometry.attributes._origPos=mesh.geometry.attributes.position.array.slice(); } if(mesh){ const pos=mesh.geometry.attributes.position.array; const orig=mesh.geometry.attributes._origPos; for(let i=0;i<pos.length;i+=3){ pos[i+2]=orig[i+2]*exag; } mesh.geometry.attributes.position.needsUpdate=true; } });
+
+// layers
+document.getElementById('chkBuildings').addEventListener('change',(e)=>{ if(terrain) terrain.visible=e.target.checked; });
+document.getElementById('chkLabels').addEventListener('change',(e)=>{ document.querySelectorAll('.label').forEach(l=>l.style.display=e.target.checked?'block':'none'); });
+
+// collapsible sections
+document.querySelectorAll('#panel h2').forEach(h=>{ h.addEventListener('click',()=>{ h.classList.toggle('open'); const sec=document.getElementById(h.dataset.sec); sec.classList.toggle('open'); }); });
+
+// cover
+document.getElementById('exploreBtn').addEventListener('click',()=>{ const c=document.getElementById('cover'); c.style.opacity='0'; setTimeout(()=>c.style.display='none',800); });
+document.getElementById('flyBtn').addEventListener('click',()=>{ const c=document.getElementById('cover'); c.style.opacity='0'; setTimeout(()=>c.style.display='none',800); startFly(); });
+
+// flyover (time-based)
+let flyData=null, flyPlaying=false, flyT=0, flyLast=0;
 fetch('terrain/camera_path.json').then(r=>r.json()).then(d=>{flyData=d;});
-document.getElementById('fly').addEventListener('click',()=>{
-  if(!flyData) return;
-  flying=!flying; flyIndex=0;
-});
-document.getElementById('buildings').addEventListener('click',()=>{ /* placeholder */ });
-document.getElementById('videoBtn').addEventListener('click',()=>{ window.open('media/bogota_flyover.mp4','_blank'); });
-
-// animation loop
-const clock=new THREE.Clock();
-let renderCount=0;
-function animate(){
-  requestAnimationFrame(animate);
-  renderer.render(scene,camera);
-  renderCount++;
-  if(flying && flyData){
-    const step=Math.floor(clock.getElapsedTime()*30)%flyData.length;
-    const p=flyData[step].position;
-    camera.position.set(p[0],p[1],p[2]);
+function startFly(){ flyPlaying=true; flyT=0; flyLast=performance.now(); }
+document.getElementById('fly').addEventListener('click',()=>{ if(!flyPlaying){ flyPlaying=true; flyT=0; flyLast=performance.now(); } else { flyPlaying=false; } });
+function flyStep(now){
+  if(flyPlaying && flyData){
+    const dt=(now-flyLast)/1000; flyLast=now;
+    flyT=Math.min(flyT+dt, flyData[flyData.length-1].t);
+    let i=0; while(i<flyData.length-2 && flyData[i+1].t<flyT) i++;
+    const a=flyData[i], b=flyData[i+1];
+    const span=b.t-a.t || 1; const u=(flyT-a.t)/span;
+    const lerp=(x,y)=>x+(y-x)*u;
+    camera.position.set(lerp(a.position[0],b.position[0]), lerp(a.position[1],b.position[1]), lerp(a.position[2],b.position[2]));
+    camera.lookAt(lerp(a.target[0],b.target[0]), lerp(a.target[1],b.target[1]), lerp(a.target[2],b.target[2]));
+    if(flyT>=flyData[flyData.length-1].t){ flyPlaying=false; }
   }
   renderer.render(scene,camera);
+  requestAnimationFrame(flyStep);
 }
-animate();
-window.addEventListener('resize',()=>{
-  camera.aspect=window.innerWidth/window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth,window.innerHeight);
+requestAnimationFrame(flyStep);
+
+// general view
+function generalView(){ camera.position.set(-30000,-40000,25000); camera.lookAt(0,0,0); }
+document.getElementById('resetView')?.addEventListener('click',generalView);
+document.addEventListener('keydown',(e)=>{ if(e.key==='h'||e.key==='H'){ document.getElementById('help').style.display='flex'; } if(e.key==='f'||e.key==='F'){ startFly(); } if(e.key==='r'||e.key==='R'){ generalView(); } });
+
+// compass
+document.getElementById('compass').addEventListener('click',()=>{ camera.position.x=0; camera.position.y=-50000; camera.position.z=20000; camera.lookAt(0,0,0); });
+
+// video modal
+document.getElementById('videoBtn').addEventListener('click',()=>{ const m=document.getElementById('videoModal'); const v=document.getElementById('videoPlayer'); v.src='media/bogota_flyover.mp4'; m.style.display='flex'; v.play().catch(()=>{}); });
+const closeVideoBtn=document.getElementById('closeVideo'); if(closeVideoBtn) closeVideoBtn.addEventListener('click',()=>{ const m=document.getElementById('videoModal'); const v=document.getElementById('videoPlayer'); v.pause(); v.src=''; m.style.display='none'; });
+
+// help
+document.getElementById('closeHelp').addEventListener('click',()=>{ document.getElementById('help').style.display='none'; });
+
+// click info
+const raycaster=new THREE.Raycaster();
+const mouse=new THREE.Vector2();
+canvas.addEventListener('click',(e)=>{
+  if(!mesh) return;
+  mouse.x=(e.clientX/window.innerWidth)*2-1;
+  mouse.y=-(e.clientY/window.innerHeight)*2+1;
+  raycaster.setFromCamera(mouse,camera);
+  const hits=raycaster.intersectObject(mesh);
+  if(hits.length){
+    const p=hits[0].point;
+    const alt=(p.z/exag+1295.2).toFixed(1);
+    document.getElementById('clickinfo').style.display='block';
+    document.getElementById('clickinfo').innerHTML=`<b>Ficha</b><br>X: ${p.x.toFixed(0)} m<br>Y: ${p.y.toFixed(0)} m<br>Altitud MDT: ${alt} m`;
+  }
 });
+
+// status bar coords
+canvas.addEventListener('mousemove',(e)=>{
+  // placeholder
+});
+
+window.addEventListener('resize',()=>{ camera.aspect=window.innerWidth/window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth,window.innerHeight); });
 </script>
 </body>
 </html>

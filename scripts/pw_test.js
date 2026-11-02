@@ -5,7 +5,7 @@ const fs = require('fs');
   const page = await browser.newPage();
   const errors = [];
   page.on('console', msg => { console.log('PAGE_CONSOLE', msg.type(), msg.text()); if (msg.type() === 'error') errors.push(msg.text()); });
-  page.on('pageerror', err => errors.push(err.message));
+  page.on('pageerror', err => errors.push(err.stack || err.message));
   await page.goto('http://localhost:8000/', { waitUntil: 'networkidle', timeout: 60000 });
   await page.waitForTimeout(8000);
   // check canvas not blank
