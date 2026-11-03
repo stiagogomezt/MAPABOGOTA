@@ -21,7 +21,22 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: pip install pyproj rasterio numpy
+      - name: Run verificar.py
+        run: python scripts/verificar.py
+
   deploy:
+    needs: verificar
     runs-on: ubuntu-latest
     environment:
       name: github-pages

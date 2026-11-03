@@ -27,3 +27,4 @@ Proyecto académico de gemelo digital 3D de Bogotá D.C. Publicar únicamente `w
 - Registrar las fases en `docs/BITACORA.md` y documentar descargas manuales en `docs/DESCARGAS_MANUALES.md`.
 - Trabajar en ramas de funcionalidades, commits semánticos y nunca hacer push directo a `main`.
 - Ejecutar pruebas/validaciones disponibles antes de integrar.
+- Prohibido modificar o debilitar una prueba para que pase. Una prueba solo se cambia si estaba mal planteada, y el motivo se documenta en docs/BITACORA.md.
