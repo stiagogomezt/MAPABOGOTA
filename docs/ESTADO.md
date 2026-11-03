@@ -58,15 +58,15 @@ Rama: `feat/terreno-3d`. Visión: gemelo digital 3D de Bogotá con MDT oficial, 
 
 ## Publicación
 
-- Push a main por SSH: exitoso (c926a4b).
-- Workflow "Publish web viewer": success (run 41548836308).
+- Push a main por SSH: exitoso (153cfcf).
+- Workflow "Publish web viewer": success (run 41553216390).
 - URL verificada: https://stiagogomezt.github.io/MAPABOGOTA/ responde 200.
-- Visor: niebla, sombras, mapa de normales, selector de calidad, exageración vertical.
+- Visor: niebla, sombras, mapa de normales, selector de calidad, exageración vertical, perfil, etiquetas, límites localidades, leyendas, escala dinámica.
 - Captura: docs/capturas/visor_ok.png (0 errores de consola).
+- check_live: recursos principales responden 200.
 
 ## Pendientes
 
 - Re-render del MP4 con la nueva trayectoria panorámica (Blender, en background).
-- Perfil topográfico interactivo y etiquetas ancladas con ocultamiento.
 - Tiles 3D de 2x2 km con edificaciones y árboles (pipeline Blender).
 EOF
