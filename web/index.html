@@ -161,6 +161,7 @@ let terrain=null, mesh=null, exag=1.0;
 const loader=new GLTFLoader();
 loader.load('terrain/terrain.glb',(gltf)=>{
   terrain=gltf.scene;
+  terrain.scale.x=-1; // fix orientation: east -> +X
   terrain.traverse(o=>{ if(o.isMesh && !mesh){ mesh=o; const nmap=new THREE.TextureLoader().load('terrain/normalmap.jpg'); const mat=new THREE.MeshStandardMaterial({map:textures.satellite,normalMap:nmap,side:THREE.DoubleSide}); mesh.material=mat; mesh.castShadow=true; mesh.receiveShadow=true; } });
   scene.add(terrain);
   document.getElementById('loader').style.opacity='0';
@@ -271,7 +272,7 @@ function flyStep(now){
 requestAnimationFrame(flyStep);
 
 // general view
-function generalView(){ camera.position.set(-30000,-40000,25000); camera.lookAt(0,0,0); }
+function generalView(){ camera.position.set(30000,-40000,25000); camera.lookAt(0,0,0); }
 document.getElementById('resetView')?.addEventListener('click',generalView);
 document.addEventListener('keydown',(e)=>{ if(e.key==='h'||e.key==='H'){ document.getElementById('help').style.display='flex'; } if(e.key==='f'||e.key==='F'){ startFly(); } if(e.key==='r'||e.key==='R'){ generalView(); } });
 
