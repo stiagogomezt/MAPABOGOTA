@@ -1,10 +1,14 @@
 import json, numpy as np, os
+# 7 control points in GLB space (X=east, Z=north-ish, Y=height)
+# Recorrido: Ciudad Bolivar/Tunjuelito -> Bosa/Kennedy -> Fontibon/El Dorado -> Suba -> Usaquen -> Chapinero -> centro
 ctrl = np.array([
-    [-5000, -30000, 6000],
-    [15000, -5000, 5000],
-    [10000, 5000, 4500],
-    [5000, 15000, 5000],
-    [-5000, 28000, 6000],
+    [0, -25000, 5000],
+    [-20000, -5000, 5000],
+    [-15000, 5000, 4800],
+    [-10000, 15000, 5000],
+    [5000, 25000, 5200],
+    [10000, 10000, 4800],
+    [0, 0, 4600],
 ], dtype=float)
 def catmull_rom(p0,p1,p2,p3,t):
     return 0.5*((2*p1)+(-p0+p2)*t+(2*p0-5*p1+4*p2-p3)*t*t+(-p0+3*p1-3*p2+p3)*t*t*t)
@@ -27,10 +31,13 @@ def smoothstep(x): x=np.clip(x,0,1); return x*x*(3-2*x)
 s_eased=total*smoothstep(times/duration)
 pos_interp=np.zeros((nframes,3))
 target_interp=np.zeros((nframes,3))
-target_offset=2000.0
+target_offset=2500.0  # 2.5km ahead
 for k in range(3):
     pos_interp[:,k]=np.interp(s_eased,cum,pts[:,k])
     target_interp[:,k]=np.interp(np.clip(s_eased+target_offset,0,total),cum,pts[:,k])
+    # target at terrain height (lower Z by 2700)
+    if k==2:
+        target_interp[:,k]=pos_interp[:,k]-2700
 out=[]
 for i in range(nframes):
     out.append({'t':round(float(times[i]),3),'position':[round(float(pos_interp[i,0]),2),round(float(pos_interp[i,1]),2),round(float(pos_interp[i,2]),2)],'target':[round(float(target_interp[i,0]),2),round(float(target_interp[i,1]),2),round(float(target_interp[i,2]),2)]})

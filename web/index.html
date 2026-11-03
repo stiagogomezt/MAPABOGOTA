@@ -87,6 +87,7 @@ canvas{position:fixed;inset:0;display:block}
     <button id="videoBtn" style="width:100%;margin:4px 0;padding:6px;border:1px solid var(--border);background:rgba(0,0,0,.3);color:var(--fg);border-radius:6px;cursor:pointer">Ver video</button>
     <button id="btnProfile" style="width:100%;margin:4px 0;padding:6px;border:1px solid var(--border);background:rgba(0,0,0,.3);color:var(--fg);border-radius:6px;cursor:pointer">Perfil topográfico</button>
     <button id="resetView" style="width:100%;margin:4px 0;padding:6px;border:1px solid var(--border);background:rgba(0,0,0,.3);color:var(--fg);border-radius:6px;cursor:pointer">Vista general</button>
+    <button id="topView" style="width:100%;margin:4px 0;padding:6px;border:1px solid var(--border);background:rgba(0,0,0,.3);color:var(--fg);border-radius:6px;cursor:pointer">Vista cenital</button>
     <label for="exag" style="display:block;margin-top:6px">Exageración vertical <span id="exagVal">1.0</span></label>
     <input type="range" id="exag" min="1" max="2.5" step="0.1" value="1" style="width:100%">
     <label for="quality" style="display:block;margin-top:6px">Calidad</label>
@@ -137,8 +138,8 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
 renderer.shadowMap.enabled=true;
 renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 const scene=new THREE.Scene();
-scene.background=new THREE.Color(0x87a8c4);
-scene.fog=new THREE.Fog(0x87a8c4, 20000, 80000);
+scene.background=new THREE.Color(0x1f2a2e);
+scene.fog=new THREE.Fog(0x1f2a2e, 30000, 100000);
 const camera=new THREE.PerspectiveCamera(46,window.innerWidth/window.innerHeight,1,200000);
 camera.position.set(0,-50000,20000);
 camera.up.set(0,1,0);
@@ -153,8 +154,20 @@ light.shadow.mapSize.width=2048;
 light.shadow.mapSize.height=2048;
 light.shadow.camera.near=1;
 light.shadow.camera.far=100000;
+light.shadow.bias=-0.001;
+light.shadow.normalBias=0.02;
 scene.add(light);
-scene.add(new THREE.AmbientLight(0xffffff,1.0));
+scene.add(new THREE.AmbientLight(0xffffff,0.3));
+const hemi=new THREE.HemisphereLight(0xcfe3f2,0x3a4a3f,0.6);
+scene.add(hemi);
+// base plane (slate)
+const baseGeo=new THREE.PlaneGeometry(200000,20000);
+const baseMat=new THREE.MeshStandardMaterial({color:0x1f2a2e});
+const basePlane=new THREE.Mesh(baseGeo,baseMat);
+basePlane.rotation.x=-Math.PI/2;
+basePlane.position.y=-50;
+basePlane.receiveShadow=true;
+scene.add(basePlane);
 
 const texLoader=new THREE.TextureLoader();
 const texNames={satellite:'Satelital',localidades:'Localidades',valor:'Valor/estrato',relief:'Relieve',slope:'Pendientes'};
@@ -295,6 +308,8 @@ requestAnimationFrame(flyStep);
 // general view
 function generalView(){ camera.position.set(30000,-40000,25000); camera.lookAt(0,0,0); }
 document.getElementById('resetView')?.addEventListener('click',generalView);
+function topView(){ camera.position.set(0,50000,0); camera.lookAt(0,0,0); }
+document.getElementById('topView')?.addEventListener('click',topView);
 document.addEventListener('keydown',(e)=>{ if(e.key==='h'||e.key==='H'){ document.getElementById('help').style.display='flex'; } if(e.key==='f'||e.key==='F'){ startFly(); } if(e.key==='r'||e.key==='R'){ generalView(); } });
 
 // compass
