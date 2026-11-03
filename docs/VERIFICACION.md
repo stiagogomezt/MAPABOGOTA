@@ -4,8 +4,8 @@ Tabla de resultados. Cada punto debe tener evidencia (captura en docs/capturas/ 
 
 | REQ | Estado | Evidencia |
 |---|---|---|
-| REQ-COORD | PENDIENTE | — |
-| REQ-ALTITUD | PENDIENTE | — |
+| REQ-COORD | PASA | docs/capturas/visor_ok.png |
+| REQ-ALTITUD | PASA | docs/capturas/visor_ok.png |
 | REQ-FICHA-CATASTRAL | PENDIENTE | — |
 | REQ-ETIQUETAS | PENDIENTE | — |
 | REQ-ESCALA | PENDIENTE | — |
