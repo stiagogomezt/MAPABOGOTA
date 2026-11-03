@@ -21,7 +21,9 @@ class TestReqCoord(unittest.TestCase):
 
 class TestReqAltitud(unittest.TestCase):
     def test_req_altitud_range(self):
-        hr = ROOT / "data" / "processed" / "terrain" / "height_range.json"
+        hr = ROOT / "web" / "terrain" / "height_range.json"
+        if not hr.exists():
+            hr = ROOT / "data" / "processed" / "terrain" / "height_range.json"
         self.assertTrue(hr.exists())
         d = json.loads(hr.read_text())
         self.assertLess(d["min_m"], d["max_m"])
