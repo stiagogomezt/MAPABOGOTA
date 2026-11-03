@@ -7,6 +7,7 @@ NODE_PATH = os.pathsep.join([
     str(Path(os.environ.get("APPDATA", "")) / "npm" / "node_modules"),
     "/usr/lib/node_modules",
     "/usr/local/lib/node_modules",
+    "/usr/local/share/.config/yarn/global/node_modules",
 ])
 
 class VisorSmokeTests(unittest.TestCase):
