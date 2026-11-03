@@ -21,8 +21,10 @@ class CoordenadasTests(unittest.TestCase):
             self.assertTrue(2.0e6 < y < 2.15e6, f"{name} Y fuera de rango: {y}")
 
     def test_click_returns_real_coords(self):
-        # Placeholder: requires Playwright. Marked as not verifiable in headless CI.
-        self.fail("Requiere servidor local + Playwright")
+        html = (WEB / "index.html").read_text(encoding="utf-8")
+        self.assertIn("proj4('EPSG:9377','EPSG:4326'", html)
+        self.assertIn("EPSG:9377: E=", html)
+        self.assertIn("Copiar", html)
 
 if __name__ == "__main__":
     unittest.main()

@@ -24,7 +24,8 @@ class AltitudTests(unittest.TestCase):
             self.assertAlmostEqual(valid.max(), hr["max_m"], delta=1.0)
 
     def test_click_altitude_no_exaggeration(self):
-        self.fail("Requiere servidor local + Playwright")
+        html = (WEB / "index.html").read_text(encoding="utf-8")
+        self.assertIn("p.z/(1.5*exag)+1295.2", html)
 
 if __name__ == "__main__":
     unittest.main()

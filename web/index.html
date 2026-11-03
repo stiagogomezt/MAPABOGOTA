@@ -133,6 +133,7 @@ scene.background=new THREE.Color(0x87a8c4);
 scene.fog=new THREE.Fog(0x87a8c4, 20000, 80000);
 const camera=new THREE.PerspectiveCamera(46,window.innerWidth/window.innerHeight,1,200000);
 camera.position.set(0,-50000,20000);
+camera.up.set(0,1,0);
 camera.lookAt(0,0,0);
 const controls=new OrbitControls(camera,renderer.domElement);
 controls.enableDamping=true;
@@ -299,7 +300,7 @@ canvas.addEventListener('click',(e)=>{
   const p=hits[0].point;
   const alt=(p.z/(1.5*exag)+1295.2).toFixed(1);
   const eo=p.x+4877500, no=p.y+2072500;
-  let wgs='—';
+  let wgs='-';
   if(window.proj4){ try { const [lon,lat]=proj4('EPSG:9377','EPSG:4326',[eo,no]); wgs=lat.toFixed(6)+', '+lon.toFixed(6); } catch(e){} }
   if(profileMode){
     profilePoints.push({x:p.x,y:p.y,z:p.z});
