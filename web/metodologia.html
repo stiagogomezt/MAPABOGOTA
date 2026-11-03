@@ -60,6 +60,7 @@
           <li><b>Máscara</b><span>Selección de suelo urbano mediante la capa oficial SUECSUELO = 1. El alcance no representa suelo rural ni de expansión.</span></li>
           <li><b>Control geométrico</b><span>Reparación de geometrías, promoción a multipartes, recorte al suelo urbano, deduplicación y control de vacías e inválidas.</span></li>
           <li><b>Edificios e indicadores</b><span>Altura estimada = pisos reportados × 3 m. Se agregan huella y área construida estimada por manzana, junto con índices de ocupación y construcción.</span></li>
+          <li><b>Datum vertical</b><span>MDT UAECD 2014: gravity-related height (MAGNA Colombia Bogotá). Copernicus GLO-30: EGM2008. Fusión: diferencia media 3.289 m, desviación 3.956 m, transición 300 m. Ver docs/CALIDAD_MDT.md.</span></li>
           <li><b>Publicación</b><span>QGIS/GDAL produce GeoJSON y PMTiles entre zooms 11 y 16. MapLibre consulta teselas vectoriales desde CDN local, sin proceso de compilación.</span></li>
           <li><b>Escena 3D</b><span>El DEM y las huellas se transforman a EPSG:9377; Blender utiliza coordenadas locales en metros. La base de edificios se aproxima con el cuartil inferior de una ventana DSM 5×5.</span></li>
         </ol>

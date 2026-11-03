@@ -93,11 +93,11 @@ canvas{position:fixed;inset:0;display:block}
   <h2 data-sec="info">Información</h2>
   <div class="section" id="info">
     <div style="font-size:11px;color:var(--muted);line-height:1.5">
-      MDT: UAECD (CC BY-NC-SA 4.0)<br>
-      Copernicus DEM GLO-30<br>
+      MDT: UAECD 2014 (CC BY-NC-SA 4.0)<br>
+      Copernicus DEM GLO-30 (EGM2008)<br>
+      Fusión: diff media 3.289 m, desv. 3.956 m, transición 300 m<br>
       Sentinel-2 / ESA<br>
-      Datum vertical: gravity-related height (m)<br>
-      CRS: EPSG:9377
+      CRS: EPSG:9377 (MAGNA-SIRGAS / Origen-Nacional)
     </div>
   </div>
 </div>
@@ -113,6 +113,7 @@ canvas{position:fixed;inset:0;display:block}
     <br><button id="closeVideo" style="margin-top:8px;padding:6px 12px;border:1px solid var(--border);background:rgba(0,0,0,.3);color:var(--fg);border-radius:6px;cursor:pointer">Cerrar</button>
   </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/proj4@2.11.0/dist/proj4.js"></script>
 <script type="importmap">
 {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
 </script>
@@ -181,9 +182,61 @@ document.querySelector('.tcard').classList.add('active');
 // exag slider
 document.getElementById('exag').addEventListener('input',(e)=>{ exag=parseFloat(e.target.value); document.getElementById('exagVal').textContent=exag.toFixed(1); if(mesh&&mesh.geometry.attributes._origPos===undefined){ mesh.geometry.attributes._origPos=mesh.geometry.attributes.position.array.slice(); } if(mesh){ const pos=mesh.geometry.attributes.position.array; const orig=mesh.geometry.attributes._origPos; for(let i=0;i<pos.length;i+=3){ pos[i+2]=orig[i+2]*exag; } mesh.geometry.attributes.position.needsUpdate=true; } });
 
+// locality boundaries
+let localityLines=null;
+fetch('descargas/localidad.geojson').then(r=>r.json()).then(gj=>{
+  if(!window.proj4) return;
+  proj4.defs('EPSG:9377','+proj=tmerc +lat_0=4.596200416666667 +lon_0=-74.07750791666667 +k=1 +x_0=1000000 +y_0=1000000 +ellps=GRS80 +units=m +no_defs');
+  const grp=new THREE.Group();
+  gj.features.forEach(f=>{
+    const geom=f.geometry;
+    if(!geom) return;
+    const rings=geom.type==='Polygon'?[geom.coordinates]:geom.type==='MultiPolygon'?geom.coordinates:[];
+    rings.forEach(poly=>{
+      poly.forEach(ring=>{
+        const pts=ring.map(c=>{ const [x,y]=proj4('EPSG:4326','EPSG:9377',[c[0],c[1]]); return new THREE.Vector3(x-4877500,0,y-2072500); });
+        // place on terrain: set z from mesh? skip, use 0
+        const geo=new THREE.BufferGeometry().setFromPoints(pts);
+        const mat=new THREE.LineBasicMaterial({color:0xc9b9e8,transparent:true,opacity:0.7});
+        const line=new THREE.Line(geo,mat);
+        grp.add(line);
+      });
+    });
+  });
+  scene.add(grp);
+  localityLines=grp;
+  grp.visible=false;
+}).catch(()=>{});
+// labels
+const labelData=[{name:'Monserrate',x:0,y:0,z:3152},{name:'Plaza de Bolívar',x:0,y:0,z:2625},{name:'Aeropuerto El Dorado',x:-10000,y:5000,z:2548}];
+const labels=[];
+labelData.forEach(l=>{
+  const div=document.createElement('div'); div.className='label'; div.textContent=l.name; div.style.cssText='position:fixed;color:#fff;font-size:11px;pointer-events:none;text-shadow:0 0 3px #000;z-index:40';
+  document.body.appendChild(div);
+  labels.push({div,world:new THREE.Vector3(l.x,l.y,(l.z-1295.2)*1.5)});
+});
+function updateLabels(){
+  labels.forEach(l=>{
+    const v=l.world.clone().project(camera);
+    const x=(v.x*0.5+0.5)*window.innerWidth;
+    const y=(-v.y*0.5+0.5)*window.innerHeight;
+    l.div.style.left=x+'px'; l.div.style.top=y+'px';
+    l.div.style.display=(v.z>1)?'none':'block';
+  });
+}
+// add to animate
+const origFlyStep=window.flyStep;
+// patch flyStep to call updateLabels
+const _fs=flyStep; 
+// We'll call updateLabels in a separate raf
+function labelLoop(){ updateLabels(); requestAnimationFrame(labelLoop); }
+requestAnimationFrame(labelLoop);
+
 // layers
 document.getElementById('chkBuildings').addEventListener('change',(e)=>{ if(terrain) terrain.visible=e.target.checked; });
 document.getElementById('chkLabels').addEventListener('change',(e)=>{ document.querySelectorAll('.label').forEach(l=>l.style.display=e.target.checked?'block':'none'); });
+const chkLoc=document.createElement('label'); chkLoc.innerHTML='<input type="checkbox" id="chkLoc"> Límites localidades'; document.getElementById('layers').appendChild(chkLoc);
+document.getElementById('chkLoc').addEventListener('change',(e)=>{ if(localityLines) localityLines.visible=e.target.checked; });
 
 // collapsible sections
 document.querySelectorAll('#panel h2').forEach(h=>{ h.addEventListener('click',()=>{ h.classList.toggle('open'); const sec=document.getElementById(h.dataset.sec); sec.classList.toggle('open'); }); });
@@ -194,9 +247,12 @@ document.getElementById('flyBtn').addEventListener('click',()=>{ const c=documen
 
 // flyover (time-based)
 let flyData=null, flyPlaying=false, flyT=0, flyLast=0;
+let profileMode=false, profilePoints=[];
 fetch('terrain/camera_path.json').then(r=>r.json()).then(d=>{flyData=d;});
 function startFly(){ flyPlaying=true; flyT=0; flyLast=performance.now(); }
 document.getElementById('fly').addEventListener('click',()=>{ if(!flyPlaying){ flyPlaying=true; flyT=0; flyLast=performance.now(); } else { flyPlaying=false; } });
+document.getElementById('btnProfile').addEventListener('click',()=>{ profileMode=true; profilePoints=[]; document.getElementById('status').textContent='Perfil: clic en el primer punto'; });
+document.getElementById('closeProfile').addEventListener('click',()=>{ document.getElementById('profilebox').style.display='none'; profileMode=false; profilePoints=[]; });
 function flyStep(now){
   if(flyPlaying && flyData){
     const dt=(now-flyLast)/1000; flyLast=now;
@@ -238,13 +294,73 @@ canvas.addEventListener('click',(e)=>{
   mouse.y=-(e.clientY/window.innerHeight)*2+1;
   raycaster.setFromCamera(mouse,camera);
   const hits=raycaster.intersectObject(mesh);
-  if(hits.length){
-    const p=hits[0].point;
-    const alt=(p.z/exag+1295.2).toFixed(1);
-    document.getElementById('clickinfo').style.display='block';
-    document.getElementById('clickinfo').innerHTML=`<b>Ficha</b><br>X: ${p.x.toFixed(0)} m<br>Y: ${p.y.toFixed(0)} m<br>Altitud MDT: ${alt} m`;
+  if(!hits.length) return;
+  const p=hits[0].point;
+  const alt=(p.z/exag+1295.2).toFixed(1);
+  if(profileMode){
+    profilePoints.push({x:p.x,y:p.y,z:p.z});
+    if(profilePoints.length===1){ document.getElementById('status').textContent='Perfil: clic en el segundo punto'; }
+    if(profilePoints.length===2){
+      drawProfile(profilePoints);
+      profileMode=false;
+      document.getElementById('status').textContent='Perfil generado';
+    }
+    return;
   }
+  document.getElementById('clickinfo').style.display='block';
+  document.getElementById('clickinfo').innerHTML=`<b>Ficha</b><br>X: ${p.x.toFixed(0)} m (EPSG:9377)<br>Y: ${p.y.toFixed(0)} m<br>Altitud MDT: ${alt} m (sin exageración)`;
 });
+
+function drawProfile(pts){
+  const c=document.getElementById('profilecanvas');
+  const ctx=c.getContext('2d');
+  const W=c.width=400, H=c.height=120;
+  ctx.clearRect(0,0,W,H);
+  // sample along line
+  const n=60;
+  const samples=[];
+  for(let i=0;i<=n;i++){
+    const t=i/n;
+    const x=pts[0].x+(pts[1].x-pts[0].x)*t;
+    const y=pts[0].y+(pts[1].y-pts[0].y)*t;
+    // find nearest mesh vertex height
+    let z=0;
+    // sample from mesh geometry (approx)
+    const pos=mesh.geometry.attributes.position.array;
+    let best=1e9;
+    for(let j=0;j<pos.length;j+=3){
+      const d=(pos[j]-x)**2+(pos[j+1]-y)**2;
+      if(d<best){ best=d; z=pos[j+2]; }
+    }
+    samples.push({t,d:Math.hypot(pts[1].x-pts[0].x,pts[1].y-pts[0].y)*t, h:z/exag+1295.2});
+  }
+  const hs=samples.map(s=>s.h);
+  const minH=Math.min(...hs), maxH=Math.max(...hs);
+  const range=maxH-minH||1;
+  // draw
+  ctx.strokeStyle='#6ea8fe'; ctx.lineWidth=2; ctx.beginPath();
+  samples.forEach((s,i)=>{
+    const px=i/(n)*W;
+    const py=H-(s.h-minH)/range*(H-20)-10;
+    if(i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
+  });
+  ctx.stroke();
+  // axis labels
+  ctx.fillStyle='#9aa4b2'; ctx.font='10px IBM Plex Sans';
+  ctx.fillText(minH.toFixed(0)+' m',4,H-2);
+  ctx.fillText(maxH.toFixed(0)+' m',4,12);
+  const dist=Math.hypot(pts[1].x-pts[0].x,pts[1].y-pts[0].y);
+  ctx.fillText('Dist: '+dist.toFixed(0)+' m  Desnivel: '+(hs[hs.length-1]-hs[0]).toFixed(1)+' m', W/2-80, H-2);
+  document.getElementById('profilebox').style.display='block';
+  // CSV export
+  const csv=samples.map(s=>`${s.d.toFixed(2)},${s.h.toFixed(2)}`).join('\\n');
+  const blob=new Blob(['distancia_m,altitud_m\\n'+csv],{type:'text/csv'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='perfil.csv'; a.textContent='Exportar CSV';
+  const pb=document.getElementById('profilebox');
+  const old=pb.querySelector('.csvlink'); if(old) old.remove();
+  a.className='csvlink'; a.style.cssText='position:absolute;bottom:6px;right:8px;font-size:11px;color:var(--accent)';
+  pb.appendChild(a);
+}
 
 // status bar coords
 canvas.addEventListener('mousemove',(e)=>{
