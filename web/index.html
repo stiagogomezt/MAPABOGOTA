@@ -8,6 +8,8 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;600&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/portada.css">
+<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;600&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/portada.css">
 <style>
 :root{--bg:rgba(12,16,28,.72);--fg:#e8ecf4;--muted:#9aa4b2;--accent:#6ea8fe;--border:rgba(255,255,255,.12)}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -168,7 +170,6 @@ let terrain=null, mesh=null, exag=1.0;
 const loader=new GLTFLoader();
 loader.load('terrain/terrain.glb',(gltf)=>{
   terrain=gltf.scene;
-  terrain.scale.x=-1; // fix orientation: east -> +X
   terrain.traverse(o=>{ if(o.isMesh && !mesh){ mesh=o; const nmap=new THREE.TextureLoader().load('terrain/normalmap.jpg'); const mat=new THREE.MeshStandardMaterial({map:textures.satellite,normalMap:nmap,side:THREE.DoubleSide}); mesh.material=mat; mesh.castShadow=true; mesh.receiveShadow=true; } });
   scene.add(terrain);
   document.getElementById('loader').style.opacity='0';

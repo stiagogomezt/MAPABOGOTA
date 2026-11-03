@@ -86,7 +86,7 @@ class TestReqAyuda(unittest.TestCase):
 class TestReqOrientacion(unittest.TestCase):
     def test_req_orientacion(self):
         html = (WEB / "index.html").read_text(encoding="utf-8")
-        self.assertIn("terrain.scale.x=-1", html)
+        self.assertNotIn("terrain.scale.x=-1", html)
         self.assertIn("camera.up.set(0,1,0)", html)
 
 class TestReqPublicacion(unittest.TestCase):

@@ -5,6 +5,7 @@ const fs = require('fs');
   const page = await browser.newPage();
   const errors = [];
   page.on('console', msg => { const loc=msg.location(); console.log('PAGE_CONSOLE', msg.type(), msg.text(), loc.url, loc.lineNumber); if (msg.type() === 'error') errors.push(msg.text()+' @'+loc.lineNumber); });
+  page.on('pageerror', err => { console.log('PAGEERROR', err.message); console.log('STACK', err.stack); errors.push('PAGEERROR: '+err.message); });
   page.on('pageerror', err => errors.push(err.stack || err.message));
   await page.goto('http://localhost:8000/', { waitUntil: 'networkidle', timeout: 60000 });
   await page.waitForTimeout(8000);
