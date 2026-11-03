@@ -297,7 +297,10 @@ canvas.addEventListener('click',(e)=>{
   const hits=raycaster.intersectObject(mesh);
   if(!hits.length) return;
   const p=hits[0].point;
-  const alt=(p.z/exag+1295.2).toFixed(1);
+  const alt=(p.z/(1.5*exag)+1295.2).toFixed(1);
+  const eo=p.x+4877500, no=p.y+2072500;
+  let wgs='—';
+  if(window.proj4){ try { const [lon,lat]=proj4('EPSG:9377','EPSG:4326',[eo,no]); wgs=lat.toFixed(6)+', '+lon.toFixed(6); } catch(e){} }
   if(profileMode){
     profilePoints.push({x:p.x,y:p.y,z:p.z});
     if(profilePoints.length===1){ document.getElementById('status').textContent='Perfil: clic en el segundo punto'; }
@@ -309,7 +312,7 @@ canvas.addEventListener('click',(e)=>{
     return;
   }
   document.getElementById('clickinfo').style.display='block';
-  document.getElementById('clickinfo').innerHTML=`<b>Ficha</b><br>X: ${p.x.toFixed(0)} m (EPSG:9377)<br>Y: ${p.y.toFixed(0)} m<br>Altitud MDT: ${alt} m (sin exageración)`;
+  document.getElementById('clickinfo').innerHTML=`<b>Ficha</b><br>EPSG:9377: E=${eo.toFixed(1)} m, N=${no.toFixed(1)} m<br>WGS84: ${wgs}<br>Altitud MDT: ${alt} m (sin exageración)<br><button onclick="navigator.clipboard.writeText('${eo.toFixed(1)},${no.toFixed(1)}')" style="margin-top:6px;padding:4px 8px;border:1px solid var(--border);background:rgba(0,0,0,.3);color:var(--fg);border-radius:4px;cursor:pointer;font-size:11px">Copiar</button>`;
 });
 
 function drawProfile(pts){
@@ -333,7 +336,7 @@ function drawProfile(pts){
       const d=(pos[j]-x)**2+(pos[j+1]-y)**2;
       if(d<best){ best=d; z=pos[j+2]; }
     }
-    samples.push({t,d:Math.hypot(pts[1].x-pts[0].x,pts[1].y-pts[0].y)*t, h:z/exag+1295.2});
+    samples.push({t,d:Math.hypot(pts[1].x-pts[0].x,pts[1].y-pts[0].y)*t, h:z/(1.5*exag)+1295.2});
   }
   const hs=samples.map(s=>s.h);
   const minH=Math.min(...hs), maxH=Math.max(...hs);
