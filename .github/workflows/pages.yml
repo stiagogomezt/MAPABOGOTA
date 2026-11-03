@@ -33,7 +33,7 @@ jobs:
       - name: Install dependencies
         run: pip install pyproj rasterio numpy
       - name: Run verificar.py
-        run: python scripts/verificar.py
+        run: python scripts/verificar.py --criticos
 
   deploy:
     needs: verificar
