@@ -1,11 +1,19 @@
 # Verificación del visor 3D de Bogotá
 
-| REQ | Estado | Evidencia |
-|---|---|---|
-| REQ-COORD | FALLA | test_click_returns_real_coords (tests.test_coordenadas.CoordenadasTests.test_click_returns_real_coords) ... FAIL test_pyproj_conversion (tests.test_coordenadas.CoordenadasTests.test_pyproj_conversion) |
-| REQ-ALTITUD | FALLA | test_click_altitude_no_exaggeration (tests.test_altitud.AltitudTests.test_click_altitude_no_exaggeration) ... FAIL test_height_range_exists (tests.test_altitud.AltitudTests.test_height_range_exists) . |
-| REQ-ETIQUETAS | FALLA | test_labels_in_dom (tests.test_etiquetas.EtiquetasTests.test_labels_in_dom) ... FAIL test_no_overlap (tests.test_etiquetas.EtiquetasTests.test_no_overlap) ... FAIL  =================================== |
-| REQ-DISEÑO | PASA | test_localidades_texture_removed (tests.test_diseno.DisenoTests.test_localidades_texture_removed) ... ok test_no_native_controls_unstyled (tests.test_diseno.DisenoTests.test_no_native_controls_unstyle |
-| REQ-NAVEGACIÓN | FALLA | test_fps (tests.test_navegacion.NavegacionTests.test_fps) ... FAIL test_zoom_time (tests.test_navegacion.NavegacionTests.test_zoom_time) ... FAIL  ===================================================== |
-| REQ-VISOR | FALLA | test_page_loads (tests.test_visor.VisorTests.test_page_loads) ... FAIL  ====================================================================== FAIL: test_page_loads (tests.test_visor.VisorTests.test_p |
-| REQ-PUBLICACIÓN | PASA | test_no_file_over_50mb (tests.test_publicacion.PublicationSizeTests.test_no_file_over_50mb) ... ok test_web_total_below_300mb (tests.test_publicacion.PublicationSizeTests.test_web_total_below_300mb) . |
+| REQ | Severidad | Estado | Evidencia |
+|---|---|---|---|
+| REQ-ALTITUD | CRÍTICO | FALLA | test_req_altitud_click (tests.test_reqs.TestReqAltitud.test_req_altitud_click) ... FAIL |
+| REQ-AYUDA | MEJORA | PASA | test_req_ayuda (tests.test_reqs.TestReqAyuda.test_req_ayuda) ... ok  ---------------------------------------------------------------------- Ran 1 test |
+| REQ-COORD | CRÍTICO | FALLA | test_req_coord_click (tests.test_reqs.TestReqCoord.test_req_coord_click) ... FAIL |
+| REQ-COSTURAS | MEJORA | FALLA | test_req_costuras (tests.test_reqs.TestReqCosturas.test_req_costuras) ... FAIL |
+| REQ-DISENO | MEJORA | PASA | test_req_diseno (tests.test_reqs.TestReqDiseno.test_req_diseno) ... ok  ---------------------------------------------------------------------- Ran 1 t |
+| REQ-ESCALA | MEJORA | FALLA | test_req_escala (tests.test_reqs.TestReqEscala.test_req_escala) ... FAIL |
+| REQ-ETIQUETAS | MEJORA | FALLA | test_req_etiquetas (tests.test_reqs.TestReqEtiquetas.test_req_etiquetas) ... FAIL |
+| REQ-FICHA-CATASTRAL | MEJORA | FALLA | test_req_ficha_catastral (tests.test_reqs.TestReqFichaCatastral.test_req_ficha_catastral) ... FAIL |
+| REQ-HD | MEJORA | PASA | test_req_hd_pixel_ratio (tests.test_reqs.TestReqHd.test_req_hd_pixel_ratio) ... ok  ------------------------------------------------------------------ |
+| REQ-NAVEGACION | MEJORA | FALLA | test_req_navegacion (tests.test_reqs.TestReqNavegacion.test_req_navegacion) ... FAIL |
+| REQ-ORGANIZACION | MEJORA | PASA | test_req_organizacion (tests.test_reqs.TestReqOrganizacion.test_req_organizacion) ... ok  ------------------------------------------------------------ |
+| REQ-ORIENTACION | CRÍTICO | FALLA | test_req_orientacion (tests.test_reqs.TestReqOrientacion.test_req_orientacion) ... FAIL |
+| REQ-PUBLICACION | CRÍTICO | PASA | test_req_publicacion (tests.test_reqs.TestReqPublicacion.test_req_publicacion) ... ok  --------------------------------------------------------------- |
+| REQ-SOMBRAS | MEJORA | FALLA | test_req_sombras (tests.test_reqs.TestReqSombras.test_req_sombras) ... FAIL |
+| REQ-VISOR | CRÍTICO | PASA | CONSOLE_ERRORS: []   test_smoke_canvas_not_black (tests.test_visor.VisorSmokeTests.test_smoke_canvas_not_black) ... 127.0.0.1 - - [02/Nov/2026 19:58:1 |
