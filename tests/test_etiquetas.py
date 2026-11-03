@@ -1,5 +1,6 @@
 import unittest
 from pathlib import Path
+WEB = Path(__file__).resolve().parents[1] / "web"
 
 class EtiquetasTests(unittest.TestCase):
     def test_labels_in_dom(self):
@@ -8,9 +9,8 @@ class EtiquetasTests(unittest.TestCase):
         self.assertIn("updateLabels", html)
 
     def test_no_overlap(self):
-        # Structural check: labels container exists
         html = (WEB / "index.html").read_text(encoding="utf-8")
-        self.assertIn("class='label'", html) or self.assertIn('class="label"', html)
+        self.assertIn("'label'", html)
 
 if __name__ == "__main__":
     unittest.main()

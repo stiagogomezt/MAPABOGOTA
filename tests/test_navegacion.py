@@ -1,5 +1,6 @@
 import unittest
 from pathlib import Path
+WEB = Path(__file__).resolve().parents[1] / "web"
 
 class NavegacionTests(unittest.TestCase):
     def test_zoom_time(self):
