@@ -5,6 +5,8 @@ ROOT = Path(__file__).resolve().parents[1]
 NODE = "node"
 NODE_PATH = os.pathsep.join([
     str(Path(os.environ.get("APPDATA", "")) / "npm" / "node_modules"),
+    "/usr/lib/node_modules",
+    "/usr/local/lib/node_modules",
 ])
 
 class VisorSmokeTests(unittest.TestCase):

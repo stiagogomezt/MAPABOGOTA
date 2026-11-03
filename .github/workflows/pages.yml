@@ -37,7 +37,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install pyproj rasterio numpy
-          npm install -g playwright
+          npm install playwright
           npx playwright install chromium
       - name: Run verificar.py
         run: python scripts/verificar.py --criticos
