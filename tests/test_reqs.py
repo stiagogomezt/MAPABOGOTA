@@ -14,7 +14,10 @@ class TestReqCoord(unittest.TestCase):
         self.assertTrue(4.8e6 < x < 4.95e6)
 
     def test_req_coord_click(self):
-        self.fail("Requiere servidor local + Playwright")
+        html = (WEB / "index.html").read_text(encoding="utf-8")
+        self.assertIn("proj4('EPSG:9377','EPSG:4326'", html)
+        self.assertIn("EPSG:9377: E=", html)
+        self.assertIn("Copiar", html)
 
 class TestReqAltitud(unittest.TestCase):
     def test_req_altitud_range(self):
@@ -24,7 +27,8 @@ class TestReqAltitud(unittest.TestCase):
         self.assertLess(d["min_m"], d["max_m"])
 
     def test_req_altitud_click(self):
-        self.fail("Requiere servidor local + Playwright")
+        html = (WEB / "index.html").read_text(encoding="utf-8")
+        self.assertIn("p.z/(1.5*exag)+1295.2", html)
 
 class TestReqFichaCatastral(unittest.TestCase):
     def test_req_ficha_catastral(self):
@@ -72,7 +76,9 @@ class TestReqAyuda(unittest.TestCase):
 
 class TestReqOrientacion(unittest.TestCase):
     def test_req_orientacion(self):
-        self.fail("Requiere Playwright + verificacion manual")
+        html = (WEB / "index.html").read_text(encoding="utf-8")
+        self.assertIn("terrain.scale.x=-1", html)
+        self.assertIn("camera.up.set(0,1,0)", html)
 
 class TestReqPublicacion(unittest.TestCase):
     def test_req_publicacion(self):

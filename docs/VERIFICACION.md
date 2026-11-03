@@ -2,9 +2,9 @@
 
 | REQ | Severidad | Estado | Evidencia |
 |---|---|---|---|
-| REQ-ALTITUD | CRÍTICO | FALLA | test_req_altitud_click (tests.test_reqs.TestReqAltitud.test_req_altitud_click) ... FAIL |
+| REQ-ALTITUD | CRÍTICO | PASA | test_req_altitud_click (tests.test_reqs.TestReqAltitud.test_req_altitud_click) ... ok test_req_altitud_range (tests.test_reqs.TestReqAltitud.test_req_ |
 | REQ-AYUDA | MEJORA | PASA | test_req_ayuda (tests.test_reqs.TestReqAyuda.test_req_ayuda) ... ok  ---------------------------------------------------------------------- Ran 1 test |
-| REQ-COORD | CRÍTICO | FALLA | test_req_coord_click (tests.test_reqs.TestReqCoord.test_req_coord_click) ... FAIL |
+| REQ-COORD | CRÍTICO | PASA | test_req_coord_click (tests.test_reqs.TestReqCoord.test_req_coord_click) ... ok test_req_coord_pyproj (tests.test_reqs.TestReqCoord.test_req_coord_pyp |
 | REQ-COSTURAS | MEJORA | FALLA | test_req_costuras (tests.test_reqs.TestReqCosturas.test_req_costuras) ... FAIL |
 | REQ-DISENO | MEJORA | PASA | test_req_diseno (tests.test_reqs.TestReqDiseno.test_req_diseno) ... ok  ---------------------------------------------------------------------- Ran 1 t |
 | REQ-ESCALA | MEJORA | FALLA | test_req_escala (tests.test_reqs.TestReqEscala.test_req_escala) ... FAIL |
@@ -16,4 +16,4 @@
 | REQ-ORIENTACION | CRÍTICO | FALLA | test_req_orientacion (tests.test_reqs.TestReqOrientacion.test_req_orientacion) ... FAIL |
 | REQ-PUBLICACION | CRÍTICO | PASA | test_req_publicacion (tests.test_reqs.TestReqPublicacion.test_req_publicacion) ... ok  --------------------------------------------------------------- |
 | REQ-SOMBRAS | MEJORA | FALLA | test_req_sombras (tests.test_reqs.TestReqSombras.test_req_sombras) ... FAIL |
-| REQ-VISOR | CRÍTICO | PASA | CONSOLE_ERRORS: []   test_smoke_canvas_not_black (tests.test_visor.VisorSmokeTests.test_smoke_canvas_not_black) ... 127.0.0.1 - - [02/Nov/2026 19:58:1 |
+| REQ-VISOR | CRÍTICO | FALLA | FAILED (errors=1) |
