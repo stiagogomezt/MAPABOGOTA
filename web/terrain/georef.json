@@ -1,0 +1,28 @@
+{
+  "crs": "EPSG:9377",
+  "extent_m": {
+    "xmin": 4850000.0,
+    "ymin": 2040000.0,
+    "xmax": 4905000.0,
+    "ymax": 2105000.0
+  },
+  "pixel_size_m": 5.0,
+  "width_px": 11000,
+  "height_px": 13000,
+  "origin_local_m": [
+    4850000.0,
+    2105000.0
+  ],
+  "height_range_m": {
+    "min": 1295.2083740234375,
+    "max": 3817.869140625
+  },
+  "vertical_exaggeration": 1.5,
+  "nodata": -9999.0,
+  "datum_vertical": "MDT UAECD 2014 (gravity-related height, m) + Copernicus GLO-30 harmonizado",
+  "harmonization": {
+    "mean_diff_copernicus_minus_mdt_m": 3.288954257965088,
+    "std_diff_m": 3.9557101726531982,
+    "transition_m": 300
+  }
+}

@@ -3,8 +3,11 @@ from pathlib import Path
 import rasterio, numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
+WEB = ROOT / "web"
 MDT = ROOT / "data" / "processed" / "terrain" / "mdt_fused_9377_5m.tif"
-HR = ROOT / "data" / "processed" / "terrain" / "height_range.json"
+HR = ROOT / "web" / "terrain" / "height_range.json"
+if not HR.exists():
+    HR = ROOT / "data" / "processed" / "terrain" / "height_range.json"
 
 class AltitudTests(unittest.TestCase):
     def test_height_range_exists(self):
