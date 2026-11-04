@@ -123,6 +123,7 @@ canvas{position:fixed;inset:0;display:block}
 </div>
 <script src="https://cdn.jsdelivr.net/npm/proj4@2.11.0/dist/proj4.js"></script>
 <script src="assets/portada.js"></script>
+<script src="assets/bogota3d_camara.js"></script>
 <script type="importmap">
 {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
 </script>
@@ -135,39 +136,21 @@ const canvas=document.getElementById('canvas');
 const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
 renderer.setSize(window.innerWidth,window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+renderer.toneMapping=THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure=1.0;
+renderer.outputColorSpace=THREE.SRGBColorSpace;
 renderer.shadowMap.enabled=true;
 renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 const scene=new THREE.Scene();
-scene.background=new THREE.Color(0x1f2a2e);
-scene.fog=new THREE.Fog(0x1f2a2e, 30000, 100000);
 const camera=new THREE.PerspectiveCamera(46,window.innerWidth/window.innerHeight,1,200000);
-camera.position.set(0,-50000,20000);
+camera.position.set(-30000,20000,30000);
 camera.up.set(0,1,0);
 camera.lookAt(0,0,0);
 const controls=new OrbitControls(camera,renderer.domElement);
 controls.enableDamping=true;
 controls.target.set(0,0,0);
-const light=new THREE.DirectionalLight(0xffffff,1.2);
-light.position.set(10000,-10000,5000);
-light.castShadow=true;
-light.shadow.mapSize.width=2048;
-light.shadow.mapSize.height=2048;
-light.shadow.camera.near=1;
-light.shadow.camera.far=100000;
-light.shadow.bias=-0.001;
-light.shadow.normalBias=0.02;
-scene.add(light);
-scene.add(new THREE.AmbientLight(0xffffff,0.3));
-const hemi=new THREE.HemisphereLight(0xcfe3f2,0x3a4a3f,0.6);
-scene.add(hemi);
-// base plane (slate)
-const baseGeo=new THREE.PlaneGeometry(200000,20000);
-const baseMat=new THREE.MeshStandardMaterial({color:0x1f2a2e});
-const basePlane=new THREE.Mesh(baseGeo,baseMat);
-basePlane.rotation.x=-Math.PI/2;
-basePlane.position.y=-50;
-basePlane.receiveShadow=true;
-scene.add(basePlane);
+// ambiente se crea despues de cargar el terreno
+// base plane is created by Bogota3D.crearAmbiente
 
 const texLoader=new THREE.TextureLoader();
 const texNames={satellite:'Satelital',localidades:'Localidades',valor:'Valor/estrato',relief:'Relieve',slope:'Pendientes'};
@@ -183,12 +166,29 @@ let terrain=null, mesh=null, exag=1.0;
 const loader=new GLTFLoader();
 loader.load('terrain/terrain.glb',(gltf)=>{
   terrain=gltf.scene;
-  terrain.traverse(o=>{ if(o.isMesh && !mesh){ mesh=o; const nmap=new THREE.TextureLoader().load('terrain/normalmap.jpg'); const mat=new THREE.MeshStandardMaterial({map:textures.satellite,normalMap:nmap,side:THREE.DoubleSide}); mesh.material=mat; mesh.castShadow=true; mesh.receiveShadow=true; } });
+  terrain.traverse(o=>{ if(o.isMesh && !mesh){ mesh=o; console.log('MESH_ATTRS', Object.keys(mesh.geometry.attributes)); const nmap=new THREE.TextureLoader().load('terrain/normalmap.jpg'); const mat=new THREE.MeshStandardMaterial({map:textures.satellite,normalMap:nmap,side:THREE.DoubleSide}); mesh.material=mat; mesh.castShadow=true; mesh.receiveShadow=true; } });
   scene.add(terrain);
+  // ambiente
+  const ambiente = (window.Bogota3D && window.Bogota3D.crearAmbiente) ? window.Bogota3D.crearAmbiente({ THREE, escena: scene, terreno: terrain, renderer, camara: camera }) : null;
+  // exageracion por defecto 1.6
+  exag = 1.6;
+  document.getElementById('exag').value = 1.6;
+  document.getElementById('exagVal').textContent = '1.6';
+  if (!window._origPos) { window._origPos = mesh.geometry.attributes.position.array.slice(); }
+  if (mesh) { const pos = mesh.geometry.attributes.position.array; const orig = window._origPos; for (let i = 0; i < pos.length; i += 3) { pos[i + 2] = orig[i + 2] * exag; } mesh.geometry.attributes.position.needsUpdate = true; }
   document.getElementById('loader').style.opacity='0';
   setTimeout(()=>document.getElementById('loader').style.display='none',600);
   if(window.portada) window.portada.listo();
   const portadaEl=document.getElementById('portada'); if(portadaEl) portadaEl.style.display='flex';
+  // vistas
+  if (window.Bogota3D) { window.Bogota3D.vistaGeneral({ THREE, camara: camera, controles: controls, terreno: terrain }); }
+  // sobrevuelo
+  const alturas = (window.Bogota3D && window.Bogota3D.alturas) ? window.Bogota3D.alturas(THREE, mesh) : null;
+  const aEscena = (este, norte) => { const r = (window.geo && window.geo.epsgToGlb) ? window.geo.epsgToGlb(este, norte) : { x: este - 4877500, z: 2072500 - norte }; return r; };
+  const vuelo = (window.Bogota3D && window.Bogota3D.crearSobrevuelo) ? window.Bogota3D.crearSobrevuelo({ THREE, camara: camera, controles: controls, terreno: terrain, aEscena, lienzo: renderer.domElement, alCuadro: () => renderer.render(scene, camera), alTerminar: () => {}, alPausar: () => { const btn = document.getElementById('resumeFly'); if (btn) btn.style.display = 'block'; } }) : null;
+  window._vuelo = vuelo;
+  window._ambiente = ambiente;
+  window._alturas = alturas;
 }, (xhr)=>{ if(xhr.lengthComputable){ const frac=xhr.loaded/xhr.total; if(window.portada) window.portada.progreso(frac); loadfill.style.width=(frac*100)+'%'; loadtxt.textContent=`Cargando terreno ${(frac*100).toFixed(0)}%`; } },
 (e)=>{ console.error('GLB load error:',e); document.getElementById('status').textContent='Error cargando terreno: '+(e&&e.message?e.message:e); });
 
@@ -203,33 +203,9 @@ Object.keys(texFiles).forEach(k=>{
 document.querySelector('.tcard').classList.add('active');
 
 // exag slider
-document.getElementById('exag').addEventListener('input',(e)=>{ exag=parseFloat(e.target.value); document.getElementById('exagVal').textContent=exag.toFixed(1); if(mesh&&mesh.geometry.attributes._origPos===undefined){ mesh.geometry.attributes._origPos=mesh.geometry.attributes.position.array.slice(); } if(mesh){ const pos=mesh.geometry.attributes.position.array; const orig=mesh.geometry.attributes._origPos; for(let i=0;i<pos.length;i+=3){ pos[i+2]=orig[i+2]*exag; } mesh.geometry.attributes.position.needsUpdate=true; } });
+document.getElementById('exag').addEventListener('input',(e)=>{ exag=parseFloat(e.target.value); document.getElementById('exagVal').textContent=exag.toFixed(1); if(!window._origPos){ window._origPos=mesh.geometry.attributes.position.array.slice(); } if(mesh){ const pos=mesh.geometry.attributes.position.array; const orig=window._origPos; for(let i=0;i<pos.length;i+=3){ pos[i+2]=orig[i+2]*exag; } mesh.geometry.attributes.position.needsUpdate=true; } if(window._ambiente) window._ambiente.recalcular(); if(window._vuelo) window._vuelo.recalcular(); });
 
-// locality boundaries
-let localityLines=null;
-fetch('descargas/localidad.geojson').then(r=>r.json()).then(gj=>{
-  if(!window.proj4) return;
-  proj4.defs('EPSG:9377','+proj=tmerc +lat_0=4.596200416666667 +lon_0=-74.07750791666667 +k=1 +x_0=1000000 +y_0=1000000 +ellps=GRS80 +units=m +no_defs');
-  const grp=new THREE.Group();
-  gj.features.forEach(f=>{
-    const geom=f.geometry;
-    if(!geom) return;
-    const rings=geom.type==='Polygon'?[geom.coordinates]:geom.type==='MultiPolygon'?geom.coordinates:[];
-    rings.forEach(poly=>{
-      poly.forEach(ring=>{
-        const pts=ring.map(c=>{ const [x,y]=proj4('EPSG:4326','EPSG:9377',[c[0],c[1]]); return new THREE.Vector3(x-4877500,0,y-2072500); });
-        // place on terrain: set z from mesh? skip, use 0
-        const geo=new THREE.BufferGeometry().setFromPoints(pts);
-        const mat=new THREE.LineBasicMaterial({color:0xc9b9e8,transparent:true,opacity:0.7});
-        const line=new THREE.Line(geo,mat);
-        grp.add(line);
-      });
-    });
-  });
-  scene.add(grp);
-  localityLines=grp;
-  grp.visible=false;
-}).catch(()=>{});
+// locality boundaries (disabled)
 // labels
 const labelData=[{name:'Monserrate',x:0,y:0,z:3152},{name:'Plaza de Bolívar',x:0,y:0,z:2625},{name:'Aeropuerto El Dorado',x:-10000,y:5000,z:2548}];
 const labels=[];
@@ -247,13 +223,7 @@ function updateLabels(){
     l.div.style.display=(v.z>1)?'none':'block';
   });
 }
-// add to animate
-const origFlyStep=window.flyStep;
-// patch flyStep to call updateLabels
-const _fs=flyStep; 
-// We'll call updateLabels in a separate raf
-function labelLoop(){ updateLabels(); requestAnimationFrame(labelLoop); }
-requestAnimationFrame(labelLoop);
+// labels disabled for now
 
 // layers
 document.getElementById('chkBuildings').addEventListener('change',(e)=>{ if(terrain) terrain.visible=e.target.checked; });
@@ -271,7 +241,11 @@ let flyData=null, flyPlaying=false, flyT=0, flyLast=0;
 let profileMode=false, profilePoints=[];
 fetch('terrain/camera_path.json').then(r=>r.json()).then(d=>{flyData=d;});
 function startFly(){ flyPlaying=true; flyT=0; flyLast=performance.now(); }
-document.getElementById('fly').addEventListener('click',()=>{ if(!flyPlaying){ flyPlaying=true; flyT=0; flyLast=performance.now(); } else { flyPlaying=false; } });
+document.getElementById('fly').addEventListener('click',()=>{ if(window._vuelo) window._vuelo.iniciar(); });
+// resume button
+const resumeBtn=document.createElement('button'); resumeBtn.id='resumeFly'; resumeBtn.textContent='Reanudar'; resumeBtn.style.cssText='width:100%;margin:4px 0;padding:6px;border:1px solid var(--border);background:rgba(0,0,0,.3);color:var(--fg);border-radius:6px;cursor:pointer;display:none';
+document.getElementById('tools').appendChild(resumeBtn);
+resumeBtn.addEventListener('click',()=>{ if(window._vuelo) window._vuelo.reanudar(); resumeBtn.style.display='none'; });
 // visorAPI for portada
 window.visorAPI = { cerrarPortada() { if (window.portada) window.portada.cerrar(); } };
 // load profile
@@ -282,33 +256,18 @@ if (window.portada) {
 }
 document.getElementById('btnProfile').addEventListener('click',()=>{ profileMode=true; profilePoints=[]; document.getElementById('status').textContent='Perfil: clic en el primer punto'; });
 document.getElementById('closeProfile').addEventListener('click',()=>{ document.getElementById('profilebox').style.display='none'; profileMode=false; profilePoints=[]; });
-function flyStep(now){
-  if(flyPlaying && flyData){
-    const dt=(now-flyLast)/1000; flyLast=now;
-    flyT=Math.min(flyT+dt, flyData[flyData.length-1].t);
-    let i=0; while(i<flyData.length-2 && flyData[i+1].t<flyT) i++;
-    const a=flyData[i], b=flyData[i+1];
-    const span=b.t-a.t || 1; const u=(flyT-a.t)/span;
-    const lerp=(x,y)=>x+(y-x)*u;
-    camera.position.set(lerp(a.position[0],b.position[0]), lerp(a.position[1],b.position[1]), lerp(a.position[2],b.position[2]));
-    camera.lookAt(lerp(a.target[0],b.target[0]), lerp(a.target[1],b.target[1]), lerp(a.target[2],b.target[2]));
-    if(flyT>=flyData[flyData.length-1].t){ flyPlaying=false; }
-  }
-  // slow orbit while portada open
-  const portadaEl=document.getElementById('portada');
-  if(portadaEl && portadaEl.style.display!=='none'){
-    camera.position.applyAxisAngle(new THREE.Vector3(0,1,0), 0.0005);
-    camera.lookAt(0,0,0);
-  }
+// render loop
+function renderLoop(){
   renderer.render(scene,camera);
-  requestAnimationFrame(flyStep);
+  requestAnimationFrame(renderLoop);
 }
-requestAnimationFrame(flyStep);
+requestAnimationFrame(renderLoop);
 
 // general view
-function generalView(){ camera.position.set(30000,-40000,25000); camera.lookAt(0,0,0); }
+function generalView(){ if(window.Bogota3D) window.Bogota3D.vistaGeneral({THREE,camera,controles:controls,terreno:terrain}); else { camera.position.set(-30000,20000,30000); camera.lookAt(0,0,0); } }
 document.getElementById('resetView')?.addEventListener('click',generalView);
-function topView(){ camera.position.set(0,50000,0); camera.lookAt(0,0,0); }
+function topView(){ if(window.Bogota3D) window.Bogota3D.vistaCenital({THREE,camera,controles:controls,terreno:terrain}); else { camera.position.set(0,50000,0); camera.lookAt(0,0,0); } }
+document.getElementById('topView')?.addEventListener('click',topView);
 document.getElementById('topView')?.addEventListener('click',topView);
 document.addEventListener('keydown',(e)=>{ if(e.key==='h'||e.key==='H'){ document.getElementById('help').style.display='flex'; } if(e.key==='f'||e.key==='F'){ startFly(); } if(e.key==='r'||e.key==='R'){ generalView(); } });
 
