@@ -147,7 +147,7 @@ camera.lookAt(0,0,0);
 const controls=new OrbitControls(camera,renderer.domElement);
 controls.enableDamping=true;
 controls.target.set(0,0,0);
-const light=new THREE.DirectionalLight(0xffffff,2.0);
+const light=new THREE.DirectionalLight(0xffffff,1.2);
 light.position.set(10000,-10000,5000);
 light.castShadow=true;
 light.shadow.mapSize.width=2048;
