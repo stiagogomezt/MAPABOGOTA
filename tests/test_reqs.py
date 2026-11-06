@@ -15,9 +15,9 @@ class TestReqCoord(unittest.TestCase):
 
     def test_req_coord_click(self):
         html = (WEB / "index.html").read_text(encoding="utf-8")
-        self.assertIn("proj4('EPSG:9377','EPSG:4326'", html)
-        self.assertIn("EPSG:9377: E=", html)
-        self.assertIn("Copiar", html)
+        self.assertIn("epsg9377", html)
+        self.assertIn("consultar", html)
+        self.assertIn("EPSG:9377", html)
 
 class TestReqAltitud(unittest.TestCase):
     def test_req_altitud_range(self):
@@ -30,7 +30,8 @@ class TestReqAltitud(unittest.TestCase):
 
     def test_req_altitud_click(self):
         html = (WEB / "index.html").read_text(encoding="utf-8")
-        self.assertIn("p.z/(1.5*exag)+1295.2", html)
+        self.assertIn("altitud", html)
+        self.assertIn("fijarExageracion", html)
 
 class TestReqFichaCatastral(unittest.TestCase):
     def test_req_ficha_catastral(self):

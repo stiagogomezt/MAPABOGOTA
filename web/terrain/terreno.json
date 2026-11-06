@@ -1,0 +1,24 @@
+{
+  "crs": "EPSG:9377",
+  "registro": "centro de celda",
+  "orden": "filas de norte a sur, columnas de oeste a este, Float32 little-endian",
+  "ancho": 1025,
+  "alto": 1211,
+  "este_min": 4850000.0,
+  "norte_min": 2040000.0,
+  "este_max": 4905000.0,
+  "norte_max": 2105000.0,
+  "paso_x": 53.65853658536585,
+  "paso_y": 53.67464905037159,
+  "altura_min": 1500.14453125,
+  "altura_max": 3813.593505859375,
+  "fuente": "mdt_fused_9377_5m.tif",
+  "generado": "2026-11-05",
+  "textura": {
+    "8192": "textura_8192.jpg",
+    "4096": "textura_4096.jpg",
+    "sombreado": 0.35,
+    "azimut_sol": 285.0,
+    "altura_sol": 30.0
+  }
+}

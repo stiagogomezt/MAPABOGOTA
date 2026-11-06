@@ -22,9 +22,9 @@ class CoordenadasTests(unittest.TestCase):
 
     def test_click_returns_real_coords(self):
         html = (WEB / "index.html").read_text(encoding="utf-8")
-        self.assertIn("proj4('EPSG:9377','EPSG:4326'", html)
-        self.assertIn("EPSG:9377: E=", html)
-        self.assertIn("Copiar", html)
+        self.assertIn("epsg9377", html)
+        self.assertIn("consultar", html)
+        self.assertIn("EPSG:9377", html)
 
 if __name__ == "__main__":
     unittest.main()
