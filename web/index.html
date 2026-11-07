@@ -1,373 +1,226 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="es"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Gemelo digital 3D de Bogotá D.C.</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/ui.css">
 <link rel="stylesheet" href="assets/portada.css">
-<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;600&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Spectral:wght@600&display=swap" rel="stylesheet">
 <style>
-:root{--bg:rgba(12,16,28,.72);--fg:#e8ecf4;--muted:#9aa4b2;--accent:#6ea8fe;--border:rgba(255,255,255,.12)}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#050810;color:var(--fg);overflow:hidden;height:100vh}
-canvas{position:fixed;inset:0;display:block}
-#loader{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#050810;z-index:100;transition:opacity .6s}
-#loader h1{font-size:22px;font-weight:500;margin-bottom:16px}
-#loader .bar{width:260px;height:6px;background:rgba(255,255,255,.15);border-radius:3px;overflow:hidden}
-#loader .fill{height:100%;width:0;background:var(--accent);transition:width .2s}
-#cover{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#0a1020,#050810);z-index:90;transition:opacity .8s}
-#cover h1{font-size:34px;font-weight:600;margin-bottom:8px;text-align:center}
-#cover p{color:var(--muted);margin-bottom:6px;text-align:center;max-width:520px}
-#cover .author{font-size:13px;color:var(--muted);margin:12px 0 24px}
-#cover button{margin:6px;padding:10px 22px;border:1px solid var(--border);background:var(--bg);color:var(--fg);border-radius:6px;cursor:pointer;font-size:14px;backdrop-filter:blur(8px)}
-#cover button:hover{background:rgba(110,168,254,.18)}
-#panel{position:fixed;top:12px;left:12px;width:300px;max-height:calc(100vh-24px);overflow:auto;background:var(--bg);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:10px;padding:12px;z-index:50;font-size:13px}
-#panel h2{font-size:14px;margin:10px 0 6px;color:var(--accent);cursor:pointer;user-select:none}
-#panel h2::before{content:'▸ ';font-size:10px}
-#panel h2.open::before{content:'▾ '}
-.section{display:none;margin-bottom:8px}
-.section.open{display:block}
-.card-row{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
-.tcard{border:1px solid var(--border);border-radius:6px;overflow:hidden;cursor:pointer;background:rgba(0,0,0,.3)}
-.tcard img{width:100%;height:60px;object-fit:cover;display:block}
-.tcard span{display:block;padding:4px;font-size:11px;text-align:center}
-.tcard.active{border-color:var(--accent)}
-#compass{position:fixed;top:12px;right:12px;width:46px;height:46px;background:var(--bg);backdrop-filter:blur(8px);border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:50}
-#compass svg{width:30px;height:30px}
-#scalebar{position:fixed;bottom:40px;left:50%;transform:translateX(-50%);background:var(--bg);backdrop-filter:blur(8px);padding:4px 10px;border-radius:4px;font-size:11px;border:1px solid var(--border);z-index:50}
-#statusbar{position:fixed;bottom:0;left:0;right:0;height:32px;background:var(--bg);backdrop-filter:blur(8px);border-top:1px solid var(--border);display:flex;align-items:center;padding:0 12px;font-size:12px;color:var(--muted);z-index:50;gap:16px}
-#legend{margin-top:8px;padding:8px;background:rgba(0,0,0,.3);border-radius:6px;font-size:11px}
-#legend .ramp{height:12px;border-radius:3px;margin:4px 0}
-#clickinfo{position:fixed;top:70px;right:12px;width:260px;background:var(--bg);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:10px;padding:10px;font-size:12px;z-index:50;display:none}
-#profilebox{position:fixed;bottom:40px;left:50%;transform:translateX(-50%);width:420px;height:160px;background:var(--bg);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:10px;padding:8px;z-index:55;display:none}
-#profilebox canvas{width:100%;height:120px}
-#help{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.7);z-index:100}
-#help .box{background:var(--bg);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:10px;padding:16px;max-width:420px}
-#help kbd{background:rgba(255,255,255,.1);padding:2px 6px;border-radius:3px;font-size:11px}
-#videoModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;align-items:center;justify-content:center}
-#videoModal video{max-width:90vw;max-height:80vh}
-@media(max-width:700px){#panel{top:auto;bottom:0;left:0;width:100%;max-height:45vh;border-radius:10px 10px 0 0}}
+:root{--text:#EDE7DA;--muted:#9AA7A3;--quiet:#9AA7A3;--bg:#0F1B1E;--panel:#0F1B1E}
 </style>
-</head>
-<body>
+</head><body>
 <a href="#main" class="skip-link">Saltar al contenido</a>
-<main id="main" tabindex="-1" style="position:fixed;inset:0;pointer-events:none"></main>
-<div id="loader"><h1>Gemelo digital 3D de Bogotá D.C.</h1><div class="bar"><div class="fill" id="loadfill"></div></div><div id="loadtxt" style="margin-top:10px;font-size:12px;color:var(--muted)">Cargando…</div></div>
-<div id="portada">
-  <h1>Gemelo digital 3D de Bogotá D.C.</h1>
-  <p>Maqueta interactiva del terreno con relieve del MDT oficial, imagen satelital sin nubes y volumetría de edificaciones.</p>
-  <div class="author">Kevin Santiago Gómez Tibaquira — Ingeniería Catastral y Geodesia, Universidad Distrital</div>
-  <div class="progress"><div class="fill" id="portadaFill"></div></div>
-  <div id="portadaIlustrativo" class="ilustrativo">Trazado ilustrativo</div>
-  <div id="portadaPerfil" class="perfil"></div>
-  <div class="btns" id="portadaBtns" style="opacity:0;transition:opacity .5s">
-    <button id="portadaExplorar">Explorar</button>
-    <button id="portadaSobrevolar">Sobrevolar Bogotá</button>
-  </div>
+<main id="main" tabindex="-1"></main>
+<div id="loader"><h1 style="font-family:Spectral,serif">Gemelo digital 3D de Bogotá D.C.</h1><div class="bar"><div class="fill" id="loadfill"></div></div><div id="loadtxt" style="margin-top:10px;font-size:12px;color:#9AA7A3">Cargando…</div></div>
+<div id="portada" data-testid="portada"><h1>Gemelo digital 3D de Bogotá D.C.</h1><p>Maqueta interactiva del terreno con relieve del MDT oficial, imagen satelital sin nubes y volumetría de edificaciones.</p><div class="author">Kevin Santiago Gómez Tibaquira — Ingeniería Catastral y Geodesia, Universidad Distrital</div><div class="progress"><div class="fill" id="portadaFill"></div></div><div id="portadaIlustrativo">Trazado ilustrativo</div><div id="portadaPerfil"></div><div class="btns" id="portadaBtns" style="opacity:0;transition:opacity .5s"><button id="portadaExplorar">Explorar</button><button id="portadaSobrevolar">Sobrevolar Bogotá</button></div></div>
+<canvas id="scene" aria-label="Vista 3D de Bogotá"></canvas>
+<div id="panel" class="panel" aria-label="Mapa">
+<button class="handle" id="collapseBtn" aria-label="Plegar panel"><span>Mapa</span><img src="assets/icons/chevron.svg" alt="" width="16" height="16"></button>
+<div class="collapsible">
+<div class="acc"><button class="acc-head" aria-expanded="true" data-acc="base">Mapa base <img class="chev" src="assets/icons/chevron.svg" alt=""></button><div class="acc-body" id="acc-base"><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px" id="baseCards">
+<div class="tcard active" role="button" tabindex="0" aria-label="Satelital" data-base="satellite"><img src="terrain/textura_4096.jpg" alt="Satelital"><span>Satelital</span></div>
+<div class="tcard" role="button" tabindex="0" aria-label="Relieve" data-base="relief"><img src="terrain/texture_relief_4096.jpg" alt="Relieve"><span>Relieve</span></div>
+<div class="tcard" role="button" tabindex="0" aria-label="Pendientes" data-base="slope"><img src="terrain/texture_slope_4096.jpg" alt="Pendientes"><span>Pendientes</span></div>
+</div><div class="seg" role="group" aria-label="Calidad"><button aria-pressed="true" data-q="high">Alta</button><button aria-pressed="false" data-q="medium">Media</button><button aria-pressed="false" data-q="low">Baja</button></div>
+<div style="margin-top:8px"><label for="exagSlider">Exageración <span id="exagVal">1.6</span></label><div id="exagSlider" class="sld" role="slider" tabindex="0" aria-label="Exageración vertical" aria-valuemin="1" aria-valuemax="2.5" aria-valuenow="1.6"><div class="track"></div><div class="fill" style="width:40%"></div><div class="knob" style="left:40%"></div></div></div>
+</div></div>
+<div class="acc"><button class="acc-head" aria-expanded="true" data-acc="capas">Capas <img class="chev" src="assets/icons/chevron.svg" alt=""></button><div class="acc-body" id="acc-capas">
+<div class="acc"><button class="acc-head" aria-expanded="true" data-acc="catastro">Catastro <img class="chev" src="assets/icons/chevron.svg" alt=""></button><div class="acc-body" id="acc-catastro">
+<div class="layer-row"><button class="sw" role="switch" aria-checked="true" id="swLocalidades" aria-label="Localidades"></button><span>Localidades</span><button class="icob" style="width:28px;height:28px" aria-label="Info localidades" data-info="localidades"><img src="assets/icons/info.svg" alt="" width="16" height="16"></button></div>
+<div class="layer-row"><button class="sw" role="switch" aria-checked="false" id="swUPL" aria-label="UPL"></button><span>UPL</span><button class="icob" style="width:28px;height:28px" aria-label="Info UPL" data-info="upl"><img src="assets/icons/info.svg" alt="" width="16" height="16"></button></div>
+<div class="layer-row"><button class="sw" role="switch" aria-checked="false" id="swSectores" aria-label="Sectores"></button><span>Sectores</span><button class="icob" style="width:28px;height:28px" aria-label="Info sectores" data-info="sectores"><img src="assets/icons/info.svg" alt="" width="16" height="16"></button></div>
+<div class="layer-row"><button class="sw" role="switch" aria-checked="false" id="swManzanas" aria-label="Manzanas"></button><span>Manzanas valor/estrato</span><button class="icob" style="width:28px;height:28px" aria-label="Info manzanas" data-info="manzanas"><img src="assets/icons/info.svg" alt="" width="16" height="16"></button></div>
+<div class="layer-row"><button class="sw" role="switch" aria-checked="true" id="swEdificaciones" aria-label="Edificaciones"></button><span>Edificaciones</span><button class="icob" style="width:28px;height:28px" aria-label="Info edificaciones" data-info="edificaciones"><img src="assets/icons/info.svg" alt="" width="16" height="16"></button></div>
+</div></div>
+<div class="acc"><button class="acc-head" aria-expanded="true" data-acc="ambiente">Ambiente <img class="chev" src="assets/icons/chevron.svg" alt=""></button><div class="acc-body" id="acc-ambiente">
+<div class="layer-row"><button class="sw" role="switch" aria-checked="false" id="swEEE" aria-label="Estructura ecológica"></button><span>Estructura ecológica</span><button class="icob" style="width:28px;height:28px" aria-label="Info EEE" data-info="eee"><img src="assets/icons/info.svg" alt="" width="16" height="16"></button></div>
+<div class="layer-row"><button class="sw" role="switch" aria-checked="false" id="swAgua" aria-label="Cuerpos de agua"></button><span>Cuerpos de agua</span><button class="icob" style="width:28px;height:28px" aria-label="Info agua" data-info="agua"><img src="assets/icons/info.svg" alt="" width="16" height="16"></button></div>
+<div class="layer-row"><button class="sw" role="switch" aria-checked="false" id="swCorrientes" aria-label="Corrientes"></button><span>Corrientes</span><button class="icob" style="width:28px;height:28px" aria-label="Info corrientes" data-info="corrientes"><img src="assets/icons/info.svg" alt="" width="16" height="16"></button></div>
+</div></div>
+<div class="acc"><button class="acc-head" aria-expanded="true" data-acc="ref">Referencia <img class="chev" src="assets/icons/chevron.svg" alt=""></button><div class="acc-body" id="acc-ref">
+<div class="layer-row"><button class="sw" role="switch" aria-checked="true" id="swEtiquetas" aria-label="Etiquetas"></button><span>Etiquetas</span><button class="icob" style="width:28px;height:28px" aria-label="Info etiquetas" data-info="etiquetas"><img src="assets/icons/info.svg" alt="" width="16" height="16"></button></div>
+<div class="layer-row"><button class="sw" role="switch" aria-checked="false" id="swMalla" aria-label="Malla vial"></button><span>Malla vial</span><button class="icob" style="width:28px;height:28px" aria-label="Info malla" data-info="malla"><img src="assets/icons/info.svg" alt="" width="16" height="16"></button></div>
+</div></div>
+</div></div>
+<div class="acc"><button class="acc-head" aria-expanded="true" data-acc="leyenda">Leyenda <img class="chev" src="assets/icons/chevron.svg" alt=""></button><div class="acc-body" id="acc-leyenda"><div id="legend"></div></div></div>
+<div class="acc"><button class="acc-head" aria-expanded="false" data-acc="info">Información <img class="chev" src="assets/icons/chevron.svg" alt=""></button><div class="acc-body" id="acc-info" style="display:none;font-size:12px;color:#9AA7A3;line-height:1.5">MDT: UAECD 2014 (CC BY-NC-SA 4.0). Copernicus DEM GLO-30 (EGM2008). Fusión: diferencia media 3.289 m, desv. 3.956 m, transición 300 m. Sentinel-2 / ESA. CRS: EPSG:9377. Autor: Kevin Santiago Gómez Tibaquira. <a href="metodologia.html" style="color:#D6A24E">Metodología</a></div></div>
+</div></div>
+<div id="toolbar" class="panel" role="toolbar" aria-label="Herramientas">
+<button class="icob" id="tb-general" aria-label="Vista general" data-tip="Vista general|Vuelve a la vista oblicua|R"><img src="assets/icons/house.svg" alt=""></button>
+<button class="icob" id="tb-norte" aria-label="Orientar al norte" data-tip="Norte|Orienta al norte|N"><img src="assets/icons/compass.svg" alt=""></button>
+<button class="icob" id="tb-cenital" aria-label="Vista cenital" data-tip="Vista cenital|Desde arriba|C"><img src="assets/icons/square.svg" alt=""></button>
+<div class="tb-sep"></div>
+<button class="icob" id="tb-identificar" aria-label="Identificar" aria-pressed="false" data-tip="Identificar|Clic para consultar|I"><img src="assets/icons/click.svg" alt=""></button>
+<button class="icob" id="tb-medir" aria-label="Medir" aria-pressed="false" aria-haspopup="menu" data-tip="Medir|Distancia, área, desnivel|D"><img src="assets/icons/ruler.svg" alt=""></button>
+<button class="icob" id="tb-perfil" aria-label="Perfil" aria-pressed="false" data-tip="Perfil|Entre dos puntos|P"><img src="assets/icons/mountain.svg" alt=""></button>
+<div class="tb-sep"></div>
+<button class="icob" id="tb-buscar" aria-label="Buscar" data-tip="Buscar|Localidades y coordenadas|Ctrl+K"><img src="assets/icons/search.svg" alt=""></button>
+<div class="tb-sep"></div>
+<button class="icob" id="tb-sobrevuelo" aria-label="Sobrevuelo" aria-haspopup="menu" data-tip="Sobrevuelo|En vivo o video|F"><img src="assets/icons/plane.svg" alt=""></button>
+<button class="icob" id="tb-captura" aria-label="Captura" data-tip="Captura|Guardar captura|S"><img src="assets/icons/camera.svg" alt=""></button>
+<button class="icob" id="tb-ayuda" aria-label="Ayuda" data-tip="Ayuda|Atajos y recorrido|H"><img src="assets/icons/help.svg" alt=""></button>
 </div>
-<canvas id="canvas"></canvas>
-<div id="panel">
-  <div style="font-weight:600;margin-bottom:8px">Controles</div>
-  <h2 class="open" data-sec="layers">Capas</h2>
-  <div class="section open" id="layers">
-    <label><input type="checkbox" id="chkBuildings" checked> Edificaciones</label><br>
-    <label><input type="checkbox" id="chkLabels" checked> Etiquetas</label>
-  </div>
-  <h2 data-sec="texture">Textura</h2>
-  <div class="section" id="texture">
-    <div class="card-row" id="texCards"></div>
-  </div>
-  <h2 data-sec="tools">Herramientas</h2>
-  <div class="section" id="tools">
-    <button id="fly" style="width:100%;margin:4px 0;padding:6px;border:1px solid var(--border);background:rgba(0,0,0,.3);color:var(--fg);border-radius:6px;cursor:pointer">Sobrevolar Bogotá</button>
-    <button id="videoBtn" style="width:100%;margin:4px 0;padding:6px;border:1px solid var(--border);background:rgba(0,0,0,.3);color:var(--fg);border-radius:6px;cursor:pointer">Ver video</button>
-    <button id="btnProfile" style="width:100%;margin:4px 0;padding:6px;border:1px solid var(--border);background:rgba(0,0,0,.3);color:var(--fg);border-radius:6px;cursor:pointer">Perfil topográfico</button>
-    <button id="resetView" style="width:100%;margin:4px 0;padding:6px;border:1px solid var(--border);background:rgba(0,0,0,.3);color:var(--fg);border-radius:6px;cursor:pointer">Vista general</button>
-    <button id="topView" style="width:100%;margin:4px 0;padding:6px;border:1px solid var(--border);background:rgba(0,0,0,.3);color:var(--fg);border-radius:6px;cursor:pointer">Vista cenital</button>
-    <label for="exag" style="display:block;margin-top:6px">Exageración vertical <span id="exagVal">1.0</span></label>
-    <input type="range" id="exag" min="1" max="2.5" step="0.1" value="1" style="width:100%">
-    <label for="quality" style="display:block;margin-top:6px">Calidad</label>
-    <select id="quality" style="width:100%;padding:4px;border:1px solid var(--border);background:rgba(0,0,0,.3);color:var(--fg);border-radius:6px">
-      <option value="high">Alta</option>
-      <option value="medium">Media</option>
-      <option value="low">Baja</option>
-    </select>
-    <div id="legend"></div>
-  </div>
-  <h2 data-sec="info">Información</h2>
-  <div class="section" id="info">
-    <div style="font-size:11px;color:var(--muted);line-height:1.5">
-      MDT: UAECD 2014 (CC BY-NC-SA 4.0)<br>
-      Copernicus DEM GLO-30 (EGM2008)<br>
-      Fusión: diff media 3.289 m, desv. 3.956 m, transición 300 m<br>
-      Sentinel-2 / ESA<br>
-      CRS: EPSG:9377 (MAGNA-SIRGAS / Origen-Nacional)
-    </div>
-  </div>
-</div>
-<div id="compass" title="Orientar al norte"><svg viewBox="0 0 30 30"><circle cx="15" cy="15" r="13" fill="none" stroke="#9aa4b2" stroke-width="1"/><polygon points="15,4 18,15 15,12 12,15" fill="#e55"/><polygon points="15,26 12,15 15,18 18,15" fill="#9aa4b2"/></svg></div>
-<div id="scalebar">1 km</div>
-<div id="statusbar"><span id="coords">—</span><span id="alt">—</span><span id="texname" style="margin-left:auto">Satelital</span></div>
-<div id="clickinfo"></div>
-<div id="profilebox"><canvas id="profilecanvas"></canvas><button id="closeProfile" style="position:absolute;top:6px;right:8px;background:none;border:none;color:var(--fg);cursor:pointer">✕</button></div>
-<div id="help"><div class="box"><h3 style="margin-bottom:8px">Atajos</h3><p><kbd>H</kbd> Ayuda &nbsp; <kbd>F</kbd> Sobrevolar &nbsp; <kbd>R</kbd> Vista general</p><button id="closeHelp" style="margin-top:10px;padding:6px 12px;border:1px solid var(--border);background:rgba(0,0,0,.3);color:var(--fg);border-radius:6px;cursor:pointer">Cerrar</button></div></div>
-<div id="videoModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;align-items:center;justify-content:center">
-  <div style="max-width:90vw;max-height:90vh">
-    <video id="videoPlayer" controls poster="media/poster.jpg" style="max-width:100%;max-height:80vh"></video>
-    <br><button id="closeVideo" style="margin-top:8px;padding:6px 12px;border:1px solid var(--border);background:rgba(0,0,0,.3);color:var(--fg);border-radius:6px;cursor:pointer">Cerrar</button>
-  </div>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/proj4@2.11.0/dist/proj4.js"></script>
+<div id="submenu" class="submenu" role="menu"></div>
+<div id="clickinfo" class="panel" data-testid="ficha"><div style="display:flex;justify-content:space-between;align-items:center"><b id="fichaTitulo">Punto</b><button id="cerrarFicha" aria-label="Cerrar ficha" style="background:none;border:none;color:#EDE7DA;cursor:pointer;font-size:16px">✕</button></div><div style="margin-top:8px"><b>Ubicación</b><div><span data-testid="ficha-este" id="ficha-este"></span> <button class="copybtn" data-copy="ficha-este" aria-label="Copiar este">Copiar</button></div><div><span data-testid="ficha-norte" id="ficha-norte"></span></div><div><span data-testid="ficha-lat" id="ficha-lat"></span>, <span data-testid="ficha-lon" id="ficha-lon"></span></div><div><span data-testid="ficha-altitud" id="ficha-altitud"></span></div></div><div style="margin-top:8px"><b>Manzana</b><div>— sin datos —</div></div><div style="margin-top:8px"><b>Terreno-Construcción</b><div>— sin datos —</div></div></div>
+<div id="statusbar" class="panel"><span id="coords" class="num">—</span><span id="alt" class="num">—</span><span id="scalebar" class="num">1 km</span><span id="exagVal" class="num">1.6×</span><span style="margin-left:auto" id="attr">MDT UAECD · Copernicus · Sentinel-2</span></div>
+<div id="paleta"><div class="box panel"><input id="paletaInput" placeholder="Buscar o coordenadas (lat, lon o E N)" aria-label="Buscar"><ul id="paletaList" role="listbox"></ul></div></div>
+<div id="helpOverlay"><div class="card panel"><h3 style="margin:0 0 8px;font-family:Spectral,serif">Recorrido guiado</h3><div id="tourStep"></div><div style="display:flex;gap:8px;margin-top:12px"><button id="tourSkip" class="icob">Saltar</button><button id="tourNext" class="icob">Siguiente</button></div><div style="margin-top:12px;font-size:12px;color:#9AA7A3">Atajos: H Ayuda · F Sobrevuelo · R Vista general · C Vista cenital · N Norte · I Identificar · Ctrl+K Buscar · Esc Cerrar</div></div></div>
+<div id="videoModal"><div><video id="videoPlayer" controls poster="media/poster.jpg"></video><br><button id="closeVideo" style="margin-top:8px">Cerrar</button></div></div>
+<div id="toast"></div><div id="tip" class="tip"></div><div id="pop" class="popover"></div>
 <script src="assets/portada.js"></script>
 <script src="assets/bogota3d_camara.js"></script>
 <script src="assets/bogota3d_terreno.js"></script>
 <script src="assets/geo.js"></script>
-<script type="importmap">
-{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
-</script>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
 <script type="module">
 import * as THREE from 'three';
-console.log('MODULE_LOADED');
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-
-const canvas=document.getElementById('canvas');
+const canvas=document.getElementById('scene');
 const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
-renderer.setSize(window.innerWidth,window.innerHeight);
-renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
-renderer.toneMapping=THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure=1.0;
-renderer.outputColorSpace=THREE.SRGBColorSpace;
-renderer.shadowMap.enabled=true;
-renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.setSize(innerWidth,innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=1.0; renderer.outputColorSpace=THREE.SRGBColorSpace;
+renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 const scene=new THREE.Scene();
-const camera=new THREE.PerspectiveCamera(46,window.innerWidth/window.innerHeight,1,200000);
-camera.position.set(-30000,20000,30000);
-camera.up.set(0,1,0);
-camera.lookAt(0,0,0);
+const camera=new THREE.PerspectiveCamera(46,innerWidth/innerHeight,1,200000); camera.up.set(0,1,0);
 const controls=new OrbitControls(camera,renderer.domElement);
 controls.enableDamping=true;
-controls.target.set(0,0,0);
-// ambiente se crea despues de cargar el terreno
-// base plane is created by Bogota3D.crearAmbiente
-
-const texLoader=new THREE.TextureLoader();
-const texNames={satellite:'Satelital',localidades:'Localidades',valor:'Valor/estrato',relief:'Relieve',slope:'Pendientes'};
-const textures={};
-const texFiles={satellite:'terrain/texture_satellite_4096.jpg',localidades:'terrain/texture_localidades_4096.jpg',valor:'terrain/texture_valor_4096.jpg',relief:'terrain/texture_relief_4096.jpg',slope:'terrain/texture_slope_4096.jpg'};
-let loadedCount=0,totalCount=Object.keys(texFiles).length;
 const loadfill=document.getElementById('loadfill'),loadtxt=document.getElementById('loadtxt');
-function updateLoad(){ loadedCount++; loadfill.style.width=(loadedCount/totalCount*100)+'%'; loadtxt.textContent=`Cargando texturas… ${loadedCount}/${totalCount}`; if(loadedCount>=totalCount){ loadtxt.textContent='Cargando terreno…'; } }
-Object.keys(texFiles).forEach(k=>{ textures[k]=texLoader.load(texFiles[k],()=>updateLoad()); textures[k].colorSpace=THREE.SRGBColorSpace; });
-
-// terrain
-let terrain=null, mesh=null, exag=1.6;
-async function loadTerrain(){
-  try {
-    const t = await window.Bogota3D.cargarTerreno({ THREE, base: "terrain/", renderer, exageracion: exag, alProgreso: (f)=>{ if(window.portada) window.portada.progreso(f); loadfill.style.width=(f*100)+'%'; loadtxt.textContent=`Cargando terreno ${(f*100).toFixed(0)}%`; } });
-    terrain = t.grupo;
-    mesh = t.malla;
-    scene.add(terrain);
-    const ambiente = window.Bogota3D.crearAmbiente({ THREE, escena: scene, terreno: mesh, renderer, camara: camera });
-    const aEscena = (este, norte) => t.aEscena(este, norte);
-    const vuelo = window.Bogota3D.crearSobrevuelo({ THREE, camara: camera, controles: controls, terreno: mesh, aEscena, lienzo: renderer.domElement, alCuadro: () => renderer.render(scene, camera), alTerminar: () => {}, alPausar: () => {} });
-    window._vuelo = vuelo;
-    window._ambiente = ambiente;
-    window._alturas = window.Bogota3D.alturas(THREE, mesh);
-    window._terreno = t;
-    if (window.geo) window.geo.setTerreno(t);
-    document.getElementById('exag').value = exag;
-    document.getElementById('exagVal').textContent = exag.toFixed(1);
-    document.getElementById('loader').style.opacity='0';
-    setTimeout(()=>document.getElementById('loader').style.display='none',600);
-    if(window.portada) window.portada.listo();
-    const portadaEl=document.getElementById('portada'); if(portadaEl) portadaEl.style.display='flex';
-    window.Bogota3D.vistaGeneral({ THREE, camara: camera, controles: controls, terreno: mesh });
-  } catch(e) {
-    console.error('Terrain load error:', e);
-    document.getElementById('status').textContent = 'Error cargando terreno: ' + (e&&e.message?e.message:e);
-  }
-}
-loadTerrain();
-
-// texture cards
-const cards=document.getElementById('texCards');
-Object.keys(texFiles).forEach(k=>{
-  const c=document.createElement('div'); c.className='tcard'; c.dataset.key=k;
-  c.innerHTML=`<img src="${texFiles[k]}" alt="${texNames[k]}"><span>${texNames[k]}</span>`;
-  c.addEventListener('click',()=>{ if(!mesh) return; mesh.material.map=textures[k]; mesh.material.needsUpdate=true; document.querySelectorAll('.tcard').forEach(x=>x.classList.remove('active')); c.classList.add('active'); document.getElementById('texname').textContent=texNames[k]; });
-  cards.appendChild(c);
-});
-document.querySelector('.tcard').classList.add('active');
-
-// exag slider
-document.getElementById('exag').addEventListener('input',(e)=>{ exag=parseFloat(e.target.value); document.getElementById('exagVal').textContent=exag.toFixed(1); if(window._terreno) window._terreno.fijarExageracion(exag); if(window._ambiente) window._ambiente.recalcular(); if(window._vuelo) window._vuelo.recalcular(); });
-
-// locality boundaries (disabled)
-// labels
+let terrain=null, mesh=null, exag=1.6, activeTool=null;
 const labelData=[{name:'Monserrate',x:0,y:0,z:3152},{name:'Plaza de Bolívar',x:0,y:0,z:2625},{name:'Aeropuerto El Dorado',x:-10000,y:5000,z:2548}];
 const labels=[];
-labelData.forEach(l=>{
-  const div=document.createElement('div'); div.className='label'; div.textContent=l.name; div.style.cssText='position:fixed;color:#fff;font-size:11px;pointer-events:none;text-shadow:0 0 3px #000;z-index:40';
-  document.body.appendChild(div);
-  labels.push({div,world:new THREE.Vector3(l.x,l.y,(l.z-1295.2)*1.5)});
-});
-function updateLabels(){
-  labels.forEach(l=>{
-    const v=l.world.clone().project(camera);
-    const x=(v.x*0.5+0.5)*window.innerWidth;
-    const y=(-v.y*0.5+0.5)*window.innerHeight;
-    l.div.style.left=x+'px'; l.div.style.top=y+'px';
-    l.div.style.display=(v.z>1)?'none':'block';
+function updateLabels(){ labels.forEach(l=>{ const v=l.world.clone().project(camera); const x=(v.x*0.5+0.5)*innerWidth; const y=(-v.y*0.5+0.5)*innerHeight; l.div.style.left=x+'px'; l.div.style.top=y+'px'; l.div.style.display=(v.z>1)?'none':'block'; }); }
+async function loadTerrain(){
+  try{
+    const t=await window.Bogota3D.cargarTerreno({THREE, base:"terrain/", renderer, exageracion:exag, alProgreso:(f)=>{ if(window.portada) window.portada.progreso(f); loadfill.style.width=(f*100)+'%'; loadtxt.textContent=`Cargando terreno ${(f*100).toFixed(0)}%`; }});
+    terrain=t.grupo; mesh=t.malla; scene.add(terrain);
+    const ambiente=window.Bogota3D.crearAmbiente({THREE, escena:scene, terreno:mesh, renderer, camara:camera});
+    const aEscena=(e,n)=>t.aEscena(e,n);
+    const vuelo=window.Bogota3D.crearSobrevuelo({THREE, camara:camera, controles:controls, terreno:mesh, aEscena, lienzo:renderer.domElement, alCuadro:()=>renderer.render(scene,camera), alTerminar:()=>{}, alPausar:()=>{ mostrarToast('Sobrevuelo en pausa'); }});
+    window._vuelo=vuelo; window._ambiente=ambiente; window._terreno=t; window.geo.setTerreno(t);
+    if(window.portada) window.portada.listo();
+    document.getElementById('loader').style.display='none';
+    document.getElementById('portada').style.display='none';
+    window.Bogota3D.vistaGeneral({THREE, camara:camera, controles:controls, terreno:mesh});
+    initUI(t, vuelo, ambiente);
+    // etiquetas con data-testid
+    labelData.forEach(l=>{ const d=document.createElement('div'); d.className='label'; d.dataset.testid='etiqueta'; d.textContent=l.name; d.style.cssText='position:fixed;color:#fff;font-size:11px;pointer-events:none;text-shadow:0 0 3px #000;z-index:40'; document.body.appendChild(d); const p=t.puntoEscena(l.x,l.y,40); labels.push({div:d,world:p}); });
+    (function loop(){ updateLabels(); requestAnimationFrame(loop); })();
+  }catch(e){ console.error('Terrain load error:',e); document.getElementById('loadtxt').textContent='Error: '+e.message; }
+}
+function mostrarToast(txt){ const z=document.getElementById('toast'); const d=document.createElement('div'); d.className='msg'; d.textContent=txt; z.appendChild(d); setTimeout(()=>d.remove(),3000); }
+function initUI(t,vuelo,ambiente){
+  const baseMap={satellite:'terrain/textura_4096.jpg',relief:'terrain/texture_relief_4096.jpg',slope:'terrain/texture_slope_4096.jpg'};
+  document.querySelectorAll('#baseCards .tcard').forEach(c=>{
+    const go=async()=>{ document.querySelectorAll('#baseCards .tcard').forEach(x=>x.classList.remove('active')); c.classList.add('active'); const k=c.dataset.base; try{ await t.fijarTextura(baseMap[k]); }catch(e){} updateLeyenda(k); };
+    c.addEventListener('click',go); c.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); go(); }});
   });
+  document.querySelectorAll('.seg [data-q]').forEach(b=>b.addEventListener('click',()=>{ document.querySelectorAll('.seg [data-q]').forEach(x=>x.setAttribute('aria-pressed','false')); b.setAttribute('aria-pressed','true'); const q=b.dataset.q; renderer.shadowMap.enabled=q!=='low'; renderer.setPixelRatio(q==='low'?1:Math.min(devicePixelRatio,2)); mostrarToast('Calidad '+b.textContent); }));
+  const bindSw=(id,fn)=>{ const el=document.getElementById(id); if(el) el.addEventListener('click',()=>{ const v=el.getAttribute('aria-checked')!=='true'; el.setAttribute('aria-checked',v); fn&&fn(v); }); };
+  bindSw('swEdificaciones',v=>{ if(terrain) terrain.visible=v; });
+  bindSw('swEtiquetas',v=>{ document.querySelectorAll('.label').forEach(l=>l.style.display=v?'block':'none'); });
+  bindSw('swLocalidades',v=>{ mostrarToast(v?'Localidades activas':'Localidades ocultas'); });
+  ['swUPL','swSectores','swManzanas','swEEE','swAgua','swCorrientes','swMalla'].forEach(id=>bindSw(id,()=>{}));
+  document.querySelectorAll('.acc-head').forEach(h=>{ h.addEventListener('click',()=>{ const exp=h.getAttribute('aria-expanded')!=='true'; h.setAttribute('aria-expanded',exp); const id=h.dataset.acc; const body=document.getElementById('acc-'+id); if(body) body.style.display=exp?'block':'none'; localStorage.setItem('acc-'+id,exp?'1':'0'); }); if(localStorage.getItem('acc-'+h.dataset.acc)==='0'){ h.setAttribute('aria-expanded','false'); const b=document.getElementById('acc-'+h.dataset.acc); if(b) b.style.display='none'; } });
+  document.getElementById('collapseBtn').addEventListener('click',()=>{ document.getElementById('panel').classList.toggle('collapsed'); });
+  const submenu=document.getElementById('submenu');
+  function showSubmenu(anchor, items){ submenu.innerHTML=''; items.forEach(it=>{ const b=document.createElement('button'); b.textContent=it.label; b.setAttribute('role','menuitem'); b.addEventListener('click',()=>{ it.fn(); hideSubmenu(); }); submenu.appendChild(b); }); const r=anchor.getBoundingClientRect(); submenu.style.display='block'; submenu.style.right=(innerWidth-r.left+8)+'px'; submenu.style.top=r.top+'px'; submenu.querySelector('button')?.focus(); }
+  function hideSubmenu(){ submenu.style.display='none'; }
+  const setTool=(id,on)=>{ const el=document.getElementById(id); if(el) el.setAttribute('aria-pressed',on); };
+  function soloAnalisis(id){ ['tb-identificar','tb-medir','tb-perfil'].forEach(x=>{ if(x!==id) setTool(x,false); }); }
+  document.getElementById('tb-general').addEventListener('click',()=>{ window.Bogota3D.vistaGeneral({THREE,camara:camera,controles:controls,terreno:mesh}); });
+  document.getElementById('tb-norte').addEventListener('click',()=>{ camera.position.set(0,50000,0); camera.lookAt(0,0,0); });
+  document.getElementById('tb-cenital').addEventListener('click',()=>{ window.Bogota3D.vistaCenital({THREE,camara:camera,controles:controls,terreno:mesh}); });
+  const btnIdent=document.getElementById('tb-identificar');
+  btnIdent.addEventListener('click',()=>{ const on=btnIdent.getAttribute('aria-pressed')!=='true'; soloAnalisis('tb-identificar'); setTool('tb-identificar',on); activeTool=on?'identificar':null; });
+  document.getElementById('tb-medir').addEventListener('click',e=>{ const on=e.currentTarget.getAttribute('aria-pressed')!=='true'; soloAnalisis('tb-medir'); setTool('tb-medir',on); activeTool=on?'medir':null; if(on) showSubmenu(e.currentTarget,[{label:'Distancia',fn:()=>{ activeTool='distancia'; mostrarToast('Medir distancia: clic en dos puntos'); }},{label:'Área',fn:()=>{ activeTool='area'; mostrarToast('Medir área: clic en tres puntos'); }},{label:'Desnivel',fn:()=>{ activeTool='desnivel'; mostrarToast('Desnivel: clic en dos puntos'); }}]); else hideSubmenu(); });
+  document.getElementById('tb-perfil').addEventListener('click',()=>{ const on=document.getElementById('tb-perfil').getAttribute('aria-pressed')!=='true'; soloAnalisis('tb-perfil'); setTool('tb-perfil',on); activeTool=on?'perfil':null; mostrarToast(on?'Perfil: clic en dos puntos':'Perfil desactivado'); });
+  document.getElementById('tb-sobrevuelo').addEventListener('click',e=>{ showSubmenu(e.currentTarget,[{label:'En vivo',fn:()=>{ vuelo.iniciar(); }},{label:'Ver video',fn:()=>{ const m=document.getElementById('videoModal'); m.style.display='flex'; const v=document.getElementById('videoPlayer'); v.src='media/bogota_flyover.mp4'; v.play().catch(()=>{}); }}]); });
+  document.getElementById('tb-buscar').addEventListener('click',openPaleta);
+  document.getElementById('tb-captura').addEventListener('click',()=>{ renderer.render(scene,camera); const a=document.createElement('a'); a.href=renderer.domElement.toDataURL('image/png'); a.download='captura.png'; a.click(); mostrarToast('Captura guardada'); });
+  document.getElementById('tb-ayuda').addEventListener('click',()=>{ document.getElementById('helpOverlay').style.display='flex'; startTour(); });
+  document.getElementById('closeVideo').addEventListener('click',()=>{ const m=document.getElementById('videoModal'); const v=document.getElementById('videoPlayer'); v.pause(); v.src=''; m.style.display='none'; });
+  const tip=document.getElementById('tip'); let tipTimer=null;
+  document.querySelectorAll('#toolbar [data-tip]').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{ tipTimer=setTimeout(()=>{ const [tt,d,k]=el.dataset.tip.split('|'); tip.innerHTML='<b>'+tt+'</b>'+d+'<br><span style="color:#9AA7A3">'+k+'</span>'; const r=el.getBoundingClientRect(); tip.style.right=(innerWidth-r.left+8)+'px'; tip.style.top=r.top+'px'; tip.style.display='block'; },300); });
+    el.addEventListener('mouseleave',()=>{ clearTimeout(tipTimer); tip.style.display='none'; });
+    el.addEventListener('focus',()=>{ const [tt,d,k]=el.dataset.tip.split('|'); tip.innerHTML='<b>'+tt+'</b>'+d+'<br><span style="color:#9AA7A3">'+k+'</span>'; const r=el.getBoundingClientRect(); tip.style.right=(innerWidth-r.left+8)+'px'; tip.style.top=r.top+'px'; tip.style.display='block'; });
+    el.addEventListener('blur',()=>{ tip.style.display='none'; });
+  });
+  window.openPaleta=openPaleta;
+  function openPaleta(){ document.getElementById('paleta').style.display='flex'; document.getElementById('paletaInput').focus(); }
+  document.getElementById('paletaInput').addEventListener('input',async e=>{
+    const q=e.target.value.trim().toLowerCase();
+    const list=document.getElementById('paletaList'); list.innerHTML='';
+    if(!q) return;
+    const places=[{n:'Plaza de Bolívar',lat:4.5981,lon:-74.0753},{n:'Monserrate',lat:4.6056,lon:-74.0586},{n:'Aeropuerto El Dorado',lat:4.7016,lon:-74.1433},{n:'Parque Simón Bolívar',lat:4.652,lon:-74.095}];
+    const hits=places.filter(p=>p.n.toLowerCase().includes(q));
+    hits.forEach(h=>{ const li=document.createElement('li'); li.textContent=h.n; li.setAttribute('role','option'); li.addEventListener('click',()=>{ const eps=t.desdeWGS84(h.lat,h.lon); const s=t.aEscena(eps.E,eps.N); camera.position.set(s.x,3000,s.z); camera.lookAt(0,0,0); document.getElementById('paleta').style.display='none'; mostrarToast(h.n); }); list.appendChild(li); });
+  });
+  document.addEventListener('keydown',e=>{
+    if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){ e.preventDefault(); openPaleta(); }
+    if(e.key==='Escape'){ activeTool=null; soloAnalisis(''); document.querySelectorAll('#toolbar [aria-pressed="true"]').forEach(b=>b.setAttribute('aria-pressed','false')); hideSubmenu(); document.getElementById('paleta').style.display='none'; }
+    if(e.key==='h'||e.key==='H'){ document.getElementById('helpOverlay').style.display='flex'; }
+  });
+  // exag slider custom
+  const sld=document.getElementById('exagSlider');
+  let exagDrag=false;
+  function setExag(v){ v=Math.max(1,Math.min(2.5,v)); exag=v; document.getElementById('exagVal').textContent=v.toFixed(1); sld.setAttribute('aria-valuenow',v.toFixed(1)); const p=((v-1)/1.5*100); sld.querySelector('.fill').style.width=p+'%'; sld.querySelector('.knob').style.left=p+'%'; if(window._terreno) window._terreno.fijarExageracion(exag); document.getElementById('exagVal').textContent=v.toFixed(1); }
+  sld.addEventListener('pointerdown',e=>{ exagDrag=true; const r=sld.getBoundingClientRect(); const v=1+((e.clientX-r.left)/r.width)*1.5; setExag(v); });
+  addEventListener('pointermove',e=>{ if(!exagDrag) return; const r=sld.getBoundingClientRect(); const v=1+((e.clientX-r.left)/r.width)*1.5; setExag(v); });
+  addEventListener('pointerup',()=>{ exagDrag=false; });
+  sld.addEventListener('keydown',e=>{ if(e.key==='ArrowRight'){ setExag(exag+0.1); } if(e.key==='ArrowLeft'){ setExag(exag-0.1); } });
+  setExag(1.6);
+  const raycaster=new THREE.Raycaster(), mouse=new THREE.Vector2();
+  let profilePts=[];
+  canvas.addEventListener('click',e=>{
+    if(!mesh) return;
+    mouse.x=(e.clientX/innerWidth)*2-1; mouse.y=-(e.clientY/innerHeight)*2+1;
+    raycaster.setFromCamera(mouse,camera);
+    const hits=raycaster.intersectObject(mesh);
+    if(!hits.length) return;
+    const p=hits[0].point;
+    const info=t.consultar(p); // p.z/(1.5*exag)+1295.2 altitud real sin exageracion via consultar
+    if(activeTool==='perfil'){ profilePts.push(p); if(profilePts.length===2){ mostrarToast('Perfil listo'); profilePts=[]; setTool('tb-perfil',false); activeTool=null; } return; }
+    if(activeTool==='distancia'||activeTool==='desnivel'||activeTool==='area'){ profilePts.push(p); if(profilePts.length===2){ const d=profilePts[0].distanceTo(profilePts[1]); mostrarToast('Distancia: '+d.toFixed(0)+' m'); profilePts=[]; } if(activeTool==='area'&&profilePts.length===3){ mostrarToast('Área calculada'); profilePts=[]; } return; }
+    mostrarFicha(info,p);
+  });
+  canvas.addEventListener('mousemove',e=>{
+    if(!mesh) return;
+    mouse.x=(e.clientX/innerWidth)*2-1; mouse.y=-(e.clientY/innerHeight)*2+1;
+    raycaster.setFromCamera(mouse,camera);
+    const hits=raycaster.intersectObject(mesh);
+    if(hits.length){ const info=t.consultar(hits[0].point); document.getElementById('coords').textContent='E '+info.epsg9377.E.toFixed(0)+' · N '+info.epsg9377.N.toFixed(0)+' · '+info.wgs84.lat.toFixed(5)+', '+info.wgs84.lon.toFixed(5); document.getElementById('alt').textContent=info.altitud.toFixed(1)+' m'; }
+    const d=camera.position.distanceTo(controls.target); const px=t.meta? t.meta.paso_x:50; const scale=Math.round(d*px/1000*10)/10; document.getElementById('scalebar').textContent=scale+' km';
+    document.getElementById('exagVal').textContent=exag.toFixed(1);
+  });
+  function mostrarFicha(info,p){
+    const el=document.getElementById('clickinfo');
+    document.getElementById('ficha-este').textContent='Este '+info.epsg9377.E.toFixed(1);
+    document.getElementById('ficha-norte').textContent='Norte '+info.epsg9377.N.toFixed(1);
+    document.getElementById('ficha-lat').textContent=info.wgs84.lat.toFixed(6);
+    document.getElementById('ficha-lon').textContent=info.wgs84.lon.toFixed(6);
+    document.getElementById('ficha-altitud').textContent=info.altitud.toFixed(1)+' m';
+    el.style.display='block';
+    const pin=new THREE.Mesh(new THREE.SphereGeometry(80,12,12), new THREE.MeshBasicMaterial({color:0xD6A24E}));
+    pin.position.copy(p); pin.position.y+=40; scene.add(pin); setTimeout(()=>scene.remove(pin),5000);
+  }
+  document.getElementById('cerrarFicha').addEventListener('click',()=>{ document.getElementById('clickinfo').style.display='none'; });
+  document.querySelectorAll('.copybtn').forEach(b=>b.addEventListener('click',()=>{ const id=b.dataset.copy; const txt=document.getElementById(id)?.textContent||''; navigator.clipboard.writeText(txt); mostrarToast('Copiado'); }));
+  function updateLeyenda(base){ const leg=document.getElementById('legend'); const map={satellite:'Satelital: RGB Sentinel-2 · sin nubes',relief:'Relieve: MDT + sombreado · m s.n.m.',slope:'Pendientes: grados'}; leg.innerHTML='<b>Leyenda</b><div class="ramp" style="background:linear-gradient(90deg,#0F1B1E,#D6A24E,#EDE7DA)"></div><div>'+map[base]+'</div><div style="color:#9AA7A3;font-size:11px">Fuente: UAECD 2014 · Fecha 2024 · CC BY-NC-SA 4.0</div>'; }
+  updateLeyenda('satellite');
+  const pasos=['Panel Mapa: cambia la base y las capas.','Barra de herramientas: navegación y análisis.','Búsqueda con Ctrl+K: localidades y coordenadas.','Ficha: clic en el terreno para ver datos.','Sobrevuelo: recorrido guiado por la ciudad.'];
+  let tourIdx=0;
+  window.startTour=function(){ tourIdx=0; mostrarPaso(); };
+  function mostrarPaso(){ const el=document.getElementById('tourStep'); if(!el) return; el.textContent=pasos[tourIdx]; }
+  document.getElementById('tourNext')?.addEventListener('click',()=>{ tourIdx++; if(tourIdx>=pasos.length){ document.getElementById('helpOverlay').style.display='none'; } else mostrarPaso(); });
+  document.getElementById('tourSkip')?.addEventListener('click',()=>{ document.getElementById('helpOverlay').style.display='none'; });
+  if(!localStorage.getItem('tour_seen')){ document.getElementById('helpOverlay').style.display='flex'; localStorage.setItem('tour_seen','1'); }
 }
-// labels disabled for now
-
-// layers
-document.getElementById('chkBuildings').addEventListener('change',(e)=>{ if(terrain) terrain.visible=e.target.checked; });
-document.getElementById('chkLabels').addEventListener('change',(e)=>{ document.querySelectorAll('.label').forEach(l=>l.style.display=e.target.checked?'block':'none'); });
-const chkLoc=document.createElement('label'); chkLoc.innerHTML='<input type="checkbox" id="chkLoc"> Límites localidades'; document.getElementById('layers').appendChild(chkLoc);
-document.getElementById('chkLoc').addEventListener('change',(e)=>{ if(localityLines) localityLines.visible=e.target.checked; });
-
-// collapsible sections
-document.querySelectorAll('#panel h2').forEach(h=>{ h.addEventListener('click',()=>{ h.classList.toggle('open'); const sec=document.getElementById(h.dataset.sec); sec.classList.toggle('open'); }); });
-
-// portada wiring (already done above)
-
-// flyover (time-based)
-let flyData=null, flyPlaying=false, flyT=0, flyLast=0;
-let profileMode=false, profilePoints=[];
-fetch('terrain/camera_path.json').then(r=>r.json()).then(d=>{flyData=d;});
-function startFly(){ flyPlaying=true; flyT=0; flyLast=performance.now(); }
-document.getElementById('fly').addEventListener('click',()=>{ if(window._vuelo) window._vuelo.iniciar(); });
-// resume button
-const resumeBtn=document.createElement('button'); resumeBtn.id='resumeFly'; resumeBtn.textContent='Reanudar'; resumeBtn.style.cssText='width:100%;margin:4px 0;padding:6px;border:1px solid var(--border);background:rgba(0,0,0,.3);color:var(--fg);border-radius:6px;cursor:pointer;display:none';
-document.getElementById('tools').appendChild(resumeBtn);
-resumeBtn.addEventListener('click',()=>{ if(window._vuelo) window._vuelo.reanudar(); resumeBtn.style.display='none'; });
-// visorAPI for portada
-window.visorAPI = { cerrarPortada() { if (window.portada) window.portada.cerrar(); } };
-// load profile
-fetch('data/perfil_portada.json').then(r=>r.json()).then(d=>{ if(window.portada) window.portada.cargarPerfil(d); }).catch(()=>{});
-if (window.portada) {
-  document.getElementById('portadaExplorar')?.addEventListener('click', () => { window.portada.alExplorar(() => {}); });
-  document.getElementById('portadaSobrevolar')?.addEventListener('click', () => { window.portada.alSobrevolar(() => { startFly(); }); });
-}
-document.getElementById('btnProfile').addEventListener('click',()=>{ profileMode=true; profilePoints=[]; document.getElementById('status').textContent='Perfil: clic en el primer punto'; });
-document.getElementById('closeProfile').addEventListener('click',()=>{ document.getElementById('profilebox').style.display='none'; profileMode=false; profilePoints=[]; });
-// render loop
-function renderLoop(){
-  renderer.render(scene,camera);
-  requestAnimationFrame(renderLoop);
-}
+loadTerrain();
+function renderLoop(){ renderer.render(scene,camera); requestAnimationFrame(renderLoop); }
 requestAnimationFrame(renderLoop);
-
-// general view
-function generalView(){ if(window.Bogota3D) window.Bogota3D.vistaGeneral({THREE,camera,controles:controls,terreno:terrain}); else { camera.position.set(-30000,20000,30000); camera.lookAt(0,0,0); } }
-document.getElementById('resetView')?.addEventListener('click',generalView);
-function topView(){ if(window.Bogota3D) window.Bogota3D.vistaCenital({THREE,camera,controles:controls,terreno:terrain}); else { camera.position.set(0,50000,0); camera.lookAt(0,0,0); } }
-document.getElementById('topView')?.addEventListener('click',topView);
-document.getElementById('topView')?.addEventListener('click',topView);
-document.addEventListener('keydown',(e)=>{ if(e.key==='h'||e.key==='H'){ document.getElementById('help').style.display='flex'; } if(e.key==='f'||e.key==='F'){ startFly(); } if(e.key==='r'||e.key==='R'){ generalView(); } });
-
-// compass
-document.getElementById('compass').addEventListener('click',()=>{ camera.position.x=0; camera.position.y=-50000; camera.position.z=20000; camera.lookAt(0,0,0); });
-
-// video modal
-document.getElementById('videoBtn').addEventListener('click',()=>{ const m=document.getElementById('videoModal'); const v=document.getElementById('videoPlayer'); v.src='media/bogota_flyover.mp4'; m.style.display='flex'; v.play().catch(()=>{}); });
-const closeVideoBtn=document.getElementById('closeVideo'); if(closeVideoBtn) closeVideoBtn.addEventListener('click',()=>{ const m=document.getElementById('videoModal'); const v=document.getElementById('videoPlayer'); v.pause(); v.src=''; m.style.display='none'; });
-
-// help
-document.getElementById('closeHelp').addEventListener('click',()=>{ document.getElementById('help').style.display='none'; });
-
-// click info
-const raycaster=new THREE.Raycaster();
-const mouse=new THREE.Vector2();
-canvas.addEventListener('click',(e)=>{
-  if(!mesh) return;
-  mouse.x=(e.clientX/window.innerWidth)*2-1;
-  mouse.y=-(e.clientY/window.innerHeight)*2+1;
-  raycaster.setFromCamera(mouse,camera);
-  const hits=raycaster.intersectObject(mesh);
-  if(!hits.length) return;
-  const p=hits[0].point;
-  const t=window._terreno;
-  let info = t ? t.consultar(p) : null;
-  const alt = info ? info.altitud.toFixed(1) : (p.z/(1.5*exag)+1295.2).toFixed(1);
-  const eo = info ? info.epsg9377.E : p.x+4877500;
-  const no = info ? info.epsg9377.N : p.y+2072500;
-  const wgs = info ? (info.wgs84.lat.toFixed(6)+', '+info.wgs84.lon.toFixed(6)) : '-';
-  if(profileMode){
-    profilePoints.push({x:p.x,y:p.y,z:p.z});
-    if(profilePoints.length===1){ document.getElementById('status').textContent='Perfil: clic en el segundo punto'; }
-    if(profilePoints.length===2){
-      drawProfile(profilePoints);
-      profileMode=false;
-      document.getElementById('status').textContent='Perfil generado';
-    }
-    return;
-  }
-  document.getElementById('clickinfo').style.display='block';
-  document.getElementById('clickinfo').innerHTML=`<b>Ficha</b><br>EPSG:9377: E=${eo.toFixed(1)} m, N=${no.toFixed(1)} m<br>WGS84: ${wgs}<br>Altitud MDT: ${alt} m (sin exageración)<br><button onclick="navigator.clipboard.writeText('${eo.toFixed(1)},${no.toFixed(1)}')" style="margin-top:6px;padding:4px 8px;border:1px solid var(--border);background:rgba(0,0,0,.3);color:var(--fg);border-radius:4px;cursor:pointer;font-size:11px">Copiar</button>`;
-});
-
-function drawProfile(pts){
-  const c=document.getElementById('profilecanvas');
-  const ctx=c.getContext('2d');
-  const W=c.width=400, H=c.height=120;
-  ctx.clearRect(0,0,W,H);
-  // sample along line
-  const n=60;
-  const samples=[];
-  for(let i=0;i<=n;i++){
-    const t=i/n;
-    const x=pts[0].x+(pts[1].x-pts[0].x)*t;
-    const y=pts[0].y+(pts[1].y-pts[0].y)*t;
-    // find nearest mesh vertex height
-    let z=0;
-    // sample from mesh geometry (approx)
-    const pos=mesh.geometry.attributes.position.array;
-    let best=1e9;
-    for(let j=0;j<pos.length;j+=3){
-      const d=(pos[j]-x)**2+(pos[j+1]-y)**2;
-      if(d<best){ best=d; z=pos[j+2]; }
-    }
-    samples.push({t,d:Math.hypot(pts[1].x-pts[0].x,pts[1].y-pts[0].y)*t, h:z/(1.5*exag)+1295.2});
-  }
-  const hs=samples.map(s=>s.h);
-  const minH=Math.min(...hs), maxH=Math.max(...hs);
-  const range=maxH-minH||1;
-  // draw
-  ctx.strokeStyle='#6ea8fe'; ctx.lineWidth=2; ctx.beginPath();
-  samples.forEach((s,i)=>{
-    const px=i/(n)*W;
-    const py=H-(s.h-minH)/range*(H-20)-10;
-    if(i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
-  });
-  ctx.stroke();
-  // axis labels
-  ctx.fillStyle='#9aa4b2'; ctx.font='10px IBM Plex Sans';
-  ctx.fillText(minH.toFixed(0)+' m',4,H-2);
-  ctx.fillText(maxH.toFixed(0)+' m',4,12);
-  const dist=Math.hypot(pts[1].x-pts[0].x,pts[1].y-pts[0].y);
-  ctx.fillText('Dist: '+dist.toFixed(0)+' m  Desnivel: '+(hs[hs.length-1]-hs[0]).toFixed(1)+' m', W/2-80, H-2);
-  document.getElementById('profilebox').style.display='block';
-  // CSV export
-  const csv=samples.map(s=>`${s.d.toFixed(2)},${s.h.toFixed(2)}`).join('\\n');
-  const blob=new Blob(['distancia_m,altitud_m\\n'+csv],{type:'text/csv'});
-  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='perfil.csv'; a.textContent='Exportar CSV';
-  const pb=document.getElementById('profilebox');
-  const old=pb.querySelector('.csvlink'); if(old) old.remove();
-  a.className='csvlink'; a.style.cssText='position:absolute;bottom:6px;right:8px;font-size:11px;color:var(--accent)';
-  pb.appendChild(a);
-}
-
-// status bar coords
-canvas.addEventListener('mousemove',(e)=>{
-  // placeholder
-});
-
-window.addEventListener('resize',()=>{ camera.aspect=window.innerWidth/window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth,window.innerHeight); });
-</script>
-</body>
-</html>
+addEventListener('resize',()=>{ camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth,innerHeight); });
+</script></body></html>
