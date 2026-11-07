@@ -1,0 +1,749 @@
+{
+  "python": "Python 3.13.14",
+  "uv": "uv 0.12.18 (01cb90c1a 2026-09-22 x86_64-pc-windows-msvc)",
+  "git": "git version 2.53.0.windows.1",
+  "gh": "gh version 2.103.3 (2026-10-26)\nhttps://github.com/cli/cli/releases/tag/v2.103.3",
+  "opencode": "ERROR: [WinError 2] The system cannot find the file specified",
+  "blender": "Blender 5.2.3 LTS\n\tbuild date: 2026-10-22\n\tbuild time: 01:37:16\n\tbuild commit date: 2026-10-21\n\tbuild commit time: 09:21\n\tbuild hash: e13b728c6880\n\tbuild branch: blender-v5.2-release\n\tbuild platform: Windows\n\tbuild type: Release\n\tbuild c flags:  /W3 -Werror=implicit-function-declaration -Werror=return-type -Wno-tautological-compare -Wno-unknown-pragmas -Wno-char-subscripts -Wstrict-prototypes -Wmissing-prototypes -Wunused-parameter -Wundef -Wundef-prefix -Werror=unguarded-availability-new /DWIN32 /D_WINDOWS /MP /nologo /J /Gy /Gd /showFilenames -Wno-unused-command-line-argument -Wno-microsoft-enum-forward-reference /clang:-funsigned-char /clang:-fno-strict-aliasing /clang:-ffp-contract=off -march=x86-64-v2 \n\tbuild c++ flags:  /W3 -Wno-tautological-compare -Wno-unknown-pragmas -Wno-char-subscripts -Wno-overloaded-virtual -Wno-sign-compare -Wno-invalid-offsetof -Wno-suggest-override -Wundef -Wundef-prefix -Wunused-parameter -Wmismatched-tags -Werror=unguarded-availability-new /DWIN32 /D_WINDOWS /EHsc  /Gy /MP /nologo /J /Gd /showFilenames /EHsc -Wno-unused-command-line-argument -Wno-microsoft-enum-forward-reference /clang:-funsigned-char /clang:-fno-strict-aliasing /clang:-ffp-contract=off -march=x86-64-v2 \n\tbuild link flags: /MACHINE:X64  /SUBSYSTEM:CONSOLE /STACK:2097152 /ignore:4049 /ignore:4217 /ignore:4221\n\tbuild system: CMake",
+  "qgis_path": "[WindowsPath('C:/Program Files/QGIS 4.0.0'), WindowsPath('C:/Program Files/QGIS 4.2.2'), WindowsPath('C:/Program Files/QGIS 4.2.3')]",
+  "qgis_folder": [
+    "C:\\Program Files\\QGIS 4.0.0",
+    "C:\\Program Files\\QGIS 4.2.2",
+    "C:\\Program Files\\QGIS 4.2.3"
+  ],
+  "pyproject": "[project]\nname = \"mapabogota\"\nversion = \"0.1.0\"\nrequires-python = \">=3.10\"\ndependencies = [\n    \"numpy>=2.2.6\",\n    \"pillow>=12.3.0\",\n    \"playwright>=1.64.1\",\n    \"pyproj>=3.7.1\",\n    \"rasterio>=1.4.4\",\n    \"requests>=2.32.0\",\n    \"shapely>=2.0.0\",\n    \"urllib3>=2.2.0\",\n]\n",
+  "uv_lock": [
+    [
+      "affine",
+      "3.0.1"
+    ],
+    [
+      "attrs",
+      "26.1.0"
+    ],
+    [
+      "certifi",
+      "2026.10.23"
+    ],
+    [
+      "charset-normalizer",
+      "3.5.2"
+    ],
+    [
+      "click",
+      "8.5.0"
+    ],
+    [
+      "click-plugins",
+      "1.1.1.2"
+    ],
+    [
+      "cligj",
+      "0.7.2"
+    ],
+    [
+      "greenlet",
+      "3.5.6"
+    ],
+    [
+      "idna",
+      "3.20"
+    ],
+    [
+      "mapabogota",
+      "0.1.0"
+    ],
+    [
+      "numpy",
+      "2.2.6"
+    ],
+    [
+      "numpy",
+      "2.4.6"
+    ],
+    [
+      "numpy",
+      "2.5.4"
+    ],
+    [
+      "pillow",
+      "12.3.0"
+    ],
+    [
+      "pillow",
+      "13.0.0"
+    ],
+    [
+      "playwright",
+      "1.64.1"
+    ],
+    [
+      "pyee",
+      "13.0.1"
+    ],
+    [
+      "pyee",
+      "14.0.0"
+    ],
+    [
+      "pyparsing",
+      "3.3.3"
+    ],
+    [
+      "pyproj",
+      "3.7.1"
+    ],
+    [
+      "pyproj",
+      "3.7.2"
+    ],
+    [
+      "pyproj",
+      "3.8.0"
+    ],
+    [
+      "rasterio",
+      "1.4.4"
+    ],
+    [
+      "rasterio",
+      "1.5.2"
+    ],
+    [
+      "requests",
+      "2.34.2"
+    ],
+    [
+      "shapely",
+      "2.1.2"
+    ],
+    [
+      "shapely",
+      "2.2.0"
+    ],
+    [
+      "typing-extensions",
+      "4.16.0"
+    ],
+    [
+      "urllib3",
+      "2.8.0"
+    ]
+  ],
+  "index_len": 29853,
+  "index_scripts": [
+    "<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">",
+    "<link href=\"https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Spectral:wght@600&display=swap\" rel=\"stylesheet\">",
+    "<script src=\"assets/portada.js\"></script>",
+    "<script src=\"assets/bogota3d_camara.js\"></script>",
+    "<script src=\"assets/bogota3d_terreno.js\"></script>",
+    "<script src=\"assets/geo.js\"></script>",
+    "<script type=\"importmap\">{\"imports\":{\"three\":\"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js\",\"three/addons/\":\"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/\"}}</script>",
+    "<script type=\"module\">",
+    "import * as THREE from 'three';",
+    "import { OrbitControls } from 'three/addons/controls/OrbitControls.js';",
+    "</script></body></html>"
+  ],
+  "tokens": ":root{\n  --ink:#0F1B1E;\n  --paper:#EDE7DA;\n  --graphite:#9AA7A3;\n  --ochre:#D6A24E;\n  --ochre-light:#E8BC6E;\n  --red:#D9715F;\n  --panel-bg:rgba(15,27,30,.82);\n  --border:rgba(237,231,218,.10);\n  --font-ui:'Barlow',system-ui,sans-serif;\n  --font-title:'Spectral',serif;\n  --fs-xs:12px; --fs-sm:13px; --fs-md:14px; --fs-lg:16px; --fs-xl:20px;\n  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px;\n  --radius:12px;\n  --trans:160ms ease;\n}\n*{box-sizing:border-box}\nhtml,body{margin:0;padding:0;background:#0F1B1E;color:var(--paper);font-family:var(--font-ui);font-size:var(--fs-md);overflow:hidden;height:100vh}\nbutton{font-family:var(--font-ui)}\n.skip-link{position:fixed;top:-40px;left:8px;z-index:1000;background:var(--ink);color:var(--paper);padding:8px 12px;border-radius:6px}\n.skip-link:focus{top:8px}\n@media(prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}\n.panel{background:var(--panel-bg);backdrop-filter:blur(14px);border:1px solid var(--border);border-radius:var(--radius);box-shadow:0 8px 32px rgba(0,0,0,.35)}\n.icob{width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:1px solid transparent;background:none;color:var(--paper);cursor:pointer;border-radius:8px}\n.icob:hover{background:rgba(214,162,78,.15);color:var(--ochre-light)}\n.icob:focus-visible{outline:2px solid var(--ochre);outline-offset:2px}\n.icob[aria-pressed=\"true\"]{color:var(--ochre);border-color:rgba(214,162,78,.5)}\n.icob svg{width:20px;height:20px;stroke:currentColor;stroke-width:1.75;fill:none;stroke-linecap:round;stroke-linejoin:round}\n",
+  "terreno": "{\n  \"crs\": \"EPSG:9377\",\n  \"registro\": \"centro de celda\",\n  \"orden\": \"filas de norte a sur, columnas de oeste a este, Float32 little-endian\",\n  \"ancho\": 1025,\n  \"alto\": 1211,\n  \"este_min\": 4850000.0,\n  \"norte_min\": 2040000.0,\n  \"este_max\": 4905000.0,\n  \"norte_max\": 2105000.0,\n  \"paso_x\": 53.65853658536585,\n  \"paso_y\": 53.67464905037159,\n  \"altura_min\": 1500.14453125,\n  \"altura_max\": 3813.593505859375,\n  \"fuente\": \"mdt_fused_9377_5m.tif\",\n  \"generado\": \"2026-11-05\",\n  \"textura\": {\n    \"8192\": \"textura_8192.jpg\",\n    \"4096\": \"textura_4096.jpg\",\n    \"sombreado\": 0.35,\n    \"azimut_sol\": 285.0,\n    \"altura_sol\": 30.0\n  }\n}",
+  "git_log": "14e98fd|2026-11-07|feat: interfaz premium con panel Mapa, toolbar, bÃºsqueda, ficha y ayuda\ne7c2395|2026-11-07|feat: interfaz premium con sistema de diseÃ±o, panel Mapa, toolbar, bÃºsqueda, ficha y ayuda\n1eaee86|2026-11-07|feat: rediseÃ±o completo del visor con sistema de diseÃ±o tokens, panel Mapa, toolbar, bÃºsqueda, ficha y ayuda\ne970ebc|2026-11-06|feat: sistema de diseÃ±o con tokens e iconos Lucide locales\nf17548c|2026-11-06|feat: sistema de diseÃ±o con tokens e iconos Lucide locales\n6c5f231|2026-11-06|feat: terreno con datos corregidos (bogota3d_terreno, alturas.bin sin agujas/picos)\ndda70c1|2026-11-04|fix: portada integrada, perfil real MDT, orientacion, sobrevuelo\n4074e55|2026-11-04|fix: sobrevuelo panoramico (5km interior, 2500m, 50-60 grados, 1.5km objetivo, hemispherelight, base pizarra)\n3e8c0ab|2026-11-02|fix: sobrevuelo, vista cenital, luz, base maqueta, atmÃ³sfera\n4742a62|2026-11-02|feat: portada integrada, perfil real MDT, orientacion corregida\nd952555|2026-11-02|fix: tests for REQ-COORD, REQ-ALTITUD, REQ-ORIENTACION, etiquetas\n4bfe0dc|2026-11-02|docs: update VERIFICACION.md with all REQ passing\n90bb92e|2026-11-02|fix: test_req_altitud_range checks web/terrain first\nf55e492|2026-11-02|fix: make test_mdt_in_range skip gracefully in CI\n9596d7a|2026-11-02|fix: simplify smoke test to not require Playwright in CI\n66adae0|2026-11-02|ci: install playwright locally for module resolution\nd5a8ff3|2026-11-02|ci: install playwright globally for smoke test\nf195283|2026-11-02|fix: make REQ-ALTITUD and REQ-VISOR pass in CI\n4cf0299|2026-11-02|fix: make CRITICOS pass in CI (georef in web, Playwright in workflow)\nccf5cb4|2026-11-02|fix: add camera.up.set(0,1,0) for REQ-ORIENTACION\n78d3273|2026-11-02|fix: corregir ficha EPSG:9377/WGS84, normalmap, orientacion\ndbc3626|2026-11-02|test: pruebas criticas protegidas v2 y contrato del visor\n72ea163|2026-11-02|ci: use verificar.py --criticos in workflow\n19f04c8|2026-11-02|test: add REQ tests with IDs, smoke test, verificar.py w",
+  "tests": "ERROR: Command '['C:\\\\Users\\\\kevin\\\\Desktop\\\\mapabogota\\\\.venv\\\\Scripts\\\\python.exe', '-m', 'unittest', 'discover', '-s', 'tests', '-v']' timed out after 20 seconds",
+  "audit": "{\n  \"files\": 61,\n  \"bytes\": 175067907,\n  \"largest_files\": [\n    {\n      \"path\": \"terrain/texture_localidades_8192.jpg\",\n      \"bytes\": 24296763\n    },\n    {\n      \"path\": \"terrain/textura_8192.jpg\",\n      \"bytes\": 23985610\n    },\n    {\n      \"path\": \"terrain/texture_satellite_8192.jpg\",\n      \"bytes\": 23985610\n    },\n    {\n      \"path\": \"terrain/texture_valor_8192.jpg\",\n      \"bytes\": 23708365\n    },\n    {\n      \"path\": \"terrain/texture_slope_8192.jpg\",\n      \"bytes\": 21177383\n    },\n    {\n      \"path\": \"terrain/texture_localidades_4096.jpg\",\n      \"bytes\": 8794644\n    },\n    {\n      \"path\": \"terrain/textura_4096.jpg\",\n      \"bytes\": 8679273\n    },\n    {\n      \"path\": \"terrain/texture_satellite_4096.jpg\",\n      \"bytes\": 8679273\n    },\n    {\n      \"path\": \"terrain/texture_valor_4096.jpg\",\n      \"bytes\": 8500825\n    },\n    {\n      \"path\": \"terrain/texture_slope_4096.jpg\",\n      \"bytes\": 6966584\n    }\n  ],\n  \"pmtiles\": [],\n  \"manifest_assets\": 0,\n  \"contrast_ratios\": {\n    \"--text\": 15.71,\n    \"--muted\": 7.41,\n    \"--quiet\": 6.17\n  },\n  \"errors\": []\n}",
+  "web_sizes": [
+    [
+      "web\\assets\\app.css",
+      16457
+    ],
+    [
+      "web\\assets\\app.js",
+      25952
+    ],
+    [
+      "web\\assets\\bogota3d_camara.js",
+      20668
+    ],
+    [
+      "web\\assets\\bogota3d_terreno.js",
+      12264
+    ],
+    [
+      "web\\assets\\favicon.svg",
+      250
+    ],
+    [
+      "web\\assets\\geo.js",
+      731
+    ],
+    [
+      "web\\assets\\icons\\camera.svg",
+      293
+    ],
+    [
+      "web\\assets\\icons\\check.svg",
+      196
+    ],
+    [
+      "web\\assets\\icons\\chevron.svg",
+      194
+    ],
+    [
+      "web\\assets\\icons\\click.svg",
+      221
+    ],
+    [
+      "web\\assets\\icons\\compass.svg",
+      275
+    ],
+    [
+      "web\\assets\\icons\\copy.svg",
+      285
+    ],
+    [
+      "web\\assets\\icons\\download.svg",
+      297
+    ],
+    [
+      "web\\assets\\icons\\help.svg",
+      271
+    ],
+    [
+      "web\\assets\\icons\\house.svg",
+      269
+    ],
+    [
+      "web\\assets\\icons\\info.svg",
+      243
+    ],
+    [
+      "web\\assets\\icons\\layers.svg",
+      233
+    ],
+    [
+      "web\\assets\\icons\\locate.svg",
+      278
+    ],
+    [
+      "web\\assets\\icons\\mountain.svg",
+      205
+    ],
+    [
+      "web\\assets\\icons\\pin.svg",
+      258
+    ],
+    [
+      "web\\assets\\icons\\plane.svg",
+      378
+    ],
+    [
+      "web\\assets\\icons\\plus.svg",
+      209
+    ],
+    [
+      "web\\assets\\icons\\ruler.svg",
+      369
+    ],
+    [
+      "web\\assets\\icons\\search.svg",
+      226
+    ],
+    [
+      "web\\assets\\icons\\sliders.svg",
+      487
+    ],
+    [
+      "web\\assets\\icons\\square.svg",
+      241
+    ],
+    [
+      "web\\assets\\icons\\x.svg",
+      213
+    ],
+    [
+      "web\\assets\\methodology.css",
+      6603
+    ],
+    [
+      "web\\assets\\model-viewer.js",
+      4032
+    ],
+    [
+      "web\\assets\\portada.css",
+      1266
+    ],
+    [
+      "web\\assets\\portada.js",
+      1148
+    ],
+    [
+      "web\\assets\\tokens.css",
+      1596
+    ],
+    [
+      "web\\assets\\ui.css",
+      5367
+    ],
+    [
+      "web\\assets\\video-poster.svg",
+      1320
+    ],
+    [
+      "web\\data\\perfil_portada.json",
+      33342
+    ],
+    [
+      "web\\descargas\\.gitkeep",
+      0
+    ],
+    [
+      "web\\descargas\\localidad.geojson",
+      2106926
+    ],
+    [
+      "web\\explorador.html",
+      10603
+    ],
+    [
+      "web\\index.html",
+      30143
+    ],
+    [
+      "web\\manifest.json",
+      83
+    ],
+    [
+      "web\\media\\.gitkeep",
+      0
+    ],
+    [
+      "web\\media\\poster.jpg",
+      33267
+    ],
+    [
+      "web\\metodologia.html",
+      9289
+    ],
+    [
+      "web\\terrain\\alturas.bin",
+      4965100
+    ],
+    [
+      "web\\terrain\\camera_path.json",
+      199549
+    ],
+    [
+      "web\\terrain\\georef.json",
+      667
+    ],
+    [
+      "web\\terrain\\height_range.json",
+      97
+    ],
+    [
+      "web\\terrain\\poster.jpg",
+      33267
+    ],
+    [
+      "web\\terrain\\terreno.json",
+      647
+    ],
+    [
+      "web\\terrain\\textura_4096.jpg",
+      8679273
+    ],
+    [
+      "web\\terrain\\textura_8192.jpg",
+      23985610
+    ],
+    [
+      "web\\terrain\\texture_localidades_4096.jpg",
+      8794644
+    ],
+    [
+      "web\\terrain\\texture_localidades_8192.jpg",
+      24296763
+    ],
+    [
+      "web\\terrain\\texture_relief_4096.jpg",
+      2267893
+    ],
+    [
+      "web\\terrain\\texture_relief_8192.jpg",
+      6499409
+    ],
+    [
+      "web\\terrain\\texture_satellite_4096.jpg",
+      8679273
+    ],
+    [
+      "web\\terrain\\texture_satellite_8192.jpg",
+      23985610
+    ],
+    [
+      "web\\terrain\\texture_slope_4096.jpg",
+      6966584
+    ],
+    [
+      "web\\terrain\\texture_slope_8192.jpg",
+      21177383
+    ],
+    [
+      "web\\terrain\\texture_valor_4096.jpg",
+      8500825
+    ],
+    [
+      "web\\terrain\\texture_valor_8192.jpg",
+      23708365
+    ]
+  ],
+  "docs": [
+    "docs\\AUDITORIA_FASE6.md",
+    "docs\\BITACORA.md",
+    "docs\\CALIDAD_MDT.md",
+    "docs\\contexto_bitacora.md",
+    "docs\\CONTRATO_VISOR.md",
+    "docs\\DESCARGAS_MANUALES.md",
+    "docs\\ESTADO.md",
+    "docs\\METADATOS.md",
+    "docs\\REPORTE_AUDITORIA_FASE6.json",
+    "docs\\REQUISITOS.md",
+    "docs\\VERIFICACION.md",
+    "docs\\capturas\\interfaz_1366.png",
+    "docs\\capturas\\interfaz_1440.png",
+    "docs\\capturas\\interfaz_390.png",
+    "docs\\capturas\\smoke.png",
+    "docs\\capturas\\visor_ok.png",
+    "docs\\diseno\\portada_bogota.html",
+    "docs\\screenshots\\visor-bogota.png"
+  ],
+  "scripts_list": [
+    "scripts\\acquire_sources.py",
+    "scripts\\audit_phase6.py",
+    "scripts\\audit_web.py",
+    "scripts\\cap_interfaz.py",
+    "scripts\\check_cop.py",
+    "scripts\\check_mdt.py",
+    "scripts\\collect_info.py",
+    "scripts\\encode_video.py",
+    "scripts\\generar_terreno.py",
+    "scripts\\gen_normalmap.py",
+    "scripts\\gen_perfil_portada.py",
+    "scripts\\gen_trajectory.py",
+    "scripts\\mdt_download.py",
+    "scripts\\mdt_fuse.py",
+    "scripts\\mdt_proximity.py",
+    "scripts\\ndsm_remerge.py",
+    "scripts\\process_phase2.py",
+    "scripts\\run_all.py",
+    "scripts\\terrain_phase_a.py",
+    "scripts\\terrain_textures.py",
+    "scripts\\test_wcs.py",
+    "scripts\\verificar.py",
+    "scripts\\volumetria_sample.py",
+    "scripts\\__init__.py"
+  ],
+  "tests_list": [
+    "tests\\test_acquire_sources.py",
+    "tests\\test_altitud.py",
+    "tests\\test_audit_web.py",
+    "tests\\test_coordenadas.py",
+    "tests\\test_diseno.py",
+    "tests\\test_etiquetas.py",
+    "tests\\test_navegacion.py",
+    "tests\\test_publicacion.py",
+    "tests\\test_reqs.py",
+    "tests\\test_visor.py"
+  ],
+  "workflow": "name: Publish web viewer\n\non:\n  push:\n    branches:\n      - main\n      - \"feat/**\"\n    paths:\n      - \"web/**\"\n      - \"scripts/audit_web.py\"\n      - \".github/workflows/pages.yml\"\n  workflow_dispatch:\n\npermissions:\n  contents: read\n  pages: write\n  id-token: write\n\nconcurrency:\n  group: pages\n  cancel-in-progress: true\n\njobs:\n  verificar:\n    runs-on: ubuntu-latest\n    steps:\n      - name: Check out repository\n        uses: actions/checkout@v4\n      - name: Set up Python\n        uses: actions/setup-python@v5\n        with:\n          python-version: '3.11'\n      - name: Set up Node\n        uses: actions/setup-node@v4\n        with:\n          node-version: '20'\n      - name: Install dependencies\n        run: |\n          pip install pyproj rasterio numpy\n          npm install playwright\n          npx playwright install chromium\n      - name: Run verificar.py\n        run: python scripts/verificar.py --criticos\n\n  deploy:\n    needs: verificar\n    runs-on: ubuntu-latest\n    environment:\n      name: github-pages\n      url: ${{ steps.deployment.outputs.page_url }}\n    steps:\n      - name: Check out repository\n        uses: actions/checkout@v4\n\n      - name: Validate static site and asset manifest\n        shell: bash\n        run: |\n          python - <<'PY'\n          import json\n          from pathlib import Path\n\n          root = Path(\"web\").resolve()\n          manifest_path = root / \"manifest.json\"\n          manifest = json.loads(manifest_path.read_text(encoding=\"utf-8\"))\n          referenced = [*manifest.get(\"pmtiles\", []), *manifest.get(\"geojson\", []), *manifest.get(\"media\", [])]\n\n          for item in referenced:\n              path = (root / item).resolve()\n              if root not in path.parents:\n                  raise SystemExit(f\"Manifest path escapes web/: {item}\")\n              if not path.is_file():\n                  raise SystemExit(f\"Manifest asset is missing: {item}\")\n              if path.stat().st_size >= 95 * 1024 * 1024:\n                  raise SystemExit(f\"Web asset exceeds 95 MB: {item}\")\n              if item.lower().endswith(\".mp4\") and path.stat().st_size >= 50 * 1024 * 1024:\n                  raise SystemExit(f\"MP4 exceeds 50 MB: {item}\")\n              if item.lower().endswith(\".glb\") and path.stat().st_size >= 20 * 1024 * 1024:\n                  raise SystemExit(f\"GLB exceeds 20 MB: {item}\")\n\n          for path in root.rglob(\"*\"):\n              if not path.is_file():\n                  continue\n              relative = path.relative_to(root).as_posix()\n              if path.stat().st_size >= 95 * 1024 * 1024:\n                  raise SystemExit(f\"Web file exceeds 95 MB: {relative}\")\n              if relative.endswith((\".part\", \".copying\", \".tmp\", \".temp.db\", \".mbtiles\", \"-journal\", \"-wal\", \"-shm\")):\n                  raise SystemExit(f\"Temporary processing file in web/: {relative}\")\n\n          print(f\"Validated {len(referenced)} manifest assets and site file size limits.\")\n          PY\n\n      - name: Check accessibility and site pa",
+  "capturas": [
+    "C:\\Users\\kevin\\Pictures\\Screenshots\\desktop.ini",
+    "C:\\Users\\kevin\\Pictures\\Screenshots\\Screenshot 2026-02-08 145113.png",
+    "C:\\Users\\kevin\\Pictures\\Screenshots\\Screenshot 2026-02-10 165623.png",
+    "C:\\Users\\kevin\\Pictures\\Screenshots\\Screenshot 2026-02-10 165754.png",
+    "C:\\Users\\kevin\\Pictures\\Screenshots\\Screenshot 2026-02-10 170026.png"
+  ],
+  "screenshots_oct31_nov7": [
+    [
+      "Screenshot 2026-10-31 191030.png",
+      "2026-10-31 19:10:31.947223",
+      457135
+    ],
+    [
+      "Screenshot 2026-10-31 191433.png",
+      "2026-10-31 19:14:34.979979",
+      499995
+    ],
+    [
+      "Screenshot 2026-10-31 201634.png",
+      "2026-10-31 20:16:35.872880",
+      36815
+    ],
+    [
+      "Screenshot 2026-10-31 201856.png",
+      "2026-10-31 20:18:57.774153",
+      34953
+    ],
+    [
+      "Screenshot 2026-10-31 202858.png",
+      "2026-10-31 20:28:59.124604",
+      34854
+    ],
+    [
+      "Screenshot 2026-10-31 203526.png",
+      "2026-10-31 20:35:27.758053",
+      299741
+    ],
+    [
+      "Screenshot 2026-10-31 204502.png",
+      "2026-10-31 20:45:03.501400",
+      235027
+    ],
+    [
+      "Screenshot 2026-10-31 204630.png",
+      "2026-10-31 20:46:30.918415",
+      325215
+    ],
+    [
+      "Screenshot 2026-10-31 204817.png",
+      "2026-10-31 20:48:19.162204",
+      387659
+    ],
+    [
+      "Screenshot 2026-10-31 232622.png",
+      "2026-10-31 23:26:26.277177",
+      81835
+    ],
+    [
+      "Screenshot 2026-10-31 234413.png",
+      "2026-10-31 23:44:14.529582",
+      23516
+    ],
+    [
+      "Screenshot 2026-10-31 234753.png",
+      "2026-10-31 23:47:54.631142",
+      203434
+    ],
+    [
+      "Screenshot 2026-10-31 235046.png",
+      "2026-10-31 23:50:47.311694",
+      242563
+    ],
+    [
+      "Screenshot 2026-11-01 090813.png",
+      "2026-11-01 09:08:15.495514",
+      135518
+    ],
+    [
+      "Screenshot 2026-11-01 162206.png",
+      "2026-11-01 16:22:07.241559",
+      93067
+    ],
+    [
+      "Screenshot 2026-11-01 165003.png",
+      "2026-11-01 16:50:06.342204",
+      167976
+    ],
+    [
+      "Screenshot 2026-11-01 185004.png",
+      "2026-11-01 18:50:06.876154",
+      347498
+    ],
+    [
+      "Screenshot 2026-11-01 194656.png",
+      "2026-11-01 19:46:56.648517",
+      110613
+    ],
+    [
+      "Screenshot 2026-11-01 204717.png",
+      "2026-11-01 20:47:18.995536",
+      199604
+    ],
+    [
+      "Screenshot 2026-11-01 215449.png",
+      "2026-11-01 21:54:49.617499",
+      243185
+    ],
+    [
+      "Screenshot 2026-11-01 220615.png",
+      "2026-11-01 22:06:16.087065",
+      170948
+    ],
+    [
+      "Screenshot 2026-11-01 223718.png",
+      "2026-11-01 22:37:19.290900",
+      259575
+    ],
+    [
+      "Screenshot 2026-11-01 224813.png",
+      "2026-11-01 22:48:13.573157",
+      186886
+    ],
+    [
+      "Screenshot 2026-11-02 000256.png",
+      "2026-11-02 00:02:57.333171",
+      159217
+    ],
+    [
+      "Screenshot 2026-11-02 070237.png",
+      "2026-11-02 07:02:37.485935",
+      676121
+    ],
+    [
+      "Screenshot 2026-11-02 074404.png",
+      "2026-11-02 07:44:05.134206",
+      172192
+    ],
+    [
+      "Screenshot 2026-11-02 155035.png",
+      "2026-11-02 15:50:37.327198",
+      124728
+    ],
+    [
+      "Screenshot 2026-11-02 170528.png",
+      "2026-11-02 17:05:29.182704",
+      91444
+    ],
+    [
+      "Screenshot 2026-11-02 170620.png",
+      "2026-11-02 17:06:20.535752",
+      199801
+    ],
+    [
+      "Screenshot 2026-11-02 170724.png",
+      "2026-11-02 17:07:24.703288",
+      255081
+    ],
+    [
+      "Screenshot 2026-11-02 170818.png",
+      "2026-11-02 17:08:19.133023",
+      294852
+    ],
+    [
+      "Screenshot 2026-11-02 171302.png",
+      "2026-11-02 17:13:02.953276",
+      115374
+    ],
+    [
+      "Screenshot 2026-11-02 173915.png",
+      "2026-11-02 17:39:16.256097",
+      212247
+    ],
+    [
+      "Screenshot 2026-11-02 174510.png",
+      "2026-11-02 17:45:11.302676",
+      95697
+    ],
+    [
+      "Screenshot 2026-11-02 183026.png",
+      "2026-11-02 18:30:27.422337",
+      126338
+    ],
+    [
+      "Screenshot 2026-11-02 183249.png",
+      "2026-11-02 18:32:49.704385",
+      760085
+    ],
+    [
+      "Screenshot 2026-11-02 192338.png",
+      "2026-11-02 19:23:39.404715",
+      1094188
+    ],
+    [
+      "Screenshot 2026-11-02 193254.png",
+      "2026-11-02 19:32:58.473465",
+      1428064
+    ],
+    [
+      "Screenshot 2026-11-02 201207.png",
+      "2026-11-02 20:12:07.988556",
+      169452
+    ],
+    [
+      "Screenshot 2026-11-02 202528.png",
+      "2026-11-02 20:25:29.644051",
+      1261793
+    ],
+    [
+      "Screenshot 2026-11-02 202610.png",
+      "2026-11-02 20:26:10.901464",
+      246885
+    ],
+    [
+      "Screenshot 2026-11-02 215019.png",
+      "2026-11-02 21:50:21.226477",
+      279692
+    ],
+    [
+      "Screenshot 2026-11-02 221815.png",
+      "2026-11-02 22:18:31.378481",
+      1232039
+    ],
+    [
+      "Screenshot 2026-11-02 224823.png",
+      "2026-11-02 22:48:24.828250",
+      1348736
+    ],
+    [
+      "Screenshot 2026-11-03 091204.png",
+      "2026-11-03 09:12:05.564514",
+      193409
+    ],
+    [
+      "Screenshot 2026-11-03 092049.png",
+      "2026-11-03 09:20:53.348675",
+      72885
+    ],
+    [
+      "Screenshot 2026-11-03 162749.png",
+      "2026-11-03 16:27:50.993017",
+      47784
+    ],
+    [
+      "Screenshot 2026-11-03 203412.png",
+      "2026-11-03 20:34:12.582270",
+      17467
+    ],
+    [
+      "Screenshot 2026-11-03 213023.png",
+      "2026-11-03 21:30:24.331229",
+      12716
+    ],
+    [
+      "Screenshot 2026-11-03 213209.png",
+      "2026-11-03 21:32:10.451363",
+      43341
+    ],
+    [
+      "Screenshot 2026-11-03 213404.png",
+      "2026-11-03 21:34:05.169070",
+      108312
+    ],
+    [
+      "Screenshot 2026-11-04 171633.png",
+      "2026-11-04 17:16:35.337843",
+      1115281
+    ],
+    [
+      "Screenshot 2026-11-06 184139.png",
+      "2026-11-06 18:41:39.749030",
+      205969
+    ]
+  ],
+  "videos": [
+    [
+      "C:\\Users\\kevin\\Desktop\\Recording 2026-11-04 171750.mp4",
+      "2026-11-04 17:17:27.903276"
+    ],
+    [
+      "C:\\Users\\kevin\\Downloads\\Generated Video September 29, 2026 - 12_35AM.mp4",
+      "2026-09-29 00:35:28.912703"
+    ],
+    [
+      "C:\\Users\\kevin\\Downloads\\Generated Video September 29, 2026 - 12_39AM.mp4",
+      "2026-09-29 00:39:38.998151"
+    ],
+    [
+      "C:\\Users\\kevin\\Downloads\\openclawdownloadvb.mp4",
+      "2026-09-23 20:59:05.728429"
+    ]
+  ]
+}
