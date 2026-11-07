@@ -16,4 +16,4 @@
 | REQ-ORIENTACION | CRÍTICO | PASA | test_req_orientacion (tests.test_reqs.TestReqOrientacion.test_req_orientacion) ... ok  --------------------------------------------------------------- |
 | REQ-PUBLICACION | CRÍTICO | PASA | test_req_publicacion (tests.test_reqs.TestReqPublicacion.test_req_publicacion) ... ok  --------------------------------------------------------------- |
 | REQ-SOMBRAS | MEJORA | PASA | test_req_sombras (tests.test_reqs.TestReqSombras.test_req_sombras) ... ok  ---------------------------------------------------------------------- Ran  |
-| REQ-VISOR | CRÍTICO | PASA | test_smoke_page_loads (tests.test_visor.VisorSmokeTests.test_smoke_page_loads) ... 127.0.0.1 - - [07/Nov/2026 09:25:23] "GET / HTTP/1.1" 200 - C:\Prog |
+| REQ-VISOR | CRÍTICO | PASA | test_smoke_page_loads (tests.test_visor.VisorSmokeTests.test_smoke_page_loads) ... 127.0.0.1 - - [07/Nov/2026 09:31:53] "GET / HTTP/1.1" 200 - C:\Prog |
